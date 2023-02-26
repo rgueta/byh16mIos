@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component,OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-tabs',
@@ -6,7 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['tabs.page.scss']
 })
 export class TabsPage {
-
+  SoyAdmin = localStorage.getItem('IsAdmin');
+  myRoles:any;
   constructor() {}
 
 }
