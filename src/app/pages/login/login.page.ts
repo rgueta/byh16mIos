@@ -13,7 +13,7 @@ import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 })
 export class LoginPage implements OnInit {
   isAndroid:any;
-  credentials: FormGroup;
+  credentials!: FormGroup;
   creds = {
     email :'neighbor2@gmail.com',
     pwd : '1234'
@@ -45,6 +45,10 @@ export class LoginPage implements OnInit {
     this.orientation.lock(this.orientation.ORIENTATIONS.PORTRAIT)
   }
 
+
+  async login() {
+
+}
 
    // Easy access for form fields
    get email() {
