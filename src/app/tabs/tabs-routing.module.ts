@@ -25,7 +25,7 @@ const routes: Routes = [
         loadChildren: () => import('../pages/codes/codes.module').then(m => m.CodesPageModule)
       },
       {
-        path: 'tab4',
+        path: 'visitors',
         loadChildren: () => import('../modals/visitors/visitors.module').then(m => m.VisitorsPageModule)
       },
       {
