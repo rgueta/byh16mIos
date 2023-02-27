@@ -4,7 +4,7 @@ import { BehaviorSubject,from,of,Observable } from "rxjs";
 import { tap, switchMap } from "rxjs/operators";
 import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
-import { Utils } from "../js/tools";
+import * as Utils from "../js/tools";
 
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
 
@@ -25,6 +25,7 @@ export class DatabaseService {
   private  REST_API_SERVER = environment.db.server_url;
   collection : String;
   public roles:any;
+  tokens : {token:'', refreshtoken:'', coreName:'',location:''};
 
   constructor(private http: HttpClient,
               private router: Router) { }
@@ -42,8 +43,31 @@ export class DatabaseService {
 
 
     // Sign in a user and store access and refres token
-    login(credentials: {email:string, pwd:string}): Observable<string> {
+    login(credentials: {email:string, pwd:string}): Observable<any>{
+      return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials)
+      .pipe(
+        switchMap(async tokens => (token:string, refreshtoken:string, coreName:string,location:string) =>{
+          // console.log('DatabaseService tokens --> ', tokens);
+  
+          // this.currentAccessToken = tokens.token;
+          this.currentAccessToken = tokens;
+  
+          // await localStorage.setItem(TOKEN_KEY,tokens['token']);
+          // await localStorage.setItem(REFRESH_TOKEN_KEY,tokens['refreshtoken']);
+          // await localStorage.setItem(LOCATION,tokens['location']);
+  
+          // const storeAccess = await localStorage.getItem(TOKEN_KEY);
+          // const storeRefresh = await localStorage.getItem(REFRESH_TOKEN_KEY);
 
+          const storeAccess = localStorage.getItem(TOKEN_KEY);
+          const storeRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
+  
+          return from(Observable.throw(Promise.all([storeAccess, storeRefresh])));
+        }),
+        tap(tokens => {
+          this.isAuthenticated.next(true);
+        })
+      )
     }
 
 
@@ -97,10 +121,17 @@ getNewAccessToken() {
 
 
 
+  // // Store a new access token
+  // storeAccessToken(accessToken: Observable<string>) {
+  //   this.currentAccessToken = accessToken;
+  //   return from(localStorage.setItem('my-token', toString(accessToken)));
+  //   // return from(this.storage.set(TOKEN_KEY, accessToken));
+  // }
+
   // Store a new access token
-  storeAccessToken(accessToken: Observable<string>) {
+  storeAccessToken(accessToken:any) {
     this.currentAccessToken = accessToken;
-    return from(localStorage.setItem('my-token', toString(accessToken)));
+    return from(Observable.throw(localStorage.setItem('my-token', accessToken)));
     // return from(this.storage.set(TOKEN_KEY, accessToken));
   }
 
