@@ -65,6 +65,7 @@ export class LoginPage implements OnInit {
     const loading = await this.loadingController.create();
     await loading.present();
 
+    console.log('--------------Estoy aqui login clicked ----------   ');
     this.authService.login(this.credentials.value).subscribe(
       async res => {        
         await loading.dismiss();

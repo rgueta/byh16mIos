@@ -60,10 +60,13 @@ export class AuthenticationService {
     }
 
   login(credentials: {email:string, pwd:string}): Observable<any> {
+    console.log('--------------Estoy aqui----------   ');
     tokens:this.Tokens;
+
     return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials).pipe(
       switchMap((tokens:any) =>{
         this.currentAccessToken = tokens.accessToken;
+        
 
         this.IsAdmin(tokens.roles).then(val => {
           localStorage.setItem('IsAdmin',val.toString());
