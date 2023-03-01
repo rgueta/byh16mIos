@@ -60,7 +60,7 @@ export class AuthenticationService {
     }
 
   login(credentials: {email:string, pwd:string}): Observable<any> {
-    console.log('--------------Estoy aqui----------   ');
+    console.log('--------------Estoy aqui authentication.service----------   ');
     tokens:this.Tokens;
 
     return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials).pipe(
