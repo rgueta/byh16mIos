@@ -116,7 +116,6 @@ export class Tab1Page {
   }
 
   async init(): Promise<void> {
-
     await this.SIM.getSimInfo().then(
        (info) => console.log('Sim info: ', info),
        (err) => console.log('Unable to get sim info: ', err)
@@ -236,33 +235,33 @@ async sendSMS(){
   const uuid =  await localStorage.getItem('device-uuid');
   // const local_sim =  await this.storage.get('my-core-sim');
 
-this.sim = local_sim;
-this.msg = this.msg + ',' + uuid;
+  this.sim = local_sim;
+  this.msg = this.msg + ',' + uuid;
 
-try{
-  if(use_twilio == 'false'){
-    await this.sms.send(this.sim,this.msg,options);
-  }else{
-    console.log('url -- >   api/twilio/open/' + this.userId['value'] + '/' + 
-    this.msg + '/' + this.sim);
-    this.api.postData('api/twilio/open/' + 
-    this.userId['value'] + '/' + this.msg + '/' + this.sim,'')
+  try{
+    if(use_twilio == 'false'){
+      await this.sms.send(this.sim,this.msg,options);
+    }else{
+      console.log('url -- >   api/twilio/open/' + this.userId['value'] + '/' + 
+      this.msg + '/' + this.sim);
+      this.api.postData('api/twilio/open/' + 
+      this.userId['value'] + '/' + this.msg + '/' + this.sim,'')
+    }
+    
+      const toast = await this.toast.create({
+        message : 'Text [ ' + JSON.stringify(this.msg) +  ' ] was sent !',
+        duration: 3000
+      });
+        toast.present();
   }
-  
+  catch(e){
+    alert('Text was not sent --> '+ JSON.stringify(e))
     const toast = await this.toast.create({
-      message : 'Text [ ' + JSON.stringify(this.msg) +  ' ] was sent !',
+      message : 'Comando no se envio : ' + JSON.stringify(e),
       duration: 3000
     });
       toast.present();
-}
-catch(e){
-  // alert('Text was not sent !')
-  const toast = await this.toast.create({
-    message : 'Comando no se envio : ' + JSON.stringify(e),
-    duration: 3000
-  });
-    toast.present();
-  }
+    }
   
 }
 
