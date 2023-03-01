@@ -255,7 +255,7 @@ async sendSMS(){
         toast.present();
   }
   catch(e){
-    console.log('Text was not sent --> ', JSON.stringify(e))
+    console.log('Text was not sent --> ', JSON.stringify(e));
     const toast = await this.toast.create({
       message : 'Comando no se envio : ' + JSON.stringify(e),
       duration: 3000
