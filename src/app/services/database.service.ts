@@ -4,7 +4,7 @@ import { BehaviorSubject,from,of,Observable } from "rxjs";
 import { tap, switchMap } from "rxjs/operators";
 import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
-import * as Utils from "../js/tools";
+import { Utils } from "../tools/tools";
 
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
 

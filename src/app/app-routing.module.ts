@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
+import { IntroGuard } from './guards/intro.guard';
+import { AutoLoginGuard } from './guards/auto-login.guard';
 
 const routes: Routes = [
   {
     path:'',
-    redirectTo:'/login',
+    redirectTo:'login',
     pathMatch:'full'
   },
   {
@@ -13,15 +16,18 @@ const routes: Routes = [
   },
   {
     path: 'tabs',
-    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+    loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'codes',
-    loadChildren: () => import('./pages/codes/codes.module').then( m => m.CodesPageModule)
+    loadChildren: () => import('./pages/codes/codes.module').then( m => m.CodesPageModule),
+    canActivate:[AuthGuard, AutoLoginGuard]
   },
   {
     path: 'admin',
-    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule)
+    loadChildren: () => import('./pages/admin/admin.module').then( m => m.AdminPageModule),
+    canActivate:[AuthGuard, AutoLoginGuard]
   },
   {
     path: 'intro',
@@ -65,7 +71,8 @@ const routes: Routes = [
   },
   {
     path: 'visitors',
-    loadChildren: () => import('./modals/visitors/visitors.module').then( m => m.VisitorsPageModule)
+    loadChildren: () => import('./modals/visitors/visitors.module').then( m => m.VisitorsPageModule),
+    canActivate: [IntroGuard]
   }
 ];
 @NgModule({

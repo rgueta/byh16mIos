@@ -1,5 +1,5 @@
 export const Utils = {
-    convDate: function(today){
+    convDate: function(today:any){
         var day = ("0" + today.getDate()).slice(-2);
         var month = ("0" + (today.getMonth() + 1 )).slice(-2);
         var year = today.getFullYear();
