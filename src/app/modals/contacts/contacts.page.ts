@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ModalController,AlertController, isPlatform, 
+  ToastController, LoadingController} from '@ionic/angular';
+import { Contacts } from "@capacitor-community/contacts";
+// import { Contact } from '@byrds/capacitor-contacts';
+
 
 @Component({
   selector: 'app-contacts',
@@ -6,10 +11,85 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./contacts.page.scss'],
 })
 export class ContactsPage implements OnInit {
+  myToast : any;
+  // contacts: Observable<[Contact]>;
+  // contacts: Observable<Contacts[]>;
+  Contacts : []
+  contact = {};
+  constructor(private modalController : ModalController,
+              private loadingController : LoadingController,
+              private toast: ToastController,) {
+   }
 
-  constructor() { }
+  async ngOnInit() {
+    console.log('entre a contacts')
+    this.loadContacts();
+    this.basicLoader();
+  }
 
-  ngOnInit() {
+  async loadContacts(){
+    if(isPlatform('android')){
+      try{
+        // await Contacts.getPermissions().then(response => {
+        //   if (!response.granted){
+        //     console.log('No permission granted...!');
+        //     // await loading.dismiss(); 
+        //     return
+        //   }
+        // });
+
+        
+        
+        // Contacts.getContacts().then(async result => {
+        //   const phoneContacts: [Contact] = await result.contacts;
+        //   this.contacts = await of(phoneContacts);
+        // })
+
+        this.contact = await Contacts.getContacts({
+          projection: {
+            // Specify which fields should be retrieved.
+            name: true,
+            phones: true,
+            postalAddresses: true,
+          },
+        });
+
+        console.log('Contacts --> ',this.contact);
+
+        }catch(e){
+          console.log('Error to get permissions --> ', e);
+      }
+    }
+  }
+
+  basicLoader() {
+    this.loadingController.create({
+        message: 'Please wait...',
+        duration: 3000,
+        translucent: true
+    }).then((res) => {
+        res.present();
+    });
+}
+
+  async onClickContact(Contact: {}){
+    this.contact = Contact;
+    this.closeModal();
+  }
+
+  closeModal(){
+    this.modalController.dismiss(this.contact);
+  }
+
+  // -------   toast control alerts    ---------------------
+  toastEvent(msg:string){
+    this.myToast = this.toast.create({
+      message:msg,
+      duration:2000
+    }).then((toastData) =>{
+      console.log(toastData);
+      toastData.present();
+    });
   }
 
 }

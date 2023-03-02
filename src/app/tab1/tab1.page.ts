@@ -86,7 +86,7 @@ export class Tab1Page {
 
     this.socket.emit('set-name',this.userId['value']);
     this.socket.fromEvent('users-changed').subscribe(data => {
-      console.log('got users-changed data: ', data);
+      console.log('got users-changed data: ', JSON.stringify(data));
     });
 
     this.socket.fromEvent('alert').subscribe(data => {
@@ -240,6 +240,7 @@ async sendSMS(){
 
   try{
     if(use_twilio == 'false'){
+      console.log('send clicked..')
       await this.sms.send(this.sim,this.msg,options);
     }else{
       console.log('url -- >   api/twilio/open/' + this.userId['value'] + '/' + 
@@ -293,6 +294,7 @@ async modalVisitors() {
     return enterAnimation(baseEl).direction('reverse');
   }
 
+  
   const modal = await this.modalController.create({
     component: VisitorsPage,
     enterAnimation,
@@ -302,6 +304,7 @@ async modalVisitors() {
     // mode: 'md',
     // showBackdrop: false
   });
+  
   return await modal.present();
 }
 

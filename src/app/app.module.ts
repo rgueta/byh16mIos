@@ -11,6 +11,7 @@ import { environment } from "../environments/environment";
 import { JwtInterceptor } from './interceptors/jwt.interceptor';
 import { SMS } from "@ionic-native/sms/ngx";
 import { Sim } from "@ionic-native/sim/ngx";
+import { VisitorsPageModule } from "./modals/visitors/visitors.module";
 
 // ------- Sockets -------------------------
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
@@ -25,7 +26,8 @@ const config: SocketIoConfig = { url: environment.db.server_url, options: {} };
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    SocketIoModule.forRoot(config)
+    SocketIoModule.forRoot(config),
+    VisitorsPageModule
 
   ],
   providers: [

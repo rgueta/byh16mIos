@@ -57,26 +57,6 @@
       </ion-card>
 
   </div>
-   <!-- <ion-item id="formSendSMS" [ngClass]="{'section-SendSMS-hide' : !SoyAdmin,'section-SendSMS-show' : SoyAdmin}">-->
-   <div [hidden]="!SoyAdmin">
-      <ion-item class="wrap-input">
-        <ion-input class='input' type="text" name='msg' required placeholder="Message" value={{msg}} [(ngModel)]="msg" ></ion-input>
-
-      </ion-item>
-
-      <ion-item class="wrap-input">
-        <ion-input class='input' type="tel" name='sim' pattern="[0-9]*" maxlength='13'  required placeholder="Numero sim" value={{sim}} [(ngModel)]='sim'></ion-input>
-      </ion-item>
-
-
-      <ion-item class="wrap-input">
-        <ion-button class="main-buttons"  (click)="sendSMS()" fill="clear" >Send msg
-          <ion-icon name="send-outline"></ion-icon>
-        </ion-button>
-      </ion-item>
-
-   
-    </div>
  
   <!-- </form> -->
 
