@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController,AlertController, isPlatform, 
   ToastController, LoadingController} from '@ionic/angular';
 import { Contacts } from "@capacitor-community/contacts";
+import { Observable } from 'rxjs';
+import { Contact } from 'src/app/phone-contacts';
 // import { Contact } from '@byrds/capacitor-contacts';
 
 
@@ -13,8 +15,9 @@ import { Contacts } from "@capacitor-community/contacts";
 export class ContactsPage implements OnInit {
   myToast : any;
   // contacts: Observable<[Contact]>;
-  // contacts: Observable<Contacts[]>;
-  Contacts : []
+  contacts: Observable<Contact[]>;
+  // contacts : any;
+  // Contacts : {}
   contact = {};
   constructor(private modalController : ModalController,
               private loadingController : LoadingController,
@@ -22,7 +25,6 @@ export class ContactsPage implements OnInit {
    }
 
   async ngOnInit() {
-    console.log('entre a contacts')
     this.loadContacts();
     this.basicLoader();
   }
@@ -30,6 +32,7 @@ export class ContactsPage implements OnInit {
   async loadContacts(){
     if(isPlatform('android')){
       try{
+        console.log('Soy plataforma android...')
         // await Contacts.getPermissions().then(response => {
         //   if (!response.granted){
         //     console.log('No permission granted...!');
@@ -45,16 +48,20 @@ export class ContactsPage implements OnInit {
         //   this.contacts = await of(phoneContacts);
         // })
 
-        this.contact = await Contacts.getContacts({
+        await Contacts.getContacts({
           projection: {
             // Specify which fields should be retrieved.
             name: true,
             phones: true,
             postalAddresses: true,
+            emails:true
           },
+        }).then(result =>{
+          this.contacts = result;
+          console.log('Contacts --> ',this.contact);
         });
 
-        console.log('Contacts --> ',this.contact);
+        
 
         }catch(e){
           console.log('Error to get permissions --> ', e);

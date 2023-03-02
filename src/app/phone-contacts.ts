@@ -10,7 +10,7 @@ export interface PhoneNumber {
   
   export interface Contact {
     contactId: string;
-    displayName?: string;
+    name: {};
     phoneNumbers: PhoneNumber[];
     emails: EmailAddress[];
     photoThumbnail?: string;

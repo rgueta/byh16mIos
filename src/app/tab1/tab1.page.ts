@@ -1,4 +1,4 @@
-import { Component ,Input} from '@angular/core';
+import { Component ,Input,} from '@angular/core';
 import { ModalController, ToastController ,
   AnimationController, isPlatform, Platform, 
   AlertController, getPlatforms} from '@ionic/angular';
@@ -266,14 +266,25 @@ async sendSMS(){
   
 }
 
+async newModal(){
+  const modal = await this.modalController.create({
+    component: VisitorsPage,
+    // cssClass:"my-modal"
+  });
 
-//#region region---- Animation controller  ----------------------------------
+  modal.present()
+}
+
+
+
+
+//#region ---- Animation controller  ----------------------------------
 
 async modalVisitors() {
   const enterAnimation = (baseEl: any) => {
     const backdropAnimation = this.animationController.create()
       .addElement(baseEl.querySelector('ion-backdrop')!)
-      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+      .fromTo('opacity', '0.01', 'var(--backdrop-opacity)')
 
 
     const wrapperAnimation = this.animationController.create()
@@ -299,7 +310,8 @@ async modalVisitors() {
     component: VisitorsPage,
     enterAnimation,
     leaveAnimation,
-    backdropDismiss: true,
+    showBackdrop:false,
+    // backdropDismiss: true,
     cssClass: "my-modal"
     // mode: 'md',
     // showBackdrop: false

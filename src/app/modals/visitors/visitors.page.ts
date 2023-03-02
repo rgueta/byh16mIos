@@ -56,56 +56,64 @@ export class VisitorsPage implements OnInit {
   } 
 
       // ---- Animation controller  ----------------------------------
+  async modalContacts() {
+    const modal = await this.modalController.create({
+      component: ContactsPage,
+      cssClass:"my-modal"
+    });
+  
+    modal.present()
+  }
 
-      async modalContacts() {
-        const enterAnimation = (baseEl: any) => {
-          const backdropAnimation = this.animationController.create()
-            .addElement(baseEl.querySelector('ion-backdrop')!)
-            .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-    
-          const wrapperAnimation = this.animationController.create()
-            .addElement(baseEl.querySelector('.modal-wrapper')!)
-            .keyframes([
-              { offset: 0, opacity: '0', transform: 'scale(0)' },
-              { offset: 1, opacity: '0.99', transform: 'scale(1)' }
-            ]);
-    
-          return this.animationController.create()
-            .addElement(baseEl)
-            .easing('ease-out')
-            .duration(700)
-            .addAnimation([backdropAnimation, wrapperAnimation]);
-        }
-    
-        const leaveAnimation = (baseEl: any) => {
-          return enterAnimation(baseEl).direction('reverse');
-        }
-    
-        const modal = await this.modalController.create({
-          component: ContactsPage,
-          enterAnimation,
-          leaveAnimation,
-          componentProps: {contact: this.contactSelected}
-        });
-  
-        modal.onDidDismiss()
-        .then((data) => {
-          this.name = '';
-          this.email = '';
-          this.sim ='';
-          this.contactSelected = data['data']
-  
-          // const phoneAcc = Object.keys(this.contactSelected['phoneNumbers']).length
-          // const emailsAcc = Object.keys(this.contactSelected['emails']).length;
-  
-          // this.name = this.contactSelected['displayName'];
-          // if(phoneAcc > 0)  this.sim = this.contactSelected['phoneNumbers'][0]['number'];
-          
-          // if(emailsAcc> 0) this.email = this.contactSelected['emails'][0]['address'];
-        });
-  
-        return await modal.present();
-      }
+  async modalContacts_() {
+    const enterAnimation = (baseEl: any) => {
+      const backdropAnimation = this.animationController.create()
+        .addElement(baseEl.querySelector('ion-backdrop')!)
+        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
+
+      const wrapperAnimation = this.animationController.create()
+        .addElement(baseEl.querySelector('.modal-wrapper')!)
+        .keyframes([
+          { offset: 0, opacity: '0', transform: 'scale(0)' },
+          { offset: 1, opacity: '0.99', transform: 'scale(1)' }
+        ]);
+
+      return this.animationController.create()
+        .addElement(baseEl)
+        .easing('ease-out')
+        .duration(700)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+    }
+
+    const leaveAnimation = (baseEl: any) => {
+      return enterAnimation(baseEl).direction('reverse');
+    }
+
+    const modal = await this.modalController.create({
+      component: ContactsPage,
+      enterAnimation,
+      leaveAnimation,
+      componentProps: {contact: this.contactSelected}
+    });
+
+    modal.onDidDismiss()
+    .then((data) => {
+      this.name = '';
+      this.email = '';
+      this.sim ='';
+      this.contactSelected = data['data']
+
+      // const phoneAcc = Object.keys(this.contactSelected['phoneNumbers']).length
+      // const emailsAcc = Object.keys(this.contactSelected['emails']).length;
+
+      // this.name = this.contactSelected['displayName'];
+      // if(phoneAcc > 0)  this.sim = this.contactSelected['phoneNumbers'][0]['number'];
+      
+      // if(emailsAcc> 0) this.email = this.contactSelected['emails'][0]['address'];
+    });
+
+    return await modal.present();
+  }
   
          // -------   toast control alerts    ---------------------
    toastEvent(msg:string){

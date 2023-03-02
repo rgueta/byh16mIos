@@ -9,14 +9,15 @@
 
 <ion-content>
  <ion-list>
-      <!-- <ion-item button *ngFor="let contact of contacts | async" (click)="onClickContact(contact)">
+      <ion-item button *ngFor="let contact of contacts | async" (click)="onClickContact(contact)">
         <ion-icon slot="start" name="person-circle-outline"></ion-icon>
         <ion-avatar slot="start">
           <ion-img [src]="contact.photoThumbnail"></ion-img>
         </ion-avatar>
-        <ion-label class="ion-text-wrap">
+        <p>Hello</p>
+        <!-- <ion-label class="ion-text-wrap">
           <ion-text color="dark">
-            <h3>{{contact.displayName}}</h3>
+            <h3>JSON.stringify({{contact.name}})</h3>
           </ion-text>
           <ion-text color="medium" *ngFor="let number of contact.phoneNumbers">
             <p>{{number.label}}:{{number.number}}</p>
@@ -24,7 +25,7 @@
           <ion-text color="medium" *ngFor="let mails of contact.emails">
             <p>{{mails.label}}: {{mails.address}}</p>
           </ion-text>
-        </ion-label>
-      </ion-item> -->
+        </ion-label> -->
+      </ion-item>
   </ion-list>
 </ion-content>
