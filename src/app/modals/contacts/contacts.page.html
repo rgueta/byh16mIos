@@ -9,7 +9,7 @@
 
 <ion-content>
  <ion-list>
-      <ion-item button *ngFor="let contact of contacts | async" (click)="onClickContact(contact)">
+      <ion-item button *ngFor="let contact of contacts?" (click)="onClickContact(contact)">
         <ion-icon slot="start" name="person-circle-outline"></ion-icon>
         <ion-avatar slot="start">
           <ion-img [src]="contact.photoThumbnail"></ion-img>
@@ -17,7 +17,7 @@
         <p>Hello</p>
         <!-- <ion-label class="ion-text-wrap">
           <ion-text color="dark">
-            <h3>JSON.stringify({{contact.name}})</h3>
+            <h3>{{contact.name}}</h3>
           </ion-text>
           <ion-text color="medium" *ngFor="let number of contact.phoneNumbers">
             <p>{{number.label}}:{{number.number}}</p>

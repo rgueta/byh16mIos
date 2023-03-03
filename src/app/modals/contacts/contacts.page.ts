@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController,AlertController, isPlatform, 
   ToastController, LoadingController} from '@ionic/angular';
-import { Contacts } from "@capacitor-community/contacts";
-import { Observable } from 'rxjs';
-import { Contact } from 'src/app/phone-contacts';
-// import { Contact } from '@byrds/capacitor-contacts';
+import { Contacts, GetContactsResult } from "@capacitor-community/contacts";
+// import { Observable } from 'rxjs';
+
+// import { Observable } from 'rxjs/internal/Observable';
+// import { Contact } from 'src/app/phone-contacts';
+
 
 
 @Component({
@@ -14,9 +16,11 @@ import { Contact } from 'src/app/phone-contacts';
 })
 export class ContactsPage implements OnInit {
   myToast : any;
-  // contacts: Observable<[Contact]>;
-  contacts: Observable<Contact[]>;
-  // contacts : any;
+  // public contacts: Observable<[Contact]>;
+  // contacts: Observable<Contact[]>;
+  // contacts: Observable<Contact[]>;
+  // public contacts? : GetContactsResult;
+  public contacts : any = [];
   // Contacts : {}
   contact = {};
   constructor(private modalController : ModalController,
@@ -41,6 +45,15 @@ export class ContactsPage implements OnInit {
         //   }
         // });
 
+
+        // await Contacts.getPermissions().then(response => {
+        //   if (!response.granted){
+        //     console.log('No permission granted...!');
+        //     // await loading.dismiss(); 
+        //     return
+        //   }
+        // });
+
         
         
         // Contacts.getContacts().then(async result => {
@@ -48,23 +61,30 @@ export class ContactsPage implements OnInit {
         //   this.contacts = await of(phoneContacts);
         // })
 
-        await Contacts.getContacts({
+         await Contacts.getContacts({
           projection: {
             // Specify which fields should be retrieved.
             name: true,
             phones: true,
             postalAddresses: true,
             emails:true
-          },
-        }).then(result =>{
-          this.contacts = result;
-          console.log('Contacts --> ',this.contact);
+          }
+
+        }).then(async (result) => {
+          this.contacts = await result.contacts;
+          console.log('Contacts ---> ', this.contacts);
+          console.log('Contacts.name ---> ', this.contacts[0].name.display);
+          localStorage.setItem('lista',JSON.stringify(this.contacts));
         });
 
-        
+        // .then(result =>{
+        //   this.contacts = result;
+        //   console.log('Contacts --> ',this.contact);
+        // });
+
 
         }catch(e){
-          console.log('Error to get permissions --> ', e);
+          console.log('Error to get contacts --> ', e);
       }
     }
   }
