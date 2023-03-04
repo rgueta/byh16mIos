@@ -30,61 +30,37 @@ export class ContactsPage implements OnInit {
 
   async ngOnInit() {
     this.loadContacts();
-    this.basicLoader();
+    
   }
 
   async loadContacts(){
+    
     if(isPlatform('android')){
+      this.contacts = JSON.parse(localStorage.getItem('lista'));
       try{
-        console.log('Soy plataforma android...')
-        // await Contacts.getPermissions().then(response => {
-        //   if (!response.granted){
-        //     console.log('No permission granted...!');
-        //     // await loading.dismiss(); 
-        //     return
-        //   }
-        // });
-
-
-        // await Contacts.getPermissions().then(response => {
-        //   if (!response.granted){
-        //     console.log('No permission granted...!');
-        //     // await loading.dismiss(); 
-        //     return
-        //   }
-        // });
-
-        
-        
-        // Contacts.getContacts().then(async result => {
-        //   const phoneContacts: [Contact] = await result.contacts;
-        //   this.contacts = await of(phoneContacts);
-        // })
-
-         await Contacts.getContacts({
-          projection: {
-            // Specify which fields should be retrieved.
-            name: true,
-            phones: true,
-            postalAddresses: true,
-            emails:true
-          }
-
-        }).then(async (result) => {
-          this.contacts = await result.contacts;
-          console.log('Contacts ---> ', this.contacts);
-          console.log('Contacts.name ---> ', this.contacts[0].name.display);
-          localStorage.setItem('lista',JSON.stringify(this.contacts));
-        });
-
-        // .then(result =>{
-        //   this.contacts = result;
-        //   console.log('Contacts --> ',this.contact);
-        // });
-
-
-        }catch(e){
-          console.log('Error to get contacts --> ', e);
+        if(!this.contacts){
+          this.basicLoader();
+          await Contacts.getContacts({
+            projection: {
+              // Specify which fields should be retrieved.
+              name: true,
+              phones: true,
+              postalAddresses: true,
+              emails:true,
+              image:true
+            }
+          }).then(async (result) => {
+            this.contacts = await result.contacts;
+            console.log('Contacts ---> ', this.contacts);
+            console.log('Contacts.name ---> ', this.contacts[75].name.display);
+            console.log('Contacts.image ---> ', this.contacts[75].image.base64String);
+            localStorage.setItem('lista',JSON.stringify(this.contacts));
+          });
+        }else{
+          console.log('Contactos tomados del local storage');
+        }
+      }catch(e){
+        console.log('Error to get contacts --> ', e);
       }
     }
   }
