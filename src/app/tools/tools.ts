@@ -22,6 +22,15 @@ export const Utils = {
         var milis = ("0" + today.getMilliseconds()).slice(-3);
 
         return year + "-" + month + "-" + day + "T" + hour + ":" + minutes + ":" + seconds + "." + milis;
-    }
+    },
+
+    sortJSON: function(arr:any, key:any, asc=true){
+        return arr.sort((a:any, b:any) => {
+          let x = a['name'][key];
+          let y = b['name'][key];
+          if (asc) { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+          else { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+        });
+      }
 
 }

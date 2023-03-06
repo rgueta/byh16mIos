@@ -2,10 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController,AlertController, isPlatform, 
   ToastController, LoadingController} from '@ionic/angular';
 import { Contacts, GetContactsResult } from "@capacitor-community/contacts";
-// import { Observable } from 'rxjs';
-
-// import { Observable } from 'rxjs/internal/Observable';
-// import { Contact } from 'src/app/phone-contacts';
+import { Utils } from "../../tools/tools";
 
 
 
@@ -30,7 +27,7 @@ export class ContactsPage implements OnInit {
 
   async ngOnInit() {
     this.loadContacts();
-    
+    this.basicLoader();
   }
 
   async loadContacts(){
@@ -50,11 +47,14 @@ export class ContactsPage implements OnInit {
               image:true
             }
           }).then(async (result) => {
-            this.contacts = await result.contacts;
-            console.log('Contacts ---> ', this.contacts);
-            console.log('Contacts.name ---> ', this.contacts[75].name.display);
-            console.log('Contacts.image ---> ', this.contacts[75].image.base64String);
-            localStorage.setItem('lista',JSON.stringify(this.contacts));
+            let localcontacts = await result.contacts;
+            let allName : any = []; 
+            await localcontacts.forEach(async (item: any) => {
+              if(item.name) await allName.push(item);
+            });
+
+            this.contacts = await Utils.sortJSON(allName,'display',true);
+           await localStorage.setItem('lista',await JSON.stringify(this.contacts));
           });
         }else{
           console.log('Contactos tomados del local storage');
@@ -64,6 +64,9 @@ export class ContactsPage implements OnInit {
       }
     }
   }
+
+
+
 
   basicLoader() {
     this.loadingController.create({

@@ -9,7 +9,7 @@
 
 <ion-content>
  <ion-list *ngFor="let contact of contacts">
-      <ion-item button *ngIf="contact.name?.display" (click)="onClickContact(contact)">
+      <ion-item button *ngIf="contact.name?.display && contact?.phones" (click)="onClickContact(contact)">
         <ion-icon  *ngIf="!contact?.image" slot="start" name="person-circle-outline"></ion-icon>
         <ion-avatar *ngIf="contact?.image" slot="start">
           <ion-img [src]="contact.image.base64String"></ion-img>

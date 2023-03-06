@@ -1,0 +1,16 @@
+.header{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.header img{
+    margin: 10px;
+    width: 100px;
+}
+
+.closeButton{
+    font-size: 30px;
+    top: -35px;
+    margin-right: 15px;
+    position:relative;
+}
