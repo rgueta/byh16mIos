@@ -52,7 +52,8 @@ export class AuthenticationService {
       const token = await localStorage.getItem(TOKEN_KEY);
 
       if (token) {
-        this.currentAccessToken = token;
+        this.currentAccessToken = await token;
+        await console.log('Assign authentication currentAccessToken --> ', token);
         this.isAuthenticated.next(true);
       } else {
         this.isAuthenticated.next(false);
@@ -64,17 +65,17 @@ export class AuthenticationService {
     tokens:this.Tokens;
 
     return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials).pipe(
-      switchMap((tokens:any) =>{
-        this.currentAccessToken = tokens.accessToken;
-        
+      switchMap(async (tokens:any) =>{
+        this.currentAccessToken = await tokens.accessToken;
+        console.log('this.currentAccessToken  at authentication --> ' + this.currentAccessToken);
 
-        this.IsAdmin(tokens.roles).then(val => {
-          localStorage.setItem('IsAdmin',val.toString());
+        this.IsAdmin(tokens.roles).then(async val => {
+          await localStorage.setItem('IsAdmin',val.toString());
         });
 
-        this.MyRole(tokens.roles).then(val_role => {
-          console.log('------------------------   What is my role --> ' + val_role);
-          localStorage.setItem('my-role',val_role);
+        this.MyRole(tokens.roles).then(async val_role => {
+          await console.log('------------------------   What is my role --> ' + val_role);
+          await localStorage.setItem('my-role',val_role);
         })
         
         console.log('aws whole login query ---> ',tokens)
@@ -125,27 +126,14 @@ export class AuthenticationService {
     return this.userData.getValue();
   }
 
-  logout() {
-    this.isAuthenticated.next(false);
-    this.router.navigateByUrl('/', { replaceUrl: true });
-  }
-  
-  // logout_() {
-  //   return this.http.post(`${this.REST_API_SERVER}/api/auth/signout`, {}).pipe(
-  //     switchMap(_ => {
-  //       this.currentAccessToken = null;
-  //       // Remove all stored tokens
-  //       const deleteAccess = Storage.remove({ key: TOKEN_KEY });
-  //       const deleteRefresh = Storage.remove({ key: REFRESH_TOKEN_KEY });
-  //       return from(Promise.all([deleteAccess, deleteRefresh]));
-  //     }),
-  //     tap(_ => {
-  //       this.isAuthenticated.next(false);
-  //       this.router.navigateByUrl('/', { replaceUrl: true });
-  //     })
-  //   ).subscribe();
-  // }
+  // logout() {
+  //   this.isAuthenticated.next(false);
+  //   this.router.navigateByUrl('/', { replaceUrl: true });
+  //   localStorage.removeItem(REFRESH_TOKEN_KEY);
+  //   localStorage.removeItem(TOKEN_KEY);
 
+  // }
+  
 
   // Load the refresh token from storage
 // then attach it as the header for one specific API call

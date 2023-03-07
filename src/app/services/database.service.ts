@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from "../../environments/environment";
-import { BehaviorSubject,from,of,Observable } from "rxjs";
+import { BehaviorSubject,from,of,Observable, throwError } from "rxjs";
 import { tap, switchMap } from "rxjs/operators";
 import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import {Router} from '@angular/router';
@@ -20,7 +20,7 @@ const LOCATION = 'location';
 })
 export class DatabaseService {
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
-  currentAccessToken: any;
+  public currentAccessToken: any;
 
   private  REST_API_SERVER = environment.db.server_url;
   collection : String;
@@ -28,12 +28,15 @@ export class DatabaseService {
   tokens : {token:'', refreshtoken:'', coreName:'',location:''};
 
   constructor(private http: HttpClient,
-              private router: Router) { }
+              private router: Router) {
+                this.loadToken();
+               }
 
       // Load accessToken on startup
   async loadToken() {
     const token = await localStorage.getItem(TOKEN_KEY);    
     if (token) {
+      
       this.currentAccessToken = token;
       this.isAuthenticated.next(true);
     } else {
@@ -41,34 +44,6 @@ export class DatabaseService {
     }
   }
 
-
-    // Sign in a user and store access and refres token
-    login(credentials: {email:string, pwd:string}): Observable<any>{
-      return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials)
-      .pipe(
-        switchMap(async tokens => (token:string, refreshtoken:string, coreName:string,location:string) =>{
-          // console.log('DatabaseService tokens --> ', tokens);
-  
-          // this.currentAccessToken = tokens.token;
-          this.currentAccessToken = tokens;
-  
-          // await localStorage.setItem(TOKEN_KEY,tokens['token']);
-          // await localStorage.setItem(REFRESH_TOKEN_KEY,tokens['refreshtoken']);
-          // await localStorage.setItem(LOCATION,tokens['location']);
-  
-          // const storeAccess = await localStorage.getItem(TOKEN_KEY);
-          // const storeRefresh = await localStorage.getItem(REFRESH_TOKEN_KEY);
-
-          const storeAccess = localStorage.getItem(TOKEN_KEY);
-          const storeRefresh = localStorage.getItem(REFRESH_TOKEN_KEY);
-  
-          return from(Observable.throw(Promise.all([storeAccess, storeRefresh])));
-        }),
-        tap(tokens => {
-          this.isAuthenticated.next(true);
-        })
-      )
-    }
 
 
     // Potentially perform a logout operation inside your API
@@ -81,10 +56,6 @@ logout() {
       // Remove all stored tokens
       const deleteAccess = localStorage.removeItem(TOKEN_KEY);
       const deleteRefresh = localStorage.removeItem(REFRESH_TOKEN_KEY);
-
-      // const deleteAccess = this.storage.remove(TOKEN_KEY);
-      // const deleteRefresh = this.storage.remove(REFRESH_TOKEN_KEY);
-
       return from(Promise.all([deleteAccess, deleteRefresh]));
     }),
     tap(_ => {
@@ -98,11 +69,29 @@ logout() {
 // Load the refresh token from storage
 // then attach it as the header for one specific API call
 getNewAccessToken() {
+  // const refreshToken = from<string>(localStorage.getItem(REFRESH_TOKEN_KEY));
+  const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
+  console.log('getNewAccessToken at database.service -->', refreshToken);
+      if (localStorage.getItem(REFRESH_TOKEN_KEY)) {
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${refreshToken}`
+          })
+        }
+        return this.http.get(`${this.REST_API_SERVER}api/auth/refresh`, httpOptions);
+      } else {
+        // No stored refresh token
+        console.log('No stored refresh token  --- > ', refreshToken);
+        return of(null);
+      }
+}
+
+getNewAccessToken_() {
   const refreshToken = from(localStorage.getItem(REFRESH_TOKEN_KEY));
   return refreshToken.pipe(
     switchMap(token => {
       if (token) {
-
         console.log('getNewAccessToken --- > ', token);
         const httpOptions = {
           headers: new HttpHeaders({
@@ -113,13 +102,12 @@ getNewAccessToken() {
         return this.http.get(`${this.REST_API_SERVER}api/auth/refresh`, httpOptions);
       } else {
         // No stored refresh token
+        console.log('No stored refresh token  --- > ', token);
         return of(null);
       }
     })
   );
 }
-
-
 
   // // Store a new access token
   // storeAccessToken(accessToken: Observable<string>) {
@@ -131,7 +119,8 @@ getNewAccessToken() {
   // Store a new access token
   storeAccessToken(accessToken:any) {
     this.currentAccessToken = accessToken;
-    return from(Observable.throw(localStorage.setItem('my-token', accessToken)));
+    localStorage.setItem('my-token', accessToken)
+    return from(this.currentAccessToken);
     // return from(this.storage.set(TOKEN_KEY, accessToken));
   }
 

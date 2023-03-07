@@ -41,7 +41,6 @@ export class VisitorsPage implements OnInit {
 
   async ngOnInit() {
     this.userId = await localStorage.getItem('my-userId');
-    console.log('userId --> ' + JSON.stringify(this.userId));
   }
 
 
@@ -69,8 +68,10 @@ export class VisitorsPage implements OnInit {
       this.email = '';
       this.sim ='';
       this.contactSelected = await data['data'];
-      await console.log('Data received -->', this.contactSelected)
-      this.name = await this.contactSelected.name['display'];
+
+      if(this.contactSelected.phones){
+        this.name = await this.contactSelected.name['display'];
+      }
       if(this.contactSelected.phones){
         this.sim = this.contactSelected.phones[0]['number'];
       }

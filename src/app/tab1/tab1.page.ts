@@ -116,10 +116,21 @@ export class Tab1Page {
   }
 
   async init(): Promise<void> {
-    await this.SIM.getSimInfo().then(
-       (info) => console.log('Sim info: ', info),
-       (err) => console.log('Unable to get sim info: ', err)
-     );
+    await this.SIM.hasReadPermission().then(async allowed =>{
+      if(!allowed){
+        await this.SIM.requestReadPermission().then( 
+        async () => {
+            await this.SIM.getSimInfo().then(
+            (info) => console.log('Sim info: ', info),
+            (err) => console.log('Unable to get sim info: ', err)
+          );
+           },
+        () => console.log('Permission denied')
+        )
+      }
+    });
+  
+   
 
      // console.log('SIM info --> ' , this.SIM.getSimInfo());
      
@@ -172,7 +183,7 @@ async collectInfo(){
 
 
   async logout(){
-    await this.authService.logout();
+    await this.api.logout();
     this.router.navigateByUrl('/',{replaceUrl:true});
     // Storage.clear();
   }

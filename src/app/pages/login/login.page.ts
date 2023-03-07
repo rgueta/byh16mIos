@@ -53,7 +53,7 @@ export class LoginPage implements OnInit {
       pwd: ['1234', [Validators.required, Validators.minLength(4)]],
     });
 
-    this.device_info = await JSON.stringify(Device.getInfo())
+    this.device_info = await Device.getInfo();
     console.log('this.device_info --> ',JSON.stringify(this.device_info))
   }
 

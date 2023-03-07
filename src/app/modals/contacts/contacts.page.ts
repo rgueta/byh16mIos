@@ -31,42 +31,36 @@ export class ContactsPage implements OnInit {
   }
 
   async loadContacts(){
-    
-    if(isPlatform('android')){
+    if(isPlatform('android')){ // -------- Android version
       this.contacts = JSON.parse(localStorage.getItem('lista'));
       try{
-        if(!this.contacts){
-          this.basicLoader();
-          await Contacts.getContacts({
-            projection: {
-              // Specify which fields should be retrieved.
-              name: true,
-              phones: true,
-              postalAddresses: true,
-              emails:true,
-              image:true
-            }
-          }).then(async (result) => {
-            let localcontacts = await result.contacts;
-            let allName : any = []; 
-            await localcontacts.forEach(async (item: any) => {
-              if(item.name) await allName.push(item);
-            });
-
-            this.contacts = await Utils.sortJSON(allName,'display',true);
-           await localStorage.setItem('lista',await JSON.stringify(this.contacts));
+        await Contacts.getContacts({
+          projection: {
+            // Specify which fields should be retrieved.
+            name: true,
+            phones: true,
+            postalAddresses: true,
+            emails:true,
+            image:true
+          }
+        }).then(async (result) => {
+          let localcontacts = await result.contacts;
+          let allName : any = []; 
+          await localcontacts.forEach(async (item: any) => {
+            if(item.name) await allName.push(item);
           });
-        }else{
-          console.log('Contactos tomados del local storage');
-        }
+
+          this.contacts = await Utils.sortJSON(allName,'display',true);
+          await localStorage.setItem('lista',await JSON.stringify(this.contacts));
+        });
+
       }catch(e){
         console.log('Error to get contacts --> ', e);
       }
+    }else{
+      // IOS version ------------------------
     }
   }
-
-
-
 
   basicLoader() {
     this.loadingController.create({
