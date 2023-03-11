@@ -7,8 +7,9 @@ import {Router} from '@angular/router';
 import { Utils } from "../tools/tools";
 
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
-
 const TOKEN_KEY = 'my-token';
+const TOKEN_EXP = 'token-exp';
+const TOKEN_IAT = 'token-iat';
 const USERID = 'my-userId';
 const USER_ROLES = 'my-roles';
 const CORE_SIM = 'my-core-sim';
@@ -46,8 +47,8 @@ export class DatabaseService {
 
 
 
-    // Potentially perform a logout operation inside your API
-// or simply remove all local tokens and navigate to login
+  // Potentially perform a logout operation inside your API
+  // or simply remove all local tokens and navigate to login
 logout() {
   console.log('YES send me to LOGOUT..!');
   return this.http.post(`${this.REST_API_SERVER}api/auth/logout`, {}).pipe(
@@ -60,7 +61,7 @@ logout() {
     }),
     tap(_ => {
       this.isAuthenticated.next(false);
-      this.router.navigateByUrl('/', { replaceUrl: true });
+      this.router.navigateByUrl('', { replaceUrl: true });
     })
   ).subscribe();
 }
@@ -71,112 +72,46 @@ logout() {
 getNewAccessToken() {
   // const refreshToken = from<string>(localStorage.getItem(REFRESH_TOKEN_KEY));
   const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
-  console.log('getNewAccessToken at database.service -->', refreshToken);
       if (localStorage.getItem(REFRESH_TOKEN_KEY)) {
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${refreshToken}`
+            'Authorization': `Bearer ${refreshToken}`
           })
         }
         return this.http.get(`${this.REST_API_SERVER}api/auth/refresh`, httpOptions);
       } else {
         // No stored refresh token
-        console.log('No stored refresh token  --- > ', refreshToken);
+        var modals = document.getElementsByTagName("ion-modal");
+        [].forEach.call(modals, function (el:any) {
+            el.parentNode.removeChild(el);
+        });
+        this.router.navigateByUrl('', { replaceUrl: true });
         return of(null);
       }
 }
-
-getNewAccessToken_() {
-  const refreshToken = from(localStorage.getItem(REFRESH_TOKEN_KEY));
-  return refreshToken.pipe(
-    switchMap(token => {
-      if (token) {
-        console.log('getNewAccessToken --- > ', token);
-        const httpOptions = {
-          headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          })
-        }
-        return this.http.get(`${this.REST_API_SERVER}api/auth/refresh`, httpOptions);
-      } else {
-        // No stored refresh token
-        console.log('No stored refresh token  --- > ', token);
-        return of(null);
-      }
-    })
-  );
-}
-
-  // // Store a new access token
-  // storeAccessToken(accessToken: Observable<string>) {
-  //   this.currentAccessToken = accessToken;
-  //   return from(localStorage.setItem('my-token', toString(accessToken)));
-  //   // return from(this.storage.set(TOKEN_KEY, accessToken));
-  // }
-
   // Store a new access token
-  storeAccessToken(accessToken:any) {
-    this.currentAccessToken = accessToken;
-    localStorage.setItem('my-token', accessToken)
+  storeAccessToken(token:any) {
+    this.currentAccessToken = token.accessToken;
+    localStorage.setItem('my-token', token.accessToken);
+    localStorage.setItem(TOKEN_IAT,token.iatDate);
+    localStorage.setItem(TOKEN_EXP,token.expDate);
+    // get new refresh token-------------
+    if(token.refreshToken !== '') localStorage.setItem(REFRESH_TOKEN_KEY,token.refreshToken);
+
     return from(this.currentAccessToken);
     // return from(this.storage.set(TOKEN_KEY, accessToken));
   }
 
 
-
-sendPostRequest(collecion:String,data:any) {
-  console.log('json to post: ' + JSON.stringify(data));
-
-      let headers = new HttpHeaders({
-        'Accept':'application/json',
-        'Content-Type': 'application/json'
-    });
-
-    
-
-    let options = {
-        headers: headers
-    }
-
-    this.http.post(this.REST_API_SERVER + collecion, JSON.stringify(data), options)
-        .subscribe(data => {
-            console.log(data);
-    });
-
-
-
-    // For pass blob in API 
-
-//     return this.http.get("http://localhost:5000/api/newCode", { headers: new HttpHeaders({
-//       'Authorization': '{data}',
-//       'Content-Type': 'application/json',
-//     }), responseType: 'blob'}).pipe (
-//     tap (
-//         // Log the result or error
-//         data => console.log('You received data'),
-//         error => console.log(error)
-//       )
-// );
-
-
-}
-
-
-
 //---- GET data from server  ------
 getData_key(collection:String,data:any){
-  // console.log('database.service getData collection --> ',collecion);
-  // const token = Storage.get({key:'my-token'});
-  console.log('database.service getData_key --> ', data);
-
  let  options = {
    headers : {
     'Accept': 'application/json',
     'content-type' :'application/json',
     'Access-Control-Allow-Headers': 'Content-Type',
-     Authorization : data,
+    'Authorization' : `${data}`,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
    }
@@ -241,63 +176,28 @@ getData_key(collection:String,data:any){
      return this.http.post(this.REST_API_SERVER + url, options);
 }
 
-async postData_(collection:String,data:any){
-  const token = await localStorage.getItem(REFRESH_TOKEN_KEY);
-  // const token = await this.storage.get('my-token');
-  console.log('postData --> ', token );
-
- let  options = {
-     headers : {
-    'Accept': 'application/json',
-    'content-type' :'application/json',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    // 'Authorization' : 'Bearer ' + token.value,
-    Authorization : token,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-   }
-
-  }
-
-  // return this.http.post(this.REST_API_SERVER + collection , data, options);
-
-   await this.http.post(this.REST_API_SERVER + collection , data, options)
-    .subscribe(data => {
-      console.log('http post success --> ',data);
-      return data
-    
-    }, error => {
-      console.log('http post error --> ',error);
-    });    
-}
-
 async postData(collection:String,data:any){
-  const token = await localStorage.getItem(REFRESH_TOKEN_KEY);
-  // const token = await this.storage.get('my-token');
-  console.log('postData --> ', token );
+  const token = await localStorage.getItem(TOKEN_KEY);
+  console.log('postData token -->', token );
+
 
  let  options = {
      headers : {
-    'Accept': 'application/json',
+    'accept': 'application/json',
     'content-type' :'application/json',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    // 'Authorization' : 'Bearer ' + token.value,
-    Authorization : token,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
+    'access-Control-Allow-Headers': 'Content-Type',
+    'authorization' : `Bearer ${token}`,
+    'access-Control-Allow-Origin': '*',
+    'access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
    }
-
   }
-
-  // return this.http.post(this.REST_API_SERVER + collection , data, options);
 
    return new Promise((resolve, reject) => {this.http.post(this.REST_API_SERVER + collection , data, options)
     .subscribe(res => {
-      console.log('http post success --> ',res);
       resolve(res);
+      console.log('respomse OK --> ', res);
     }, error => {
       reject(error)
-      console.log('http post error --> ',error);
     });
   })    
 }
@@ -356,7 +256,7 @@ async putData(collecion:String,data:any){
     'content-type' :'application/json',
     'Access-Control-Allow-Headers': 'Content-Type',
     // 'x-access-token': token.value,
-     Authorization :  token,
+     'Authorization' :  `Bearer ${token}`,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
    }
@@ -367,7 +267,7 @@ async putData(collecion:String,data:any){
     console.log('http put success --> ',data);
   
   }, error => {
-    console.log('http post error --> ',error);
+    console.log('http put error --> ',error);
   });
 }
 

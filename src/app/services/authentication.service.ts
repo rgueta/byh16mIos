@@ -3,16 +3,17 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { take, map, tap, switchMap, subscribeOn } from 'rxjs/operators';
 import { BehaviorSubject, from, Observable, of, Subject } from 'rxjs';
 import { environment } from "../../environments/environment";
-import { DatabaseService  } from "../services/database.service";
-import { Platform } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt";
 import { tokens } from "../tools/data.model";
 
 
+// #region constants ----------------------------------
 const helper = new JwtHelperService();
-
 const REFRESH_TOKEN_KEY = 'my-refresh-token';
+const TOKEN_EXP = 'token-exp';
+const TOKEN_IAT = 'token-iat';
+
 const TOKEN_KEY = 'my-token';
 const USERID = 'my-userId';
 const USER_ROLES = 'my-roles';
@@ -23,6 +24,8 @@ const CORE_NAME = 'core-name';
 const LOCATION = 'location';
 const TWILIO = 'twilio';
 const CODE_EXPIRY = 'code_expiry';
+
+// #endregion  
 
 @Injectable({
   providedIn: 'root'
@@ -47,38 +50,33 @@ export class AuthenticationService {
     this.loadToken()
   }
 
-    // Load accessToken on startup
-    async loadToken() {
-      const token = await localStorage.getItem(TOKEN_KEY);
+  async loadToken() {
+    const token = await localStorage.getItem(TOKEN_KEY);
 
-      if (token) {
-        this.currentAccessToken = await token;
-        await console.log('Assign authentication currentAccessToken --> ', token);
-        this.isAuthenticated.next(true);
-      } else {
-        this.isAuthenticated.next(false);
-      }
+    if (token) {
+      this.currentAccessToken = await token;
+      this.isAuthenticated.next(true);
+    } else {
+      this.isAuthenticated.next(false);
     }
+  }
+
 
   login(credentials: {email:string, pwd:string}): Observable<any> {
-    console.log('--------------Estoy aqui authentication.service----------   ');
     tokens:this.Tokens;
 
     return this.http.post(`${this.REST_API_SERVER}api/auth/signin`, credentials).pipe(
       switchMap(async (tokens:any) =>{
         this.currentAccessToken = await tokens.accessToken;
-        console.log('this.currentAccessToken  at authentication --> ' + this.currentAccessToken);
 
         this.IsAdmin(tokens.roles).then(async val => {
           await localStorage.setItem('IsAdmin',val.toString());
         });
 
         this.MyRole(tokens.roles).then(async val_role => {
-          await console.log('------------------------   What is my role --> ' + val_role);
           await localStorage.setItem('my-role',val_role);
         })
         
-        console.log('aws whole login query ---> ',tokens)
         localStorage.setItem(USERID,tokens.userId);
         localStorage.setItem(USER_ROLES,JSON.stringify(tokens.roles));
         localStorage.setItem(CORE_SIM,tokens.core_sim);
@@ -87,6 +85,9 @@ export class AuthenticationService {
         localStorage.setItem(LOCATION,tokens.location);
         localStorage.setItem(TWILIO,'false');
         localStorage.setItem(CODE_EXPIRY,tokens.code_expiry);
+
+        localStorage.setItem(TOKEN_IAT,tokens.iatDate);
+        localStorage.setItem(TOKEN_EXP,tokens.expDate);
 
         const storeAccess = localStorage.setItem(TOKEN_KEY,tokens.accessToken);
         const storeRefresh = localStorage.setItem(REFRESH_TOKEN_KEY,tokens.refreshToken);
@@ -124,16 +125,7 @@ export class AuthenticationService {
 
   getUser(){
     return this.userData.getValue();
-  }
-
-  // logout() {
-  //   this.isAuthenticated.next(false);
-  //   this.router.navigateByUrl('/', { replaceUrl: true });
-  //   localStorage.removeItem(REFRESH_TOKEN_KEY);
-  //   localStorage.removeItem(TOKEN_KEY);
-
-  // }
-  
+  } 
 
   // Load the refresh token from storage
 // then attach it as the header for one specific API call
@@ -146,7 +138,7 @@ getNewAccessToken() {
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
+            'Authorization': `Bearer ${token}`
           })
         }
         return this.http.get(`${this.REST_API_SERVER}/api/auth/refresh`, httpOptions);

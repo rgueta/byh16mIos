@@ -64,8 +64,6 @@ export class LoginPage implements OnInit {
   async login() {
     const loading = await this.loadingController.create();
     await loading.present();
-
-    console.log('--------------Estoy aqui login clicked.. ----------   ');
     this.authService.login(this.credentials.value).subscribe(
       async res => {        
         await loading.dismiss();
@@ -86,11 +84,18 @@ export class LoginPage implements OnInit {
         if (err.error.errId == 1){
           console.log('Abrir registro');
         }
-
         await loading.dismiss();
-        
+
+        let msgErr='';
+
+        if(1==1) {
+            msgErr = 'Fallo el acceso: ' + JSON.stringify(err);
+        }else{
+          msgErr = 'Fallo de acceso';
+        }
+
         const alert = await this.alertController.create({
-          header: 'Fallo el acceso: ' + JSON.stringify(err),
+          header: msgErr,
           message: err.error.ErrMsg,
           buttons: [
             {

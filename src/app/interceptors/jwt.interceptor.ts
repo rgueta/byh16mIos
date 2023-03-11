@@ -10,6 +10,7 @@ import {
   switchMap,
   filter,
   take,
+  map,
 } from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
  
@@ -26,28 +27,30 @@ export class JwtInterceptor implements HttpInterceptor {
               private router : Router) { }
  
   // Intercept every HTTP call
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    console.log('----------  INTERCEPTOR ...!  -------------------');
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // Check if we need additional token logic or not
-    if (this.isInBlockedList(request.url)) {
-      return next.handle(request);
+    console.log('-- INTERCEPTOR req url ----> ',req.url);
+    console.log('-- INTERCEPTOR req headers ----> ',req.headers);
+    if (this.isInBlockedList(req.url)) {
+      return next.handle(req);
     } else {
-          return next.handle(this.addToken(request)).pipe(
-            catchError(err => {
-              if(err instanceof HttpErrorResponse){
-                switch(err.status){
-                  case 400:
-                    console.log('---------- 400  INTERCEPTOR  logout the user  -------------------');
-                  return this.handle400Error(err);
-                  case 401:
-                    console.log('---------- 401  INTERCEPTOR  token expire start token refresh  -------------------');
-                return this.handle401Error(request, next);
-                  default:
-                    return throwError(err);
-                }
+        return next.handle(this.addToken(req)).pipe(
+          catchError(err => {
+            if(err instanceof HttpErrorResponse){
+              switch(err.status){
+                case 400:
+                  console.log('---------- 400  INTERCEPTOR  logout the user  -------------------');
+                return this.handle400Error(err);
+                case 401:
+                  console.log('---------- 401  INTERCEPTOR token expire start token refresh  -------');
+                  return this.handle401Error(req, next);
+                default:
+                  console.log('---------- INTERCEPTOR default error  -------------------');
+                  return throwError(err);
               }
-            })
-          );
+            }
+          })
+        );
     }
 
   }
@@ -76,7 +79,8 @@ export class JwtInterceptor implements HttpInterceptor {
       if (this.apiService.currentAccessToken) {
         return req.clone({
           headers: new HttpHeaders({
-            Authorization: `Bearer ${this.apiService.currentAccessToken}`
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.apiService.currentAccessToken}`
           })
         });
       } else {
@@ -96,41 +100,36 @@ private async handle400Error(err:any) {
       duration: 3000
     });
     toast.present();
-    this.apiService.logout();
-    // this.router.navigateByUrl('/', { replaceUrl: true });
+    // this.apiService.logout();
+    var modals = document.getElementsByTagName("ion-modal");
+    [].forEach.call(modals, function (el:any) {
+        el.parentNode.removeChild(el);
+    });
+    this.router.navigateByUrl('', { replaceUrl: true });
     return of(null);
   }
 
 
     // Indicates our access token is invalid, try to load a new one
     private handle401Error(request: HttpRequest < any >, next: HttpHandler): Observable < any > {
-      console.log('<--- inside jwt.interceptor handle401Error --- > ');
       // Check if another call is already using the refresh logic
       if(!this.isRefreshingToken) {
-    
         // Set to null so other requests will wait
         // until we got a new token!
         this.tokenSubject.next(null);
         this.isRefreshingToken = true;
         this.apiService.currentAccessToken = null;
     
-        // console.log(' jwt.interceptor handle401Error --- > ');
+        // return next.handle(this.addToken(request));
         // First, get a new access token
         return (this.apiService.getNewAccessToken()).pipe(
           switchMap((token: any) => {
             if (token) {
               // Store the new token
               const accessToken = token.accessToken;
-              console.log('handle401Error switchMap if token.accessToken -->', token.accessToken )
-              return this.apiService.storeAccessToken(accessToken).pipe(
-                switchMap(_ => {
-                  // Use the subject so other calls can continue with the new token
-                  this.tokenSubject.next(accessToken);
-    
-                  // Perform the initial request again with the new token
-                  return next.handle(this.addToken(request));
-                })
-              )
+              this.apiService.storeAccessToken(token);
+              this.tokenSubject.next(accessToken);
+              return next.handle(this.addToken(request));
             } else {
               // No new token or other problem occurred
               return of(null);
@@ -142,6 +141,7 @@ private async handle400Error(err:any) {
           })
         );
       } else {
+
         // "Queue" other calls while we load a new token
         return this.tokenSubject.pipe(
           filter(token => token !== null),
