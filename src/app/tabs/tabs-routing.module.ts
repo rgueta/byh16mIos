@@ -25,8 +25,8 @@ const routes: Routes = [
         loadChildren: () => import('../pages/codes/codes.module').then(m => m.CodesPageModule)
       },
       {
-        path: 'visitors',
-        loadChildren: () => import('../modals/visitors/visitors.module').then(m => m.VisitorsPageModule)
+        path: 'tab4',
+        loadChildren: () => import('../tab4/tab4.module').then(m => m.Tab4PageModule)
       },
       {
         path: 'admin',

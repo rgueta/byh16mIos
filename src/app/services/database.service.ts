@@ -106,12 +106,13 @@ getNewAccessToken() {
 
 //---- GET data from server  ------
 getData_key(collection:String,data:any){
+  const token = localStorage.getItem(TOKEN_KEY);
  let  options = {
    headers : {
     'Accept': 'application/json',
     'content-type' :'application/json',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Authorization' : `${data}`,
+    'authorization' : `Bearer ${token}`,
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
    }

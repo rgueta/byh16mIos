@@ -46,6 +46,15 @@ export class VisitorsPage implements OnInit {
 
   async onSubmit(){
     await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(
+      (result) => this.modalController.dismiss(),
+      (err) => alert('No se agrego el contacto')
+
+    );
+
+  }
+
+  async onSubmit_(){
+    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(
       (result) => this.closeModal(),
       (err) => alert('No se agrego el contacto')
 
@@ -54,7 +63,7 @@ export class VisitorsPage implements OnInit {
   }
 
   closeModal(){
-    // this.modalController.dismiss();
+    this.modalController.dismiss();
   } 
 
       // ---- Animation controller  ----------------------------------
