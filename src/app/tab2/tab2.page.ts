@@ -47,8 +47,6 @@ export class Tab2Page {
   }
 
   async getEvents($event:any){
-    // this.filterDay = await new Date($event).toISOString();
-    console.log('filterDay --> ',this.filterDay)
     this.start = await new Date($event);
     this.end = await new Date($event);
     await this.start.setHours(0,0,0,0);
