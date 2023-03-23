@@ -25,8 +25,8 @@ export class UpdCodesModalPage implements OnInit {
   // public UpdCodeForm: FormGroup;
   
   selectdVisitor:any;
-  initial: any;
-  expiry : any;
+  initial: any = new Date().toISOString();
+  expiry : any = new Date().toISOString();
   diff: any;
   userId = {};
   StrPlatform = '';
@@ -91,18 +91,6 @@ export class UpdCodesModalPage implements OnInit {
       (err) => console.log('Unable to get sim info: ', err)
     );
 
-    // console.log(JSON.stringify(this.newData));
-
-    // this.UpdCodeForm = new FormGroup({
-    //   visitor: new FormControl('',[Validators.required]),
-    //   sim: new FormControl('',[Validators.required])
-
-    // });
-    // this.UpdCodeForm =  await this.formBuilder.group({
-    //   visitor: ['',Validators.required],
-    //   sim: ['',Validators.required]
-
-    // });
   }
 
 getPlatform(){
@@ -126,30 +114,37 @@ getPlatform(){
     this.initial = new Date();
     this.expiry = new Date(new Date().setHours(new Date().getHours() + this.code_expiry));
     this.diff =  await (Math.abs(this.initial.getTime() - this.expiry.getTime()) / 3600000).toFixed(1);
+
+    this.initial = await new Date().toISOString();
+    this.expiry =  await new Date(new Date().setHours(new Date().getHours() + this.code_expiry)).toISOString();
   }
 
 
-
-  async onChangeInitial($event:any){
-    if(new Date($event) >= this.expiry){
+  async onChangeInitial(init:any){
+    if(new Date(init) >= new Date(this.expiry)){
       alert('Tiempo inicial debe ser menor al tiempo final');
       this.initDates();
       return;
     }else{
-      this.initial = new Date($event);
+      // var initTemp = new Date(init);
+      this.initial = await new Date(init);
+      this.expiry = await new Date(this.expiry);
+      
       this.diff =  await (Math.abs(this.initial.getTime() - this.expiry.getTime()) / 3600000).toFixed(1);
       console.log('Initial : ' + Utils.convDate(this.initial) + '\nExpiry :  ' + Utils.convDate(this.expiry) + '\nDiff hrs. ' + this.diff);
     }
 
   }
 
-  async onChangeExpiry($event:any){
-    if(new Date($event) <= this.initial){
+  async onChangeExpiry(expiry:any){
+    if(new Date(expiry) <= new Date(this.initial)){
       alert('Tiempo final debe ser meyor al tiempo inicial');
       this.initDates();
       return;
     }else{
-      this.expiry = new Date($event);
+      this.initial = await new Date(this.initial);
+      this.expiry = await new Date(expiry);
+
       this.diff = await (Math.abs(this.initial.getTime() - this.expiry.getTime()) / 3600000).toFixed(1);
     console.log('Initial : ' + this.initial + '\nExpiry :  ' + this.expiry + '\nDiff hrs. ' + this.diff);
     }
@@ -203,19 +198,34 @@ getPlatform(){
     const coreName = await localStorage.getItem('core-name')
     const expire = await ((new Date(this.expiry).getTime() - new Date().getTime() ) / 3600000).toFixed(1)
 
+
+    console.log('API -->')
+    console.log('api/codes/' + this.userId + JSON.stringify({'code':this.code,'sim':this.visitorSim,
+       'initial': Utils.convDate(new Date(this.initial)),
+       'expiry' : Utils.convDate(new Date(this.expiry)),'visitorId' : this.visitorId ,'comment': this.localComment}) + JSON.stringify(
+       {'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}));
+
+
     try{
 
       this.api.postData('api/codes/' + this.userId,{'code':this.code,'sim':this.visitorSim,
-       'initial': Utils.convDate(this.initial),
-       'expiry' : Utils.convDate(this.expiry),'visitorId' : this.visitorId ,'comment': this.localComment,
+       'initial': Utils.convDate(new Date(this.initial)),
+       'expiry' : Utils.convDate(new Date(this.expiry)),'visitorId' : this.visitorId ,'comment': this.localComment,
        'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}).then(async resp => {
         
 //------- Uncomment, just to fix bug 
-        const respId = Object.values(resp)[1];
+        const respId = await Object.values(resp)[1];
+
+        await console.log('response from aPI --> ', respId);
         
          // Send code to core
-        const pckgToCore = 'codigo,' + this.code +','+ Utils.convDate(this.expiry) 
+        const pckgToCore = await 'codigo,' + this.code +','+ Utils.convDate(new Date(this.expiry)) 
         + ',' + this.userId + ',' + this.visitorSim + ',' + respId
+
+        await console.log('send to core module --> ', pckgToCore);
+
+        return;
+
         
       await this.sendSMS(coreSim, pckgToCore);
 

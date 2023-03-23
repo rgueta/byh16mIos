@@ -257,8 +257,6 @@ export class CodesPage implements OnInit {
         // ---- Animation controller  ----------------------------------
 
   async addCode() {
- 
-
     const modal = await this.modalController.create({
       component: UpdCodesModalPage,
     });

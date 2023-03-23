@@ -48,7 +48,7 @@
             <ion-note class="filterDate" slot="end">{{item.initial | date:'dd MMM YYYY hh:mm a'}}</ion-note>
             <ion-icon color="white" slot="end" name="calendar-outline" ></ion-icon>
           </ion-item>
-          <ion-modal trigger="open-modalInitial" [cssClass]="'bottom-end'">
+          <ion-modal trigger="open-modalInitialToAvoid" [cssClass]="'bottom-end'">
             <ng-template>
               <ion-datetime  class="dateFilter" 
                 locale="es-ES"
@@ -71,7 +71,7 @@
             <ion-note class="filterDate" slot="end">{{item.expiry | date:'dd MMM YYYY hh:mm a'}}</ion-note>
             <ion-icon color="white" slot="end" name="calendar-outline" ></ion-icon>
           </ion-item>
-          <ion-modal trigger="open-modalExpiry" [cssClass]="'bottom-end'">
+          <ion-modal trigger="open-modalExpiryToAvoid" [cssClass]="'bottom-end'">
             <ng-template>
               <ion-datetime  class="dateFilter" 
                 locale="es-ES"

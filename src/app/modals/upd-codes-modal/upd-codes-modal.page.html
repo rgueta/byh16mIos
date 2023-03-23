@@ -16,80 +16,65 @@
     </ion-button>
   </ion-item>
 
-<form [formGroup] = "UpdCodeForm" >
-      <ion-item >
-          <ion-label class='labelInput' floating>Visitante:</ion-label>
-          <ion-select [(ngModel)]="selectdVisitor" ok-text="Seleccionar" cancel-text="Cancelar" 
-            (ionChange)="setupCode($event)" formControlName="visitor" >
-            <ion-select-option *ngFor="let item of myVisitors" 
-            [value] = "item">{{item.name}}</ion-select-option>
-          </ion-select>
-      </ion-item>
+ <form [formGroup] = "UpdCodeForm" >
 
-      <ion-item class="wrap-input">
+      <ion-item >
+        <ion-label class='labelInput' floating>Visitante:</ion-label>
+        <ion-select [(ngModel)]="selectdVisitor" ok-text="Seleccionar" cancel-text="Cancelar" 
+          (ionChange)="setupCode($event)" formControlName="visitor" >
+          <ion-select-option *ngFor="let item of myVisitors" 
+          [value] = "item">{{item.name}}</ion-select-option>
+        </ion-select>
+    </ion-item>
+
+    <ion-item>
       <ion-label class='labelInput' floating>Telefono : </ion-label>
-      <!--pattern="[+0-9] ([0-9]){3} [0-9]{3}-[0-9]{4}*" maxlength='16'-->
+      <!-- pattern="[+0-9] ([0-9]){3} [0-9]{3}-[0-9]{4}*" maxlength='16' -->
         <ion-input class='phoneNumber' type="text"  required value="visitorSim" 
           [(ngModel)]="visitorSim" formControlName="visitorSim" ></ion-input>
       </ion-item>
 
 <!-- Initial  -------------------------------------------------------------------- -->
-      <ion-item id="open-modalInitial" class="itemFilter">
+      <ion-item id="open-Initial" class="itemFilter">
         <ion-label class='labelInput'>Inicio :</ion-label>
         <ion-note class="filterDate" slot="end">{{initial | date:'dd MMM YYYY hh:mm a'}}</ion-note>
         <ion-icon color="white" slot="end" name="calendar-outline" ></ion-icon>
       </ion-item>
-      <ion-modal trigger="open-modalInitial" [cssClass]="'bottom-end'">
+      <ion-modal trigger="open-Initial" [cssClass]="'bottom-end'">
         <ng-template>
-          <ion-datetime  class="dateFilter" 
-            locale="es-ES"
-            presentation="date"
-            size="cover"
-            #myInitial displayFormat="D MMM YYYY hh:mm a" min="2022" 
-            max="2060" minuteValues="0,15,30,45"
-            [showDefaultButtons]="true"
+          <ion-datetime  class="dateFilter" [showDefaultTitle]="true"
+            locale="es-ES" presentation="date-time" size="cover" [preferWheel]="true"
+            #myInitial displayFormat="D MMM YYYY hh:mm a" min="2022" max="2060" 
+            [showDefaultButtons]="true" doneText="Cambiar" cancelText="Ignorar"
             (ionChange)="onChangeInitial(myInitial.value)"
             >
+            <span slot="title">Fecha de inicio</span>
         </ion-datetime>
         </ng-template>
-      </ion-modal>
-
-      <!-- <ion-item>
-        <ion-label class='labelInput'>Activo desde : </ion-label>
-        <ion-datetime #myInitial display-format="D MMM YYYY h:mm a" min="2021" max="2040"
-         value={{initial}} (ionChange)="onChangeInitial(myInitial.value)"></ion-datetime>
-      </ion-item> -->
-
+      </ion-modal> 
 
 <!-- Expiry ----------------------------------------------------------------------------- -->
 
-      <ion-item id="open-modalExpiry" class="itemFilter">
+      <ion-item id="open-Expiry" class="itemFilter">
         <ion-label class='lblFilterDate'>Fin :</ion-label>
         <ion-note class="filterDate" slot="end">{{expiry | date:'dd MMM YYYY hh:mm a'}}</ion-note>
         <ion-icon color="white" slot="end" name="calendar-outline" ></ion-icon>
       </ion-item>
-      <ion-modal trigger="open-modalExpiry" [cssClass]="'bottom-end'">
+      <ion-modal trigger="open-Expiry" [cssClass]="'bottom-end'">
         <ng-template>
-          <ion-datetime  class="dateFilter" 
-            locale="es-ES"
-            presentation="date"
-            size="cover"
-            #myExpiry display-format="D MMM YYYY hh:mm a" min="2021" 
-            max="2060" 
-            [showDefaultButtons]="true"
+          <ion-datetime  class="dateFilter" [showDefaultTitle]="true"
+            locale="es-ES" presentation="date-time" size="cover" [preferWheel]="true"
+            #myExpiry display-format="D MMM YYYY hh:mm" min="2021"  max="2060" 
+            [showDefaultButtons]="true" doneText="Cambiar" cancelText="Ignorar"
             (ionChange)="onChangeExpiry(myExpiry.value)"
             >
+            <span slot="title">Fecha que expira</span>
         </ion-datetime>
         </ng-template>
       </ion-modal>
 
-      <!-- <ion-item >
-        <ion-label class='labelInput'>Expira hasta : </ion-label>
-        <ion-datetime #myExpiry display-format="D MMM YYYY h:mm a" min="2021" max="2040"
-         value={{expiry}} (ionChange)="onChangeExpiry(myExpiry.value)"></ion-datetime>
-      </ion-item> -->
-
 <!-- ----------------------------------- -->
+    
       <ion-item class="wrap-input">
         <ion-label class='labelInput' floating>Expira en horas: </ion-label>
         <ion-input class='input' type="number" name='diff' disabled value={{diff}}></ion-input>
