@@ -182,15 +182,25 @@ async postData(collection:String,data:any){
   console.log('postData token -->', token );
 
 
- let  options = {
-     headers : {
-    'accept': 'application/json',
-    'content-type' :'application/json',
-    'access-Control-Allow-Headers': 'Content-Type',
-    'authorization' : `Bearer ${token}`,
-    'access-Control-Allow-Origin': '*',
-    'access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-   }
+//  let  options = {
+//      headers : {
+//     'accept': 'application/json',
+//     'content-type' :'application/json',
+//     'access-Control-Allow-Headers': 'Content-Type',
+//     'authorization' : `Bearer ${token}`,
+//     'access-Control-Allow-Origin': '*',
+//     'access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
+//    }
+//   }
+// Commented to test simple single two lines for header as follow
+
+
+
+  let  options = {
+    headers : {
+  'content-type' : 'application/json',
+  'authorization' : `Bearer ${token}`,
+  }
   }
 
    return new Promise((resolve, reject) => {this.http.post(this.REST_API_SERVER + collection , data, options)
