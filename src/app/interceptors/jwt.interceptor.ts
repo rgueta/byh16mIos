@@ -79,8 +79,7 @@ export class JwtInterceptor implements HttpInterceptor {
       if (this.apiService.currentAccessToken) {
         return req.clone({
           headers: new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.apiService.currentAccessToken}`
+            Authorization: `Bearer ${this.apiService.currentAccessToken}`
           })
         });
       } else {
@@ -109,50 +108,52 @@ private async handle400Error(err:any) {
     return of(null);
   }
 
-
-    // Indicates our access token is invalid, try to load a new one
-    private handle401Error(request: HttpRequest < any >, next: HttpHandler): Observable < any > {
-      // Check if another call is already using the refresh logic
-      if(!this.isRefreshingToken) {
-        // Set to null so other requests will wait
-        // until we got a new token!
-        this.tokenSubject.next(null);
-        this.isRefreshingToken = true;
-        this.apiService.currentAccessToken = null;
-    
-        // return next.handle(this.addToken(request));
-        // First, get a new access token
-        return (this.apiService.getNewAccessToken()).pipe(
-          switchMap((token: any) => {
-            if (token) {
-              // Store the new token
-              const accessToken = token.accessToken;
-              this.apiService.storeAccessToken(token);
-              this.tokenSubject.next(accessToken);
-              return next.handle(this.addToken(request));
-            } else {
-              // No new token or other problem occurred
-              return of(null);
-            }
-          }),
-          finalize(() => {
-            // Unblock the token reload logic when everything is done
-            this.isRefreshingToken = false;
-          })
-        );
-      } else {
-
-        // "Queue" other calls while we load a new token
-        return this.tokenSubject.pipe(
-          filter(token => token !== null),
-          take(1),
-          switchMap(_ => {
-          // switchMap(token => {
-            // Perform the request again now that we got a new token!
+  // Indicates our access token is invalid, try to load a new one
+  private handle401Error(request: HttpRequest < any >, next: HttpHandler): Observable < any > {
+    // Check if another call is already using the refresh logic
+    if(!this.isRefreshingToken) {
+      // Set to null so other requests will wait
+      // until we got a new token!
+      this.tokenSubject.next(null);
+      this.isRefreshingToken = true;
+      this.apiService.currentAccessToken = null;
+  
+      console.log(' jwt.interceptor handle401Error --- > ');
+      // return next.handle(this.addToken(request));
+      // First, get a new access token
+      return (this.apiService.getNewAccessToken()).pipe(
+        switchMap((token: any) => {
+          if (token) {
+            // Store the new token
+            const accessToken = token.accessToken;
+            this.apiService.storeAccessToken(token);
+            this.tokenSubject.next(accessToken);
             return next.handle(this.addToken(request));
-          })
-        );
-      }
+          } else {
+            // No new token or other problem occurred
+            return of(null);
+          }
+        }),
+        finalize(() => {
+          // Unblock the token reload logic when everything is done
+          this.isRefreshingToken = false;
+        })
+      );
+    } else {
+
+      // "Queue" other calls while we load a new token
+      return this.tokenSubject.pipe(
+        filter(token => token !== null),
+        take(1),
+        switchMap(_ => {
+        // switchMap(token => {
+          // Perform the request again now that we got a new token!
+          return next.handle(this.addToken(request));
+        })
+      );
     }
+  }
+
+
   
 }

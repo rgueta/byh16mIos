@@ -121,14 +121,18 @@ getData_key(collection:String,data:any){
    return this.http.get(this.REST_API_SERVER + collection, options);
 }
 
-
-
-
  getData(collection:String) {
-    return this.http.get(this.REST_API_SERVER + collection );
-    // console.log('database.service postData --> ', token);
-    // return this.http.get('/api/codes');
+  const token = localStorage.getItem(TOKEN_KEY);
+  let  options = {
+    headers : {
+  'content-type' : 'application/json',
+  'authorization' : `Bearer ${token}`,
+  }
+  }
+
+    return this.http.get(this.REST_API_SERVER + collection ,options);
 }
+
 
 //--- POST data to server
 
@@ -180,21 +184,6 @@ getData_key(collection:String,data:any){
 async postData(collection:String,data:any){
   const token = await localStorage.getItem(TOKEN_KEY);
   console.log('postData token -->', token );
-
-
-//  let  options = {
-//      headers : {
-//     'accept': 'application/json',
-//     'content-type' :'application/json',
-//     'access-Control-Allow-Headers': 'Content-Type',
-//     'authorization' : `Bearer ${token}`,
-//     'access-Control-Allow-Origin': '*',
-//     'access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
-//    }
-//   }
-// Commented to test simple single two lines for header as follow
-
-
 
   let  options = {
     headers : {
@@ -258,18 +247,12 @@ async postRegisterData(url:String,data:any){
 
 //--- PUT data to server
 async putData(collecion:String,data:any){
-  const token = await localStorage.getItem(REFRESH_TOKEN_KEY);
-  // const token = await Storage.get({key : TOKEN_KEY});
+  const token = await localStorage.getItem(TOKEN_KEY);
 
  let  options = {
    headers : {
-    'Accept': 'application/json',
     'content-type' :'application/json',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    // 'x-access-token': token.value,
-     'Authorization' :  `Bearer ${token}`,
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
+    'Authorization' :  `Bearer ${token}`,
    }
   }
 
