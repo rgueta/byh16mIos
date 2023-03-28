@@ -14,7 +14,7 @@ export const environment = {
     // status 1 = Active; 2 = Inactive, 3 = New register
     register_status : 3,
     // "server_url" : "http://ec2-52-55-153-194.compute-1.amazonaws.com/"
-    server_url : "http://192.168.1.109:5000/"
+    server_url : "http://192.168.1.154:5000/"
   }
 };
 

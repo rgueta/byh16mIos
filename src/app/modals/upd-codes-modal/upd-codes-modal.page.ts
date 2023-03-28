@@ -223,22 +223,19 @@ getPlatform(){
         + ',' + this.userId + ',' + this.visitorSim + ',' + respId
 
         await console.log('send to core module --> ', pckgToCore);
-
-        return;
-
         
-      await this.sendSMS(coreSim, pckgToCore);
+      // await this.sendSMS(coreSim, pckgToCore);
 
-       // send code to visitor
-       await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
-       '  Expira en ' + expire + ' Hrs.' )
+      //  // send code to visitor
+      //  await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
+      //  '  Expira en ' + expire + ' Hrs.' )
 
-       this.closeModal();
+      //  this.closeModal();
  
-      //  this.showAlerts('Message', 'Se envio el codigo')
+      // //  this.showAlerts('Message', 'Se envio el codigo')
 
        },error =>{
-        console.log('apiReturned  Error -->', error);
+          alert('No se pudo enviar el codigo');
        });
 
     }catch(err){

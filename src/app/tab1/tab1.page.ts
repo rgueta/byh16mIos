@@ -1,7 +1,6 @@
 import { Component ,Input,} from '@angular/core';
 import { ModalController, ToastController ,
-  AnimationController, isPlatform, Platform, 
-  AlertController, getPlatforms} from '@ionic/angular';
+  AnimationController, isPlatform, getPlatforms} from '@ionic/angular';
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { Sim } from "@ionic-native/sim/ngx"; 
 import { Socket } from 'ngx-socket-io';
@@ -12,7 +11,7 @@ import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
-import { LocalNotifications, ScheduleOptions } from "@capacitor/local-notifications";
+import { LocalNotifications } from "@capacitor/local-notifications";
 
 const DEVICE_UUID = 'device-uuid';
 

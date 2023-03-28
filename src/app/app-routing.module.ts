@@ -73,6 +73,10 @@ const routes: Routes = [
     path: 'visitors',
     loadChildren: () => import('./modals/visitors/visitors.module').then( m => m.VisitorsPageModule),
     canActivate: [IntroGuard]
+  },
+  {
+    path: 'upd-cpus',
+    loadChildren: () => import('./modals/upd-cpus/upd-cpus.module').then( m => m.UpdCpusPageModule)
   }
 ];
 @NgModule({
