@@ -5,6 +5,7 @@ import { UpdCoresPage } from "../../modals/upd-cores/upd-cores.page";
 import { UsersPage } from '../../modals/users/users.page';
 import { DatabaseService } from '../../services/database.service';
 import { UpdUsersPage } from "../../modals/upd-users/upd-users.page";
+import { UpdCpusPage } from "../../modals/upd-cpus/upd-cpus.page";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { InfoPage } from "../../modals/info/info.page";
 
@@ -108,6 +109,14 @@ export class AdminPage implements OnInit {
   async modalUpdCores() {
     const modal = await this.modalController.create({
       component: UpdCoresPage
+    });
+    return await modal.present();
+  
+  }
+
+  async modalUpdCpus() {
+    const modal = await this.modalController.create({
+      component: UpdCpusPage
     });
     return await modal.present();
   
