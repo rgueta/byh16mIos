@@ -26,8 +26,9 @@ export class ContactsPage implements OnInit {
    }
 
   async ngOnInit() {
-    this.loadContacts();
-    this.basicLoader();
+    await this.basicLoader();
+    await this.loadContacts();
+    
   }
 
   async loadContacts(){
