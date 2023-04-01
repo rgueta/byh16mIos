@@ -8,6 +8,7 @@ import { UpdUsersPage } from "../../modals/upd-users/upd-users.page";
 import { UpdCpusPage } from "../../modals/upd-cpus/upd-cpus.page";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { InfoPage } from "../../modals/info/info.page";
+import { async } from '@angular/core/testing';
 
 const TWILIO = 'twilio';
 
@@ -108,15 +109,25 @@ export class AdminPage implements OnInit {
 
   async modalUpdCores() {
     const modal = await this.modalController.create({
-      component: UpdCoresPage
+      component: UpdCoresPage,
+      backdropDismiss: true,
+      componentProps: {retorno: Boolean}
     });
-    return await modal.present();
+
+    modal.onDidDismiss()
+    .then(async (data) =>{
+      if(data.data) {
+        this.getCores();
+      }
+    });
+  
+    modal.present();
   
   }
 
   async modalUpdCpus() {
     const modal = await this.modalController.create({
-      component: UpdCpusPage
+      component: UpdCpusPage,
     });
     return await modal.present();
   

@@ -11,12 +11,12 @@ import { ContactsPage } from "../../modals/contacts/contacts.page";
 })
 export class VisitorsPage implements OnInit {
   RegisterForm : FormGroup;
-  @Input() name:string;
-  @Input() email:string;
-  @Input() sim:String;
-  @Input() address:String;
+  @Input() name:string = '';
+  @Input() email:string = '';
+  @Input() sim: string = '';
+  @Input() address: string= '';
   // @Input() gender:String;
-  @Input() avatar:String;
+  @Input() avatar: string = '';
 
 
   myToast : any;
@@ -34,8 +34,7 @@ export class VisitorsPage implements OnInit {
   ) { 
     this.RegisterForm = new FormGroup({
       LocalName : new FormControl('', [Validators.required]),
-      LocalSim : new FormControl('', [Validators.required])
-      // LocalEmail : new FormControl('', [Validators.required])
+      LocalSim : new FormControl('', [Validators.required]),
     });
   }
 
@@ -43,33 +42,33 @@ export class VisitorsPage implements OnInit {
     this.userId = await localStorage.getItem('my-userId');
   }
 
-
-  async onSubmit(){
+  async onSubmit_(){
     await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(
       (result) => this.modalController.dismiss(),
       (err) => alert('No se agrego el contacto')
+    );
+
+  }
+
+  async onSubmit(){
+    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(async result => {
+      console.log('omSubmit Closing modal ...!');
+        await this.closeModal()
+      }, err => {
+        alert('No se agrego el contacto');
+      }
 
     );
 
   }
 
-  async onSubmit_(){
-    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(
-      (result) => this.closeModal(),
-      (err) => alert('No se agrego el contacto')
-
-    );
-
-  }
-
-  closeModal(){
-    this.modalController.dismiss();
-  } 
+  
 
       // ---- Animation controller  ----------------------------------
   async modalContacts() {
     const modal = await this.modalController.create({
       component: ContactsPage,
+      backdropDismiss:true,
       cssClass:"my-modal",
       componentProps: {contact: this.contactSelected}
     });
@@ -106,5 +105,9 @@ export class VisitorsPage implements OnInit {
     });
   }
 
+  closeModal(){
+    console.log('Closing modal ...!');
+    this.modalController.dismiss(null,'dismiss');
+  } 
 
 }

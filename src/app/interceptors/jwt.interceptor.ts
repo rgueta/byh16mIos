@@ -4,14 +4,7 @@ import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse
 import { Observable, throwError, BehaviorSubject, of } from 'rxjs';
 import { DatabaseService } from '../services/database.service';
 import { Router } from "@angular/router";
-import {
-  catchError,
-  finalize,
-  switchMap,
-  filter,
-  take,
-  map,
-} from 'rxjs/operators';
+import {catchError, finalize, switchMap, filter, take} from 'rxjs/operators';
 import { ToastController } from '@ionic/angular';
  
 @Injectable()

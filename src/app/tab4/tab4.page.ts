@@ -62,38 +62,9 @@ export class Tab4Page {
   }
 
   async modalVisitors() {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('ion-backdrop')!)
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-
-      const wrapperAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('.modal-wrapper')!)
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0)' },
-          { offset: 1, opacity: '0.99', transform: 'scale(1)' }
-        ]);
-
-      return this.animationController.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(700)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    }
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    }
-
     const modal = await this.modalController.create({
       component: VisitorsPage,
-      enterAnimation,
-      leaveAnimation,
-      backdropDismiss: true,
-      cssClass: "my-modal"
-      // mode: 'md',
-      // showBackdrop: false
+      backdropDismiss:true
     });
     return await modal.present();
   }

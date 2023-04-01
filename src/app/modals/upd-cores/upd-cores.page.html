@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar>
      <ion-buttons class="modalcloseButton" slot="end">
-      <ion-icon (click)='closeModal()' name='close-circle' >Close</ion-icon>
+      <ion-icon (click)='closeModal(false)' name='close-circle' >Close</ion-icon>
     </ion-buttons>
     <ion-title class="title" >Core register</ion-title>
   </ion-toolbar>
@@ -21,7 +21,7 @@
       [(ngModel)]="localAddress"  ></ion-input>
     </ion-item>
     
-    <ion-item class="wrap-input">
+    <ion-item class="wrap-input1">
       <div class="Section1">
       <ion-item class="wrap-input">
         <ion-label>Web service</ion-label>
@@ -57,8 +57,8 @@
         <ion-item class="wrap-input">
           <div class="Section1">
             <ion-item>
-              <ion-label floating>{{SelectHousingUnitTitle}}</ion-label>
-              <ion-select class="ion-select-Division"  okText="Aceptar" cancelText="Cancelar" 
+              <!-- <ion-label floating>{{SelectHousingUnitTitle}}</ion-label> -->
+              <ion-select class="ion-select-Division"  okText="Aceptar" cancelText="Cancelar"  placeholder="Cpu" interface="popover"
                  (ionChange)="changeHousing_unit($event)" formControlName="housing_unit">
                 <ion-select-option *ngFor="let housing_unit of myHousingUnitList" 
                 [value]="{id:housing_unit._id,name:housing_unit.Name}" >{{housing_unit.name}}</ion-select-option>
@@ -121,8 +121,8 @@
             </div>
             <div class="Section2">
               <ion-item class="wrap-input">
-                <ion-input class='input' type="number" placeholder="Gate heigh" 
-                formControlName="Gate_heigh" [(ngModel)]="localGate_heigh"></ion-input>
+                <ion-input class='input' type="number" placeholder="Gate height mts" 
+                formControlName="Gate_height" [(ngModel)]="localGate_height"></ion-input>
               </ion-item>
 
               <ion-item class="wrap-input">
@@ -136,8 +136,8 @@
               </ion-item>
 
               <ion-item class="wrap-input">
-                <ion-input class='input' type="number" placeholder="Pedestrian heigh" 
-                formControlName="Pedestrian_heigh" [(ngModel)]="localPedestrian_heigh"></ion-input>
+                <ion-input class='input' type="number" placeholder="Pedestrian height" 
+                formControlName="Pedestrian_height" [(ngModel)]="localPedestrian_height"></ion-input>
               </ion-item>
 
             </div>
@@ -145,8 +145,13 @@
         
       </div>
 
-      <ion-item>
+      <!-- <ion-item>
         <ion-button type="submit" class="submit titleButtonBlue" [disabled] = "updCoreForm.invalid" 
+        expand="full" (click)="onSubmitUpdCoreForm()">Save</ion-button>
+      </ion-item> -->
+
+      <ion-item>
+        <ion-button type="submit" class="submit titleButtonBlue" 
         expand="full" (click)="onSubmitUpdCoreForm()">Save</ion-button>
       </ion-item>
 

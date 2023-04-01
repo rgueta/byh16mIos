@@ -28,10 +28,10 @@ export class UpdCoresPage implements OnInit {
   localMotor : any;
   localGate_type : any;
   localGate_long : any;
-  localGate_heigh : any;
+  localGate_height : any;
   localPedestrian_type : any;
   localPedestrian_long : any;
-  localPedestrian_heigh : any;
+  localPedestrian_height : any;
   localhousing_unit :any;
   localenable : any;
   // --- contact  -------
@@ -41,6 +41,9 @@ export class UpdCoresPage implements OnInit {
 
   public SelectHousingUnitTitle : any = 'Housing unit';
   public myHousingUnitList:any;
+  location:any;
+  userId : string = '';
+  refresh_page: boolean= false;
 
   // -- Validators  ------------
 
@@ -64,23 +67,27 @@ export class UpdCoresPage implements OnInit {
       Motor : new FormControl('', [Validators.required]),
       Gate_type : new FormControl('', [Validators.required]),
       Gate_long : new FormControl('', [Validators.required]),
-      Gate_heigh : new FormControl('', [Validators.required]),
+      Gate_height : new FormControl('', [Validators.required]),
       Pedestrian_type : new FormControl('', [Validators.required]),
       Pedestrian_long : new FormControl('', [Validators.required]),
-      Pedestrian_heigh : new FormControl('', [Validators.required])
+      Pedestrian_height : new FormControl('', [Validators.required])
       
     });
     
   }
 
-  ngOnInit() {
-    // this.SelectDivisionTitle = {header : 'Division', subHeader : 'Select division'};
+  async ngOnInit() {
+    this.userId = localStorage.getItem('my-userId');
+    this.location  = await localStorage.getItem('location')
+    
+    var locationArr = this.location.split('.');
+    console.log('location Array --> ', locationArr);
     this.localWebService = "Y";
-    this.getHousing_unit();
+    this.getCpus(locationArr);
   }
 
-  async getHousing_unit(){
-    await this.api.getData('api/housing_unit/').subscribe(async result => {
+  async getCpus(location:any){
+    await this.api.getData('api/cpus/basic/' + location[0] + ',' + location[1] + ',' + location[2] + ',' + location[3]).subscribe(async result => {
       this.myHousingUnitList = await result;
       console.log('Housing Unit --> ', JSON.stringify(this.myHousingUnitList));
     });
@@ -89,9 +96,9 @@ export class UpdCoresPage implements OnInit {
 
   async changeHousing_unit($event:any){
     // console.log($event);
-    console.log('change Housing Unit --> ' + JSON.stringify($event.value.name))
-    this.localhousing_unit = $event.value.id;
-    this.myHousingUnitList = $event.value.name;
+    console.log('change Housing Unit --> ' + JSON.stringify($event));
+    // this.localhousing_unit = $event.value.id;
+    // this.myHousingUnitList = $event.value.name;
 
   }
 
@@ -100,7 +107,47 @@ export class UpdCoresPage implements OnInit {
       this.localenable = JSON.stringify($event.detail.checked);
   }
 
+
   async onSubmitUpdCoreForm(){
+    const pkg = {
+      'name': 'test',
+      'Address': 'Test Address',
+      'webService' : true,
+      'Sim': '6641752182', 
+      'coord' : ['24', '22.3'],
+      'qty' : 28,
+      'House_detail' : [] = [],
+      'housing_unit' : '6423087c02cc48ae02388186',
+      'enable' : true,
+      'contact_name': 'rjg',
+      'contact_email' : 'test@test.com',
+      'contact_phone' : '6641752182',
+      'Motor' : 'Motor 123',
+      'Gate_type': 'gate type',
+      'Gate_long' : 6,
+      'Gate_height' : 3,
+      'Pedestrian_type': 'tubes',
+      'Pedestrian_long' : 1.2,
+      'Pedestrian_height' : 2
+
+    };
+    try{
+
+      await this.api.postRegisterData('api/cores/' + this.userId ,pkg).then(async result =>{
+        console.log('response --> ', result)
+        await this.closeModal(true);
+      },async error => {
+        alert('Failed to add core');
+        await this.closeModal(false);
+      });
+      
+      
+    }catch(err){
+      console.log('can not post core data', err);
+    }
+  }
+
+  async onSubmitUpdCoreForm_(){
     const pkg = {
       'Name':this.localName,
       'Address':this.localAddress,
@@ -117,21 +164,23 @@ export class UpdCoresPage implements OnInit {
       'Motor' : this.localMotor,
       'Gate_type': this.localGate_type,
       'Gate_long' : this.localGate_long,
-      'Gate_heigh' : this.localGate_heigh,
+      'Gate_height' : this.localGate_height,
       'Pedestrian_type': this.localPedestrian_type,
       'Pedestrian_long' : this.localPedestrian_long,
-      'Pedestrian_heigh' : this.localPedestrian_heigh
+      'Pedestrian_height' : this.localPedestrian_height
 
     };
     try{
       await this.api.postRegisterData('api/cores/',pkg);
-      this.closeModal();
+      this.closeModal(true);
     }catch(err){
       console.log('can not post core data', err);
+      this.closeModal(false);
     }
   }
 
-  closeModal(){
-    this.modalController.dismiss();
-  } 
+  async closeModal(refresh:Boolean){
+   await this.modalController.dismiss(refresh);
+  }
+
 }

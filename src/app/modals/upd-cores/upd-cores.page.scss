@@ -3,14 +3,23 @@
     width: 100%;
 }
 
-.Section1{
-    float: left;
-    width: 50%;
+.wrap-input1{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: yellow;
+    padding: 0px;
+    margin: 0px;
+    width: 100%;
 }
 
+.Section1{
+    width: 100%;
+}
+
+
 .Section2{
-    float: right;
-    width: 50%;
+    width: 100%;
 }
 
 .detailTitle{
@@ -19,4 +28,7 @@
 
 .ion-select-Division{
     text-align: left;
+    max-width: 90% !important;
+    padding-left: 0 !important;
+    width: 100% !important;
 }

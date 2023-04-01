@@ -183,7 +183,7 @@ getData_key(collection:String,data:any){
 
 async postData(collection:String,data:any){
   const token = await localStorage.getItem(TOKEN_KEY);
-  console.log('postData token -->', token );
+  console.log('Data to api -->', data);
 
   let  options = {
     headers : {
@@ -203,28 +203,24 @@ async postData(collection:String,data:any){
 }
 
 async postRegisterData(url:String,data:any){
-  // const token = await Storage.get({key : TOKEN_KEY});
-  // const token = await this.storage.get('my-token');
-  // console.log('token -- > ' + token);
+  const token = localStorage.getItem(TOKEN_KEY);
   
  let  options = {
    headers : {
-    'Accept': 'application/json',
     'content-type' :'application/json',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Origin': '*',
+    'authorization' : `Bearer ${token}`,
     'Access-Control-Allow-Methods': 'POST, GET, OPTIONS, PUT'
    }
   }
 
-    this.http.post(this.REST_API_SERVER + url , data, options)
-    .subscribe(data => {
-      console.log(data);
+    return new Promise((resolve, reject) => {this.http.post(this.REST_API_SERVER + url , data, options)
+    .subscribe(res=> {
+      resolve(res)
     
     }, error => {
-      console.log(error);
+      reject(error);
     });
-    
+  });
 
 }
 
