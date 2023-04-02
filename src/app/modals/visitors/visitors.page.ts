@@ -3,6 +3,8 @@ import { ModalController,AlertController, isPlatform, ToastController, Animation
 import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { DatabaseService } from "../../services/database.service";
 import { ContactsPage } from "../../modals/contacts/contacts.page";
+import { HttpClient } from "@angular/common/http";
+
 
 @Component({
   selector: 'app-visitors',
@@ -25,12 +27,15 @@ export class VisitorsPage implements OnInit {
   contacts: [];
   contactSelected:any = {};
   userId : string;
+  pkg:any;
 
   constructor(
             private modalController : ModalController,
             private toast : ToastController,
             public api:DatabaseService,
             private animationController : AnimationController,
+            private http: HttpClient
+
   ) { 
     this.RegisterForm = new FormGroup({
       LocalName : new FormControl('', [Validators.required]),
@@ -40,6 +45,14 @@ export class VisitorsPage implements OnInit {
 
   async ngOnInit() {
     this.userId = await localStorage.getItem('my-userId');
+  }
+
+
+  async readVisitors(){
+    await this.http.get('assets/visitors.json').subscribe((res) =>{
+      this.pkg = res;
+      console.log('visitors --> ' + this.pkg);
+    })
   }
 
   async onSubmit_(){
@@ -62,9 +75,7 @@ export class VisitorsPage implements OnInit {
 
   }
 
-  
-
-      // ---- Animation controller  ----------------------------------
+        // ---- Animation controller  ----------------------------------
   async modalContacts() {
     const modal = await this.modalController.create({
       component: ContactsPage,
@@ -109,5 +120,6 @@ export class VisitorsPage implements OnInit {
     console.log('Closing modal ...!');
     this.modalController.dismiss(null,'dismiss');
   } 
+
 
 }
