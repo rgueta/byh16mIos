@@ -4,6 +4,7 @@ import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { DatabaseService } from "../../services/database.service";
 import { ContactsPage } from "../../modals/contacts/contacts.page";
 import { HttpClient } from "@angular/common/http";
+import { switchMap } from 'rxjs/operators'
 
 
 @Component({
@@ -27,7 +28,15 @@ export class VisitorsPage implements OnInit {
   contacts: [];
   contactSelected:any = {};
   userId : string;
-  pkg:any;
+  pkg: {} = {};
+
+  pkg2 = {
+    "name" : "Atsushi Mikami",
+    "email" : "atsushi.mikami@d4cpd.com",
+    "sim" : "+1 (858) 735-0751",
+    "uuid" : "+1 (858) 735-0751",
+    "address" : "San Diego"
+  }
 
   constructor(
             private modalController : ModalController,
@@ -49,10 +58,27 @@ export class VisitorsPage implements OnInit {
 
 
   async readVisitors(){
+
+    // this.pkg = await this.http.get('assets/visitors.json').pipe(
+    //   switchMap((res:any) => res.json()
+    //   ))
+    
+      
+    //   console.log('visitors --> ' + JSON.stringify(this.pkg));
+    
+
     await this.http.get('assets/visitors.json').subscribe((res) =>{
       this.pkg = res;
-      console.log('visitors --> ' + this.pkg);
+      console.log('visitors --> ' + JSON.stringify(this.pkg));
     })
+  }
+
+  async insertVisitor(){
+    const options = {Headers, responseType: 'json' as 'blob'};
+    this.http.put('assets/visitors.json', this.pkg2, options).subscribe(
+      data => {
+         console.log(data);
+      })
   }
 
   async onSubmit_(){
