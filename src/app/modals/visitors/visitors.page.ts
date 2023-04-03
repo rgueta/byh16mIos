@@ -5,7 +5,7 @@ import { DatabaseService } from "../../services/database.service";
 import { ContactsPage } from "../../modals/contacts/contacts.page";
 
 
-
+const VISITORS = 'visitors';
 
 @Component({
   selector: 'app-visitors',
@@ -28,9 +28,7 @@ export class VisitorsPage implements OnInit {
   contacts: [];
   contactSelected:any = {};
   userId : string;
-
-  visitors:any;
-  vis_pkg : any;
+  visitors: any = [];
 
   constructor(
             private modalController : ModalController,
@@ -47,25 +45,23 @@ export class VisitorsPage implements OnInit {
 
   async ngOnInit() {
     this.userId = await localStorage.getItem('my-userId');
-    this.visitors = await this.readVisitors();
-    console.log('actual visitors --> ', this.visitors);
+
+    if(localStorage.getItem(VISITORS) != null){
+      this.visitors = await JSON.parse(localStorage.getItem(VISITORS));
+      console.log('actual visitors --> ', this.visitors);
+    }
   }
-
-
-  async readVisitors(){
-    return await fetch('assets/visitors.json')
-    .then((res:any) => res.json())
-  }
-
+  
   async appendVisitor(pkg:any){
     await this.visitors.push(pkg);
+    localStorage.setItem(VISITORS, JSON.stringify(this.visitors));
     console.log('visitor added --> ', this.visitors)
   }
 
   async onSubmit(){
-    this.vis_pkg = {'name':this.name,'email':this.email,'sim':this.sim,'address': this.address,'gender': this.gender}
-
-    this.appendVisitor(this.vis_pkg);
+    var pkg = {'name':this.name,'sim':this.sim,'email':this.email, 'address': this.address,'gender': this.gender}
+    this.appendVisitor(pkg);
+    this.closeModal();
 
   }
 
@@ -76,7 +72,6 @@ export class VisitorsPage implements OnInit {
       }, err => {
         alert('No se agrego el contacto');
       }
-
     );
 
   }

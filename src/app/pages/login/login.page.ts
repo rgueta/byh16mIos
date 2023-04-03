@@ -9,6 +9,8 @@ import { Device } from "@capacitor/device";
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
+const VISITORS = 'visitors';
+
 
 @Component({
   selector: 'app-login',
@@ -27,7 +29,6 @@ export class LoginPage implements OnInit {
 
  private  REST_API_SERVER = environment.db.server_url;
  public version = '';
- 
 
   constructor(
     private fb: FormBuilder,
@@ -47,7 +48,14 @@ export class LoginPage implements OnInit {
       this.isAndroid = true;
     }
 
-    localStorage.clear();
+    if(localStorage.getItem(VISITORS) != null){
+      var pkg = localStorage.getItem('visitors');
+       localStorage.clear();
+       localStorage.setItem('visitors',pkg);
+    }else{
+      await localStorage.clear();
+    }
+
     this.credentials = this.fb.group({
       email: ['neighbor2@gmail.com', [Validators.required, Validators.email]],
       pwd: ['1234', [Validators.required, Validators.minLength(4)]],
