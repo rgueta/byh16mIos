@@ -19,11 +19,11 @@
 
   <ion-list  *ngFor="let item of VisitorsList; let i = index;" class="accordion-list" lines="none" detail="false" no-padding>
     
-    <ion-item tappable class='section' (click)="toggleSection(i)">
-       <ion-icon color="white" slot="end" name="chevron-forward-outline" *ngIf="!item.open"></ion-icon>
-       <ion-icon color="white" slot="end" name="chevron-down-outline" *ngIf="item.open"></ion-icon>
-       <ion-label class="ion-text-wrap">
-        Nombre: <strong>{{item.name}}</strong><b></b></ion-label>
+    <ion-item tappable class='section'>
+      <ion-icon name="trash-outline" class="removeIteem" color="white" slot="start" (click)="removeVisitor(i)"></ion-icon>
+       <ion-icon color="white" slot="end" name="chevron-forward-outline"  (click)="toggleSection(i)" *ngIf="!item.open"></ion-icon>
+       <ion-icon color="white" slot="end" name="chevron-down-outline"  (click)="toggleSection(i)" *ngIf="item.open"></ion-icon>
+       <ion-label class="ion-text-wrap"><strong>{{item.name}}</strong><b></b></ion-label>
    </ion-item>
 
    <form tappable *ngIf="item.open" class="detail">

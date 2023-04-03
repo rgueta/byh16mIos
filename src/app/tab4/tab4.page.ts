@@ -39,13 +39,15 @@ export class Tab4Page {
     }, 2000);
   }
 
+
   async getVisitors(){
-    await this.api.getData('api/visitors/').subscribe(async result =>{
-      console.table(result);
-      this.VisitorsList = await result;
-      this.VisitorsList[0].open = true;
-    });
-    
+    this.VisitorsList = JSON.parse(localStorage.getItem('visitors'))
+    this.VisitorsList[0].open = true;
+  }
+
+
+  async removeVisitor(index:number){
+    alert('Remove item ' + String(index))
   }
 
   toggleSection(index:number){
