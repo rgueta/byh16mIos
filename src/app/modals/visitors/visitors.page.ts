@@ -3,8 +3,8 @@ import { ModalController,AlertController, isPlatform, ToastController, Animation
 import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { DatabaseService } from "../../services/database.service";
 import { ContactsPage } from "../../modals/contacts/contacts.page";
-import { HttpClient } from "@angular/common/http";
-import { switchMap } from 'rxjs/operators'
+
+
 
 
 @Component({
@@ -28,22 +28,15 @@ export class VisitorsPage implements OnInit {
   contacts: [];
   contactSelected:any = {};
   userId : string;
-  pkg: {} = {};
 
-  pkg2 = {
-    "name" : "Atsushi Mikami",
-    "email" : "atsushi.mikami@d4cpd.com",
-    "sim" : "+1 (858) 735-0751",
-    "uuid" : "+1 (858) 735-0751",
-    "address" : "San Diego"
-  }
+  visitors:any;
+  vis_pkg : any;
 
   constructor(
             private modalController : ModalController,
             private toast : ToastController,
             public api:DatabaseService,
             private animationController : AnimationController,
-            private http: HttpClient
 
   ) { 
     this.RegisterForm = new FormGroup({
@@ -54,43 +47,30 @@ export class VisitorsPage implements OnInit {
 
   async ngOnInit() {
     this.userId = await localStorage.getItem('my-userId');
+    this.visitors = await this.readVisitors();
+    console.log('actual visitors --> ', this.visitors);
   }
 
 
   async readVisitors(){
-
-    // this.pkg = await this.http.get('assets/visitors.json').pipe(
-    //   switchMap((res:any) => res.json()
-    //   ))
-    
-      
-    //   console.log('visitors --> ' + JSON.stringify(this.pkg));
-    
-
-    await this.http.get('assets/visitors.json').subscribe((res) =>{
-      this.pkg = res;
-      console.log('visitors --> ' + JSON.stringify(this.pkg));
-    })
+    return await fetch('assets/visitors.json')
+    .then((res:any) => res.json())
   }
 
-  async insertVisitor(){
-    const options = {Headers, responseType: 'json' as 'blob'};
-    this.http.put('assets/visitors.json', this.pkg2, options).subscribe(
-      data => {
-         console.log(data);
-      })
-  }
-
-  async onSubmit_(){
-    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(
-      (result) => this.modalController.dismiss(),
-      (err) => alert('No se agrego el contacto')
-    );
-
+  async appendVisitor(pkg:any){
+    await this.visitors.push(pkg);
+    console.log('visitor added --> ', this.visitors)
   }
 
   async onSubmit(){
-    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(async result => {
+    this.vis_pkg = {'name':this.name,'email':this.email,'sim':this.sim,'address': this.address,'gender': this.gender}
+
+    this.appendVisitor(this.vis_pkg);
+
+  }
+
+  async onSubmit_(){
+    await this.api.postData('api/visitors/' + this.userId ,{'userId': this.userId,'name':this.name,'email':this.email,'sim':this.sim,'address':this.address,'gender':this.gender,'avatar':this.avatar}).then(async (result:any) => {
       console.log('omSubmit Closing modal ...!');
         await this.closeModal()
       }, err => {
