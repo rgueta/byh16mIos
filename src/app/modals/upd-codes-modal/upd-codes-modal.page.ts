@@ -151,16 +151,10 @@ getPlatform(){
   }
 
   async getVisitors(){
-    let initDate : any;
-    let finalDate : any;
-    console.log('get visitor for : -> ' + this.userId);
-    // this.userId = '60afc4125d8280dc19460980';
-    await this.api.getData('api/visitors/user/'+ this.userId).subscribe(visitors =>{
-      
-      this.myVisitors = visitors;
-      console.table(visitors);
-      // console.log('in upd-codes-modal getData..' + JSON.stringify(this.newData));
-  });
+    this.myVisitors = await JSON.parse(localStorage.getItem('visitors'))
+
+    //Sort Visitors by name
+    this.myVisitors = await Utils.sortJsonVisitors(this.myVisitors,'name',true);
 
 
 }

@@ -273,7 +273,6 @@ async sendSMS(){
     });
       toast.present();
     }
-  
 }
 
 async newModal(){

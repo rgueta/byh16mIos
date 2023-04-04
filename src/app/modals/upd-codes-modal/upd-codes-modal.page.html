@@ -2,8 +2,8 @@
 
   <ion-toolbar>
     <ion-title>Agregar codigo</ion-title>
-    <ion-buttons class="modalcloseButton" slot="end">
-      <ion-icon (click)='closeModal()' name='close-circle' >Cerrar</ion-icon>
+    <ion-buttons class="modalcloseButton" slot="start">
+      <ion-icon (click)='closeModal()' name='arrow-back-circle-outline' >Cerrar</ion-icon>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -17,7 +17,6 @@
   </ion-item>
 
  <form [formGroup] = "UpdCodeForm" >
-
       <ion-item >
         <ion-label class='labelInput' floating>Visitante:</ion-label>
         <ion-select [(ngModel)]="selectdVisitor" ok-text="Seleccionar" cancel-text="Cancelar" 
