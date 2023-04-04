@@ -52,7 +52,7 @@ export class ContactsPage implements OnInit {
           });
 
           this.contacts = await Utils.sortJSON(allName,'display',true);
-          await localStorage.setItem('lista',await JSON.stringify(this.contacts));
+          // await localStorage.setItem('lista',await JSON.stringify(this.contacts));
         });
 
       }catch(e){

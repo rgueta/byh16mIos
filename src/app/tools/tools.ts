@@ -43,6 +43,15 @@ export const Utils = {
           if (asc) { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
           else { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
         });
+      },
+
+    sortJsonVisitors: function(arr:any, key:any, asc=true){
+        return arr.sort((a:any, b:any) => {
+          let x = a[key];
+          let y = b[key];
+          if (asc) { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
+          else { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
+        });
       }
 
 }

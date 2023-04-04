@@ -3,6 +3,7 @@ import { ModalController, AnimationController,ToastController, AlertController }
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { DatabaseService } from '../services/database.service';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
+import { Utils } from "../tools/tools";
 
 
 @Component({
@@ -16,6 +17,7 @@ export class Tab4Page {
   public myVisitorsList:any;
   automaticClose = false;
   userId = {};
+  public alertButtons = ['OK'];
 
   constructor(
         public animationController : AnimationController,
@@ -39,15 +41,50 @@ export class Tab4Page {
     }, 2000);
   }
 
+  async refreshVisitors(){
+    this.getVisitors();
+  }
+
 
   async getVisitors(){
-    this.VisitorsList = JSON.parse(localStorage.getItem('visitors'))
+    this.VisitorsList = await JSON.parse(localStorage.getItem('visitors'))
+
+    //Sort Visitors by name
+    this.VisitorsList = await Utils.sortJsonVisitors(this.VisitorsList,'name',true);
+
     this.VisitorsList[0].open = true;
   }
 
 
-  async removeVisitor(index:number){
-    alert('Remove item ' + String(index))
+  async removeVisitor(index:number,name:string){
+    const alertControl = await this.alertCtrl.create({
+      header: 'Borrar al visitante ?',
+      message: name,
+      buttons: [
+        {
+        text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'icon-color',
+          handler: () => {}
+        },{
+            text:'Si',
+            handler:async () => {
+              try{
+                console.log('Se borrara --> ', this.VisitorsList[index]);
+                this.VisitorsList.splice(index,1)
+                localStorage.setItem('visitors',JSON.stringify(this.VisitorsList));
+                this.VisitorsList[0].open = true;
+              }
+              catch(e){
+                alert('No se pudo borrar');
+              }
+            }
+          }
+      ]
+    });
+
+    await alertControl.present();
+
   }
 
   toggleSection(index:number){
@@ -59,15 +96,17 @@ export class Tab4Page {
     }
   }
 
-  toggleItem(index:number, childIndex:number){
-    this.VisitorsList[index].children[childIndex].open = !this.VisitorsList[index].open;
-  }
 
   async modalVisitors() {
     const modal = await this.modalController.create({
       component: VisitorsPage,
       backdropDismiss:true
     });
+
+    modal.onDidDismiss().then(_ => {
+       this.getVisitors();
+     });
+
     return await modal.present();
   }
 
