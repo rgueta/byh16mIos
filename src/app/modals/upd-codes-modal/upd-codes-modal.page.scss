@@ -41,8 +41,8 @@ ion-modal {
 }
 
 .phoneNumber{
-    display: flex;
-    float: right;
+    display: contents;
+    text-align: center;
 }
 
 .newCodeButton{
@@ -60,5 +60,19 @@ ion-modal {
     height: 40px;
     margin-top: 10px;
     width: 40px;
+}
+
+.visitorOption{
+    display: contents;
+    text-align: center;
+}
+
+.labelVisitor{
+   display: contents;
+}
+
+.selectedItem{
+    display: contents;
+    text-align: center;
 }
 

@@ -18,10 +18,10 @@
 
  <form [formGroup] = "UpdCodeForm" >
       <ion-item >
-        <ion-label class='labelInput' floating>Visitante:</ion-label>
-        <ion-select [(ngModel)]="selectdVisitor" ok-text="Seleccionar" cancel-text="Cancelar" 
+        <ion-label class='labelVisitor' >Visitante:</ion-label>
+        <ion-select class="visitorOption" [(ngModel)]="selectedVisitor" ok-text="Seleccionar" cancel-text="Cancelar" 
           (ionChange)="setupCode($event)" formControlName="visitor" >
-          <ion-select-option *ngFor="let item of myVisitors" 
+          <ion-select-option class="selectedItem" (selected)="item.isSelected" *ngFor="let item of myVisitors, let i = index"
           [value] = "item">{{item.name}}</ion-select-option>
         </ion-select>
     </ion-item>

@@ -195,7 +195,6 @@ async postData(collection:String,data:any){
    return new Promise((resolve, reject) => {this.http.post(this.REST_API_SERVER + collection , data, options)
     .subscribe(res => {
       resolve(res);
-      console.log('response OK --> ', res);
     }, error => {
       reject(error)
     });

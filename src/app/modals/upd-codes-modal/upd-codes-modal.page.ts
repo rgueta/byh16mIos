@@ -8,6 +8,7 @@ import { SMS, SmsOptions } from "@ionic-native/sms/ngx";
 import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { timeoutWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
 
 const USERID = 'my-userId';
 
@@ -22,16 +23,14 @@ export class UpdCodesModalPage implements OnInit {
   @Input() range:Number;
   @Input() localComment:string;
   myVisitors:any;
-  // public UpdCodeForm: FormGroup;
-  
-  selectdVisitor:any;
+  selectedVisitor:any;
   initial: any = new Date().toISOString();
   expiry : any = new Date().toISOString();
   diff: any;
   userId = {};
   StrPlatform = '';
   comment = '';
-  visitorId='';
+
   public code_expiry:any;
 
   // -- Validators  ------------
@@ -152,12 +151,30 @@ getPlatform(){
 
   async getVisitors(){
     this.myVisitors = await JSON.parse(localStorage.getItem('visitors'))
+    console.log('myVisitors --> ', this.myVisitors);
 
     //Sort Visitors by name
     this.myVisitors = await Utils.sortJsonVisitors(this.myVisitors,'name',true);
 
-
 }
+
+async setupCode(event:any){
+  this.visitorSim = this.selectedVisitor.sim;
+} 
+
+
+  async updSelectedVisitor(item:any){
+    console.log('Se debe actualizar --> ', item);
+    for(var i = 0; i < this.myVisitors.length; i++ ){
+      if(item.name === this.myVisitors[i].name && 
+         item.sim === this.myVisitors[i].sim){
+        this.myVisitors[i].date = new Date();
+        break;
+      }
+    }
+
+    localStorage.setItem('visitors',JSON.stringify(this.myVisitors));
+  }
 
   newCode(){
     // console.log('generate ne code..!');
@@ -192,19 +209,18 @@ getPlatform(){
     const coreName = await localStorage.getItem('core-name')
     const expire = await ((new Date(this.expiry).getTime() - new Date().getTime() ) / 3600000).toFixed(1)
 
-
-    console.log('API -->')
-    console.log('api/codes/' + this.userId + JSON.stringify({'code':this.code,'sim':this.visitorSim,
+    console.log('api/codes/' + this.userId + ','+ JSON.stringify({'code':this.code,'sim':this.visitorSim,
        'initial': Utils.convDate(new Date(this.initial)),
-       'expiry' : Utils.convDate(new Date(this.expiry)),'visitorId' : this.visitorId ,'comment': this.localComment}) + JSON.stringify(
+       'expiry' : Utils.convDate(new Date(this.expiry)) ,'visitorSim' : this.selectedVisitor.sim, 'visitorName' : this.selectedVisitor.name, 'comment': this.localComment}) + ',' + JSON.stringify(
        {'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}));
 
-
+       this.updSelectedVisitor(this.selectedVisitor);
+       
     try{
 
       this.api.postData('api/codes/' + this.userId,{'code':this.code,'sim':this.visitorSim,
        'initial': Utils.convDate(new Date(this.initial)),
-       'expiry' : Utils.convDate(new Date(this.expiry)),'visitorId' : this.visitorId ,'comment': this.localComment,
+       'expiry' : Utils.convDate(new Date(this.expiry)) ,'visitorSim' : this.selectedVisitor.sim,'visitorName' : this.selectedVisitor.name ,'comment': this.localComment,
        'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}).then(async resp => {
         
 //------- Uncomment, just to fix bug 
@@ -218,13 +234,14 @@ getPlatform(){
 
         await console.log('send to core module --> ', pckgToCore);
         
-      // await this.sendSMS(coreSim, pckgToCore);
+      // Send code to Core
+      await this.sendSMS(coreSim, pckgToCore);
 
-      //  // send code to visitor
-      //  await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
-      //  '  Expira en ' + expire + ' Hrs.' )
+      //  send code to visitor
+       await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
+       '  Expira en ' + expire + ' Hrs.' )
 
-      //  this.closeModal();
+       this.closeModal();
  
       // //  this.showAlerts('Message', 'Se envio el codigo')
 
@@ -238,6 +255,7 @@ getPlatform(){
     
     // this.api.sendPostRequest('api/newCode',{'code':this.code,'sim':this.sim,'range':this.range});
   }
+
 
 
   async sendSMS(sim:string,text:string){
@@ -282,22 +300,7 @@ getPlatform(){
       }
   }
   
-  // async setupCode(visitorId,visistorSim){
-    async setupCode(event:any){
-      this.visitorSim = this.selectdVisitor.sim;
-      this.visitorId = this.selectdVisitor._id;
-    //  Object.entries(this.myVisitors).forEach(async ([key,item]) =>{
-    //    Object.keys(item).forEach(async (key) => {
-    //     console.log('setupCode visitorSim --> ',item['sim'])
-    //      if(item['_id'] === item['_id'] && key === 'sim'){
-    //        this.visitorId = await item[key];
-    //        console.log('setupCode visitorSim --> ',item[key])
-    //      }
-        
-    //    })
-    //   });
-    
-  } 
+   
 
    // -------   show alerts              ---------------------------------
    async showAlerts(header:string,message:string){

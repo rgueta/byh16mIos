@@ -59,7 +59,7 @@ export class VisitorsPage implements OnInit {
   }
 
   async onSubmit(){
-    var pkg = {'name':this.name,'sim':this.sim,'email':this.email, 'address': this.address,'gender': this.gender}
+    var pkg = {'name':this.name,'sim':this.sim,'email':this.email, 'address': this.address,'gender': this.gender, 'date': new Date()}
     this.appendVisitor(pkg);
     this.closeModal();
 
