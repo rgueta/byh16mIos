@@ -23,7 +23,6 @@
           max="2060" value={{filterDay}} 
           [showDefaultButtons]="true"
           (ionChange)="getEvents(myInitial.value)"
-
         >
       </ion-datetime>
       </ng-template>
@@ -44,7 +43,7 @@
 
    <form tappable *ngIf="item.open" class="detail">
        <ion-item class='detail-events-item'>
-         <ion-label> Ocurrio: <b>{{item.createdAt}}</b></ion-label>
+         <ion-label> Ocurrio: <b>{{item.createdAt | date:'dd MMM YYYY hh:mm a'}}</b></ion-label>
        </ion-item>
        <ion-item class='detail-item'>
         <ion-label> Casa: <b>{{item.casa}}</b></ion-label>

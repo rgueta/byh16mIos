@@ -62,9 +62,16 @@ export class Tab2Page {
       this.Core_sim + '/' + this.start + '/' + this.end,this.myToken).subscribe(async result =>{
       
       this.EventsList = await result;
+      
       if(this.EventsList.length > 0){
+        this.EventsList.forEach(async (item:any) =>{
+          let d = new Date(item.createdAt.replace('Z',''));
+          item.createdAt = await new Date(d.setMinutes(d.getMinutes() - d.getTimezoneOffset()));
+        });
+
         console.log('------------ Si hay eventos ---------------- ');
         this.EventsList[0].open = true;
+        console.log('EventsList --> ',this.EventsList)
       }else{
         console.log('------------ No hay eventos ---------------- ');
         const toast = await this.toast.create({

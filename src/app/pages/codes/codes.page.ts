@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DatabaseService } from '../../services/database.service';
-import { ToastController, ModalController, AnimationController } from '@ionic/angular';
+import { ToastController, ModalController,
+         AnimationController } from '@ionic/angular';
 import { UpdCodesModalPage } from '../../modals/upd-codes-modal/upd-codes-modal.page';
 import { Utils } from '../../tools/tools';
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
@@ -44,29 +45,24 @@ export class CodesPage implements OnInit {
 
 
   async collectCodes(){
-    console.log('userId to collect codes: ' + this.userId);
-    this.api.getData_key('api/codes/user/' + this.userId, this.myToken).subscribe(async result =>{
+    this.api.getData_key('api/codes/user/' + this.userId, 
+      this.myToken).subscribe(async result =>{
       Object.entries(result).forEach(async ([key,item]) =>{
-          // console.log('Expiry --> ' + new Date(item.expiry)  + ' - Utils.convDateToday() --> ' + Utils.convDateToday());
           if(new Date(item.expiry) < new Date()){
             item.expired = true;
           }else{
             item.expired = false;
           }
 
-          item.range = await ((new Date(item.expiry).getTime() - new Date().getTime() ) / 3600000).toFixed(1);
-    });
+          item.range = await ((new Date(item.expiry).getTime() - 
+            new Date().getTime() ) / 3600000).toFixed(1);
+      });
       
       this.CodeList = await result;
       this.CodeList[0].open = true;
-      // this.initial = new Date(this.CodeList[0].initial);
-      // this.expiry = new Date(this.CodeList[0].expiry);
-
       this.initial = this.CodeList[0].initial;
       this.expiry = this.CodeList[0].expiry;
-      console.log('collectCodes initial --> ',this.CodeList[0].initial); 
-
-         });
+      });
 
       // await this.HrsRange();
   }

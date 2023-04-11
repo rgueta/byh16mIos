@@ -9,6 +9,7 @@ import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { timeoutWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
+import { environment } from 'src/environments/environment';
 
 const USERID = 'my-userId';
 
@@ -238,8 +239,12 @@ async setupCode(event:any){
       await this.sendSMS(coreSim, pckgToCore);
 
       //  send code to visitor
+      if(environment.app.debugging_send_sms){
        await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
        '  Expira en ' + expire + ' Hrs.' )
+      }else{
+        console.log('Modo debugging no se envio el SMS');
+      }
 
        this.closeModal();
  
