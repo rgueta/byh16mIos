@@ -284,9 +284,6 @@ async newModal(){
   modal.present()
 }
 
-
-
-
 //#region ---- Animation controller  ----------------------------------
 
 async modalVisitors() {
