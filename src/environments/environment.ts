@@ -14,7 +14,7 @@ export const environment = {
     neighbor_role : "60c642849f93ea09e4bbe3c6",
     // status 1 = Active; 2 = Inactive, 3 = New register
     register_status : 3,
-    "server_url" : "http://ec2-44-203-151-166.compute-1.amazonaws.com/"
+    "server_url" : "http://34.229.28.145/"
     // server_url : "http://192.168.1.154:5000/"
   }
 };

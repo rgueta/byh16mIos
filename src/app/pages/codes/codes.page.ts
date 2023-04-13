@@ -5,6 +5,7 @@ import { ToastController, ModalController,
 import { UpdCodesModalPage } from '../../modals/upd-codes-modal/upd-codes-modal.page';
 import { Utils } from '../../tools/tools';
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-codes',
@@ -172,20 +173,17 @@ export class CodesPage implements OnInit {
 
     console.log('Resend code --> ', 'codigo,' + pkg['code'] +','+ pkg['expiry'] + ',' + pkg['_id'])
 
-    
-
     try{
+      if(environment.app.debugging_send_sms){
+        await this.sms.send(sim,'codigo,' + pkg['code'] +','+ pkg['expiry'] + ',' + pkg['_id']);
+          const toast = await this.toast.create({
+            message : 'Text was sent !',
+            duration: 4000
+          });
 
-      await this.sms.send(sim,'codigo,' + pkg['code'] +','+ pkg['expiry'] + ',' + pkg['_id']);
-      // alert('Text was sent !')
-        const toast = await this.toast.create({
-          message : 'Text was sent !',
-          duration: 4000
-        });
-
-        this.collectCodes(); 
-        toast.present();
-          
+          this.collectCodes(); 
+          toast.present();
+      }  
         
     }
     catch(e:any){

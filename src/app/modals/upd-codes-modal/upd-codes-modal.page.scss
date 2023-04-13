@@ -1,4 +1,7 @@
 
+
+
+
 ion-modal {
     &.bottom-end {
       align-items: flex-end;
@@ -62,17 +65,52 @@ ion-modal {
     width: 40px;
 }
 
-.visitorOption{
-    display: contents;
-    text-align: center;
-}
+
 
 .labelVisitor{
    display: contents;
 }
 
-.selectedItem{
-    display: contents;
-    text-align: center;
+
+
+.visitor-item-select{
+    display:flex;
+    align-content: space-between;
+    flex-wrap: wrap;
+    // width: 100%;
 }
 
+.visitorOption{
+    display: contents;
+    float: right;
+    text-align: center;
+    
+    max-width: 100% !important;
+    width: 100%;
+}
+
+// ---- Lines used to fix ion-select-option width (
+    .alert-tappable.alert-radio{
+        height: auto;
+        contain: content;
+        // --min-height: auto;
+    }
+    
+    .alert-radio-label.sc-ion-alert-md,
+    .alert-radio-label.sc-ion-alert-ios{
+        white-space: normal;
+    }
+    
+    .alert-checkbox-label.sc-ion-alert-md,
+    .alert-checkbox-label.sc-ion-alert-ios {
+       white-space: normal;
+    }
+    .alert-tappable.alert-checkbox {
+       height: auto;
+       contain: content;
+    }
+
+.icon_exit{
+    font-size: 38px;
+    padding-left: 10px;
+}

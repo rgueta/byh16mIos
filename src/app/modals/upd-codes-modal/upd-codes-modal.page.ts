@@ -1,15 +1,16 @@
-import { Component, Input, OnInit,NgModule  } from '@angular/core';
-import { ModalController,AlertController, Platform, ToastController } from '@ionic/angular';
+import { Component, Input, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ModalController,AlertController,
+  Platform, ToastController, IonSelect } from '@ionic/angular';
 import { DatabaseService } from '../../services/database.service';
 import { Utils } from '../../tools/tools';
 // import { element } from 'protractor';
 import { Sim } from "@ionic-native/sim/ngx";
 import { SMS, SmsOptions } from "@ionic-native/sms/ngx";
 import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
-import { timeoutWith } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
+// import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
 import { environment } from 'src/environments/environment';
+import { VisitorsPage } from '../visitors/visitors.page';
 
 const USERID = 'my-userId';
 
@@ -17,12 +18,16 @@ const USERID = 'my-userId';
   selector: 'app-upd-codes-modal',
   templateUrl: './upd-codes-modal.page.html',
   styleUrls: ['./upd-codes-modal.page.scss'],
+  encapsulation:ViewEncapsulation.None,
 })
 export class UpdCodesModalPage implements OnInit {
   @Input() code:string;
   @Input() visitorSim:string;
   @Input() range:Number;
   @Input() localComment:string;
+
+  @ViewChild('VisitorList') visitorSelectRef: IonSelect;
+
   myVisitors:any;
   selectedVisitor:any;
   initial: any = new Date().toISOString();
@@ -91,6 +96,8 @@ export class UpdCodesModalPage implements OnInit {
       (err) => console.log('Unable to get sim info: ', err)
     );
 
+    this.visitorSelectRef.interface="popover";
+    await this.visitorSelectRef.open();
   }
 
 getPlatform(){
@@ -159,8 +166,23 @@ getPlatform(){
 
 }
 
+async newVisitor(){
+  const modal = await this.modalController.create({
+    component: VisitorsPage,
+    // cssClass:"my-modal"
+  });
+
+  modal.onDidDismiss().then(_ =>{
+    this.getVisitors();
+  })
+
+  modal.present()
+}
+
 async setupCode(event:any){
   this.visitorSim = this.selectedVisitor.sim;
+  console.log('selected -->', event);
+  this.visitorSelectRef.disabled;
 } 
 
 
@@ -276,11 +298,10 @@ async setupCode(event:any){
     try{
 
       if(use_twilio == 'false'){
-        console.log('sim --> ',sim);
-        console.log('text --> ',text);
-        await this.sms.send(sim,text);
+        if (environment.app.debugging_send_sms){
+          await this.sms.send(sim,text);
+        }
       }else{
-        console.log('url -- >   api/twilio/' + this.userId + '/' + text + '/' + sim);
         this.api.postData('api/twilio/open/' + this.userId + '/' + text + '/' + sim,'')
       }
 
@@ -304,8 +325,7 @@ async setupCode(event:any){
         toast.present();
       }
   }
-  
-   
+
 
    // -------   show alerts              ---------------------------------
    async showAlerts(header:string,message:string){
