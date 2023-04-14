@@ -1,0 +1,43 @@
+.list{
+    --ion-item-background: #fff;
+    .section, .section-active, .section-expired{
+    border-radius: 5px;
+
+
+   max-width: 100% !important;
+   margin-left: auto;
+   margin-right: auto;
+    // margin-bottom: 4px;
+    // --min-height:58px;
+    }
+
+    
+}
+
+.visitor-items{
+    min-width: 100%;
+    ion-icon{
+        color: #000;
+    }
+}
+
+.toolbar-visitor{
+    display: flex;
+    justify-content: space-between;
+}
+
+.title_visitor{
+    text-align: center;
+}
+
+.mainTitle{
+    color: black;
+}
+
+ion-button{
+    color: white;
+}
+
+.delete-item{
+    padding-right: 10px;
+}

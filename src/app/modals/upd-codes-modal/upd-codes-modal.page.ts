@@ -10,7 +10,8 @@ import { Validators, FormControl, FormBuilder, FormGroup} from "@angular/forms";
 import { Router } from '@angular/router';
 // import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
 import { environment } from 'src/environments/environment';
-import { VisitorsPage } from '../visitors/visitors.page';
+import { VisitorListPage } from '../visitor-list/visitor-list.page';
+
 
 const USERID = 'my-userId';
 
@@ -36,6 +37,7 @@ export class UpdCodesModalPage implements OnInit {
   userId = {};
   StrPlatform = '';
   comment = '';
+  localVisitor='Visitante';
 
   public code_expiry:any;
 
@@ -96,8 +98,8 @@ export class UpdCodesModalPage implements OnInit {
       (err) => console.log('Unable to get sim info: ', err)
     );
 
-    this.visitorSelectRef.interface="popover";
-    await this.visitorSelectRef.open();
+    // this.visitorSelectRef.interface="popover";
+    // await this.visitorSelectRef.open();
   }
 
 getPlatform(){
@@ -164,19 +166,6 @@ getPlatform(){
     //Sort Visitors by name
     this.myVisitors = await Utils.sortJsonVisitors(this.myVisitors,'name',true);
 
-}
-
-async newVisitor(){
-  const modal = await this.modalController.create({
-    component: VisitorsPage,
-    // cssClass:"my-modal"
-  });
-
-  modal.onDidDismiss().then(_ =>{
-    this.getVisitors();
-  })
-
-  modal.present()
 }
 
 async setupCode(event:any){
@@ -346,6 +335,27 @@ async setupCode(event:any){
       ],
     });
     await MsgAlert.present();
+  }
+
+
+  async openVisitorModal() {
+    const modal = await this.modalController.create({
+      component: VisitorListPage,
+    });
+
+    modal.onDidDismiss()
+    .then(async (item) => {
+      console.log('visitor seleccionado --> ', item.data)
+      this.localVisitor = item.data['name'];
+      this.visitorSim = item.data['sim'];
+
+      console.log(this.localVisitor);
+      console.log(this.visitorSim)
+
+
+    })
+
+    return await modal.present();
   }
 
   closeModal(){

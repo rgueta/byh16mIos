@@ -1,7 +1,5 @@
 
 
-
-
 ion-modal {
     &.bottom-end {
       align-items: flex-end;
@@ -12,6 +10,17 @@ ion-modal {
         contain: content;
       }
     }
+  }
+  
+  .closeButton{
+    margin-right: 0px;
+  }
+
+  .title{
+    display:flex;
+    flex-direction: column;
+    margin-left: -20px;
+    width: 100%;
   }
 
   .itemFilter {

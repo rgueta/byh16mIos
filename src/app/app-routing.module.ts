@@ -77,7 +77,11 @@ const routes: Routes = [
   {
     path: 'upd-cpus',
     loadChildren: () => import('./modals/upd-cpus/upd-cpus.module').then( m => m.UpdCpusPageModule)
+  },  {
+    path: 'visitor-list',
+    loadChildren: () => import('./modals/visitor-list/visitor-list.module').then( m => m.VisitorListPageModule)
   }
+
 ];
 @NgModule({
   imports: [
