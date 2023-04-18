@@ -161,7 +161,6 @@ getPlatform(){
 
   async getVisitors(){
     this.myVisitors = await JSON.parse(localStorage.getItem('visitors'))
-    console.log('myVisitors --> ', this.myVisitors);
 
     //Sort Visitors by name
     this.myVisitors = await Utils.sortJsonVisitors(this.myVisitors,'name',true);
@@ -345,12 +344,15 @@ async setupCode(event:any){
 
     modal.onDidDismiss()
     .then(async (item) => {
-      console.log('visitor seleccionado --> ', item.data)
-      this.localVisitor = item.data['name'];
-      this.visitorSim = item.data['sim'];
 
-      console.log(this.localVisitor);
-      console.log(this.visitorSim)
+      if(item.data){
+        this.localVisitor = item.data['name'] ? item.data['name'] : ''  ;
+        this.visitorSim = item.data['sim'] ? item.data['sim'] : '';
+
+        console.log(this.localVisitor);
+        console.log(this.visitorSim);
+      }
+      
 
 
     })

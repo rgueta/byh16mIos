@@ -11,6 +11,10 @@ ion-modal {
       }
     }
   }
+
+  .wrap-input{
+    padding: 10px 0 10px 0;
+  }
   
   .closeButton{
     margin-right: 0px;
@@ -83,9 +87,9 @@ ion-modal {
 
 
 .visitor-item-select{
-    display:flex;
-    align-content: space-between;
-    flex-wrap: wrap;
+    display:contents;
+    // align-content: space-between;
+    // flex-wrap: wrap;
     // width: 100%;
 }
 

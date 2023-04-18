@@ -18,16 +18,10 @@
   </ion-item>
 
  <form [formGroup] = "UpdCodeForm" >
-      <ion-item class="visitor-item-select">
-        <ion-label class="visitorOption" (click)="openVisitorModal()">{{localVisitor}}
-
+      <ion-item class="visitor-item-select"  color="primary">
+        <ion-label class="visitorOption" href="#" (click)="openVisitorModal()">{{localVisitor}}
         </ion-label>
-        <!-- <ion-select #VisitorList class="visitorOption" [(ngModel)]="selectedVisitor" interface="popover" placeholder="Visitante" cancel-text="Nuevo" ok-text="Aceptar"
-          (ionChange)="setupCode($event)" formControlName="visitor"
-          (ionCancel)="newVisitor()" >
-          <ion-select-option class="selectedItem" (selected)="item.isSelected" *ngFor="let item of myVisitors, let i = index"
-          [value] = "item">{{item.name}}</ion-select-option>
-        </ion-select> -->
+        <ion-icon name="person-add-outline" slot="start" (click)="openVisitorModal()" ></ion-icon>
       </ion-item>
 
 

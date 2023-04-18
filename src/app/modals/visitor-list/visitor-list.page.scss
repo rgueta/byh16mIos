@@ -1,17 +1,6 @@
 .list{
     --ion-item-background: #fff;
-    .section, .section-active, .section-expired{
-    border-radius: 5px;
-
-
-   max-width: 100% !important;
-   margin-left: auto;
-   margin-right: auto;
-    // margin-bottom: 4px;
-    // --min-height:58px;
-    }
-
-    
+    border-bottom-color:red ;
 }
 
 .visitor-items{
@@ -22,12 +11,17 @@
 }
 
 .toolbar-visitor{
-    display: flex;
-    justify-content: space-between;
+    display: contents;
+    // justify-content: space-between;
+}
+.icon_exit{
+    margin-top: 15px;
 }
 
 .title_visitor{
+    margin-top: 15px;
     text-align: center;
+    margin-right: 50px;
 }
 
 .mainTitle{

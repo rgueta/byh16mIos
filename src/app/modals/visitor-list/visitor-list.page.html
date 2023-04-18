@@ -1,18 +1,24 @@
 <ion-header>
   <ion-toolbar class="toolbar-visitor">
-    <ion-title>Visitantes</ion-title>
+    <ion-title class="title_visitor">Visitantes</ion-title>
     <ion-buttons class="modalcloseButton" slot="start">
       <ion-icon class="icon_exit" (click)='closeModal()' name='arrow-back-circle-outline' >Cerrar</ion-icon>
     </ion-buttons>
-    <ion-button slot="end">Agregar</ion-button>
   </ion-toolbar>
 </ion-header>
 
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button class="button-green" (click)="addVisitor()">
+    <ion-icon name="people"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
 <ion-content>
-  <ion-list class="list" detail="false" no-padding>
+  <ion-list class="list" detail="false" lines="full" no-padding [inset]="true">
     <ion-item class="visitor-items" *ngFor="let item of myVisitors; let i = index;">
       <ion-label class="mainTitle" (click)="toggleSection(item)">{{item.name}}</ion-label>
-      <ion-icon class="delete-item" slot="end" name="trash-outline" (click)="deleteVisitor(item)"></ion-icon>
+      <ion-icon class="delete-item" slot="end" name="trash-outline" (click)="removeVisitor(i,item.name)"></ion-icon>
     </ion-item>
     
 
