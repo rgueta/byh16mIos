@@ -31,6 +31,11 @@
  
     <ion-button class="loginButton" type="submit" expand="block" 
       [disabled]="!credentials.valid">Signin</ion-button>
+      <hr>
+
+      <ion-button class="loginButton" expand="block" (click)='openStore()'
+      [disabled]="!credentials.valid">Soy visitante</ion-button>
+
     <div class="resetPwd-Link">
       <a routerLink="/pwd-reset">Recuperar contraseña</a>
     </div>

@@ -29,6 +29,7 @@ export class VisitorsPage implements OnInit {
   contactSelected:any = {};
   userId : string;
   visitors: any = [];
+  pkg:{};
 
   constructor(
             private modalController : ModalController,
@@ -48,7 +49,6 @@ export class VisitorsPage implements OnInit {
 
     if(localStorage.getItem(VISITORS) != null){
       this.visitors = await JSON.parse(localStorage.getItem(VISITORS));
-      console.log('actual visitors --> ', this.visitors);
     }
   }
   
@@ -59,8 +59,8 @@ export class VisitorsPage implements OnInit {
   }
 
   async onSubmit(){
-    var pkg = {'name':this.name,'sim':this.sim,'email':this.email, 'address': this.address,'gender': this.gender, 'date': new Date()}
-    this.appendVisitor(pkg);
+    this.pkg = {'name':this.name,'sim':this.sim,'email':this.email, 'address': this.address,'gender': this.gender, 'date': new Date()}
+    this.appendVisitor(this.pkg);
     this.closeModal();
 
   }
@@ -118,8 +118,7 @@ export class VisitorsPage implements OnInit {
   }
 
   closeModal(){
-    console.log('Closing modal ...!');
-    this.modalController.dismiss(null,'dismiss');
+    this.modalController.dismiss(this.pkg,'dismiss');
   } 
 
 

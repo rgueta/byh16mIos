@@ -1,6 +1,6 @@
 .mainToolBar{
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     width: 100%;
 }
 
@@ -17,7 +17,7 @@
 #header-core{
     text-align: center;
     vertical-align: middle;
-    width: 70vh;
+    width: 80vh;
 
     ion-title{
         height: 100%;

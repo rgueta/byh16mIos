@@ -13,7 +13,7 @@
 <ion-content>
 <!-- Menu -->
 
-  <ion-menu side="start" menuId="adminMenu" contentId="menu">
+  <ion-menu class="main-manu" side="start" menuId="adminMenu" content-id="menu">
     <ion-header>
       <ion-toolbar class="titleGreen">
         <ion-title class="title" >Admin options</ion-title>
@@ -32,8 +32,6 @@
           <ion-toggle id="twilioToggle" class="ion-toggle-red" slot="end" [ngModel]="localenable" [checked]="false" 
           [ngModelOptions]="{standalone: true}" (ionChange)="TwilioToggleEven($event)"></ion-toggle>
       </ion-item>
-      
-        
       </ion-list>
     </ion-content>
   </ion-menu>

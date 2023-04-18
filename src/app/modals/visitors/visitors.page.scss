@@ -1,6 +1,6 @@
 .header{
     display: flex;
-    flex-wrap: wrap;
+    // flex-wrap: wrap;
 }
 
 .header img{
@@ -8,9 +8,19 @@
     width: 100px;
 }
 
+.title{
+    display:flex;
+    flex-direction: column;
+    margin-left: -20px;
+    width: 100%;
+  }
+
 .closeButton{
-    font-size: 30px;
-    top: -35px;
-    margin-right: 15px;
-    position:relative;
+    font-size: 3em;
+    // position:relative;
+}
+
+.icon_exit{
+    font-size: 38px;
+    padding-left: 10px;
 }

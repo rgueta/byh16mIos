@@ -40,7 +40,7 @@ export class LoginPage implements OnInit {
 
   ) { }
 
-  async ngOnInit() {
+  async ngOnInit_() {
     this.version = environment.app.version;
     if(isPlatform('cordova') || isPlatform('ios')){
       this.lockToPortrait();
@@ -48,6 +48,7 @@ export class LoginPage implements OnInit {
       this.isAndroid = true;
     }
 
+    
     if(localStorage.getItem(VISITORS) != null){
       var pkg = localStorage.getItem('visitors');
        localStorage.clear();
@@ -56,18 +57,55 @@ export class LoginPage implements OnInit {
       await localStorage.clear();
     }
 
-    this.credentials = this.fb.group({
+    
+
+    this.credentials = await this.fb.group({
       email: ['neighbor2@gmail.com', [Validators.required, Validators.email]],
       pwd: ['1234', [Validators.required, Validators.minLength(4)]],
     });
 
     this.device_info = await Device.getInfo();
-    console.log('this.device_info --> ',JSON.stringify(this.device_info))
+  
+    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
   }
 
+
+  async ngOnInit() {
+    this.version = environment.app.version;
+    if(isPlatform('cordova') || isPlatform('ios')){
+      this.lockToPortrait();
+    }else if(isPlatform('android')){
+      this.isAndroid = true;
+    }
+
+    
+    if(localStorage.getItem(VISITORS) != null){
+      var pkg = localStorage.getItem('visitors');
+       localStorage.clear();
+       localStorage.setItem('visitors',pkg);
+    }else{
+      await localStorage.clear();
+    }
+
+    
+
+    this.credentials = await this.fb.group({
+      email: ['neighbor2@gmail.com', [Validators.required, Validators.email]],
+      pwd: ['1234', [Validators.required, Validators.minLength(4)]],
+    });
+
+    this.device_info = await Device.getInfo();
+  
+    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
+  }
+
+  
   lockToPortrait(){
     this.orientation.lock(this.orientation.ORIENTATIONS.PORTRAIT)
   }
+
+
+  
 
   async login() {
     const loading = await this.loadingController.create();
@@ -122,8 +160,10 @@ export class LoginPage implements OnInit {
         await alert.present();
       }
     );
+}
 
-
+async openStore(){
+  this.router.navigate(['/store']);
 }
 
    // Easy access for form fields
