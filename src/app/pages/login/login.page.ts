@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from './../../services/authentication.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
 import { AlertController, LoadingController, isPlatform} from "@ionic/angular";
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { Device } from "@capacitor/device";
+import { Utils } from 'src/app/tools/tools';
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
@@ -19,11 +20,16 @@ const VISITORS = 'visitors';
 })
 export class LoginPage implements OnInit {
   isAndroid:any;
-  credentials!: FormGroup;
-  creds = {
-    email :'neighbor2@gmail.com',
-    pwd : '1234'
-  };
+  credentials: FormGroup;
+
+  // Easy access for form fields
+   get email() {
+    return this.credentials.get('email');
+  }
+  
+  get password() {
+    return this.credentials.get('pwd');
+  }
   
   device_info:any;
 
@@ -42,44 +48,28 @@ export class LoginPage implements OnInit {
 
   async ngOnInit() {
     this.version = environment.app.version;
+
     if(isPlatform('cordova') || isPlatform('ios')){
       this.lockToPortrait();
     }else if(isPlatform('android')){
       this.isAndroid = true;
     }
 
-    
-    if(localStorage.getItem(VISITORS) != null){
-      console.log('SI encontree key visitors')
+    Utils.cleanLocalStorage();
 
-      var pkg = localStorage.getItem('visitors');
-       localStorage.clear();
-       localStorage.setItem('visitors',pkg);
-    }else{
-      console.log('NO. encontree key visitors')
-      await localStorage.clear();
-    }
-
-    
-
-    this.credentials = await this.fb.group({
-      email: ['neighbor2@gmail.com', [Validators.required, Validators.email]],
-      pwd: ['1234', [Validators.required, Validators.minLength(4)]],
+    this.credentials =new FormGroup({
+      email: new FormControl('neighbor2@gmail.com', [Validators.required, Validators.email]),
+      pwd: new FormControl('1234', [Validators.required, Validators.minLength(4)]),
     });
 
-    this.device_info = await Device.getInfo();
-  
-    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
+    // this.device_info = await Device.getInfo();
+
+    // console.log('this.device_info --> ',await JSON.stringify(this.device_info))
   }
 
-
- 
   lockToPortrait(){
     this.orientation.lock(this.orientation.ORIENTATIONS.PORTRAIT)
   }
-
-
-  
 
   async login() {
     const loading = await this.loadingController.create();
@@ -140,13 +130,6 @@ async openStore(){
   this.router.navigate(['/store']);
 }
 
-   // Easy access for form fields
-   get email() {
-    return this.credentials.get('email');
-  }
-  
-  get password() {
-    return this.credentials.get('pwd');
-  }
+
 
 }

@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { LocalNotifications } from "@capacitor/local-notifications";
+import {Utils } from "../tools/tools";
 
 const DEVICE_UUID = 'device-uuid';
 
@@ -51,14 +52,11 @@ export class Tab1Page {
     private SIM : Sim) { }
   
   async ionViewWillEnter(){
-    console.log('------------------ ionViewWillEnter tabs.page ----------------');
-    const val = await localStorage.getItem('IsAdmin')
-      if(val === 'true'){
+      if(localStorage.getItem('IsAdmin') === 'true'){
         this.SoyAdmin = true;
       }else{
         this.SoyAdmin = false;
       }
-    console.log('tabs Soy admin -->' ,this.SoyAdmin);
   }
 
   async ngOnInit(){
@@ -102,14 +100,14 @@ export class Tab1Page {
 
     // getting info data
     if(environment.app.debugging){
-      console.log('collectInfo jumped, because debugging!');
+      console.log('collect Info jumped, because debugging!');
       const toast = await this.toast.create({
-        message : 'collectInfo jumped, because debugging!',
+        message : 'collect Info jumped, because debugging!',
         duration: 3000
       });
         toast.present();
     }else{
-      this.collectInfo()
+      this.collectInfo();
     }
 
   }
@@ -117,6 +115,7 @@ export class Tab1Page {
   async init(): Promise<void> {
     await this.SIM.hasReadPermission().then(async allowed =>{
       if(!allowed){
+        console.log('Si entre init sim has read permissions')
         await this.SIM.requestReadPermission().then( 
         async () => {
             await this.SIM.getSimInfo().then(
@@ -131,30 +130,17 @@ export class Tab1Page {
   
    
 
-     // console.log('SIM info --> ' , this.SIM.getSimInfo());
+     
      
      const info = await Device.getInfo();
+     console.log('tab1.page SIM info --> ' , info);
      localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
-     // console.log('info uuid--> ', info.uuid);
-     // console.log('Platform --> ', this.platform.platforms);
+
      if (info.platform === 'android') {
-       // console.log('info uuid--> ', info.uuid);
        try {
-         console.log('soy android');
-   //       const sqlite = CapacitorSQLite as any;
-   //       // await sqlite.requestPermissions();
-   //       this.setupDatabase();
+         console.log('soy android OK');
        } catch (e) {
-         console.log('no soy android');
-   //       const alert = await this.alertCtrl.create({
-   //         header: 'No DB access',
-   //         message: 'This app can\'t work without Database access.',
-   //         buttons: ['OK']
-   //       });
-   //       await alert.present();
-   //     }
-   //   } else {
-   //     this.setupDatabase();
+         console.log('soy android con Error: ', e);
      }
    }else{
      console.log('no soy android');
@@ -184,7 +170,7 @@ async collectInfo(){
   async logout(){
     await this.api.logout();
     this.router.navigateByUrl('/',{replaceUrl:true});
-    // Storage.clear();
+    Utils.cleanLocalStorage();
   }
 
   loadCodes() {
@@ -208,6 +194,10 @@ async collectInfo(){
   push_notifications(codeId:Number){
     this.toastEvent('Process code ' + codeId);
     
+  }
+
+  async openFamily(){
+
   }
 
   sendOpening(Door : string){

@@ -11,9 +11,7 @@ export class TabsPage {
   constructor() {}
 
   async ionViewWillEnter(){
-    console.log('------------------ ionViewWillEnter tabs.page ----------------');
     localStorage.getItem('IsAdmin') === 'true' ? this.SoyAdmin = true : this.SoyAdmin = false ;
-    console.log('tabs Soy admin -->' ,this.SoyAdmin);
   }
 
 }

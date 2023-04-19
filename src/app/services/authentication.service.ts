@@ -24,6 +24,7 @@ const CORE_NAME = 'core-name';
 const LOCATION = 'location';
 const TWILIO = 'twilio';
 const CODE_EXPIRY = 'code_expiry';
+const TOKEN_PX = 'token_px';
 
 // #endregion  
 
@@ -77,6 +78,7 @@ export class AuthenticationService {
           await localStorage.setItem('my-role',val_role);
         })
         
+        localStorage.setItem(TOKEN_PX,tokens.pwd);
         localStorage.setItem(USERID,tokens.userId);
         localStorage.setItem(USER_ROLES,JSON.stringify(tokens.roles));
         localStorage.setItem(CORE_SIM,tokens.core_sim);

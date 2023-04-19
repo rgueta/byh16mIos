@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
+import { FormGroup } from "@angular/forms";
+import { Utils } from "../../tools/tools";
 
 @Component({
   selector: 'app-store',
@@ -7,13 +9,13 @@ import { Router } from "@angular/router";
   styleUrls: ['./store.page.scss'],
 })
 export class StorePage implements OnInit {
-
+credentials = new FormGroup({});
   constructor(
     private router:Router,
   ) { }
 
   ngOnInit() {
-    localStorage.clear();
+    Utils.cleanLocalStorage();
   }
 
 close(){

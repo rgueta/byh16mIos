@@ -52,6 +52,26 @@ export const Utils = {
           if (asc) { return ((x < y) ? -1 : ((x > y) ? 1 : 0)); }
           else { return ((x > y) ? -1 : ((x < y) ? 1 : 0)); }
         });
+      },
+
+    cleanLocalStorage: async () =>{
+      let myVisitors : any = [];
+      let myToken_px : string = '';
+
+      if(localStorage.getItem('visitors') != null){
+        myVisitors = await JSON.parse(localStorage.getItem('visitors'));
+      }else{
       }
+
+      if(localStorage.getItem('token_px') != null){
+        myToken_px = await JSON.parse(localStorage.getItem('token_px'));
+      }
+
+      await localStorage.clear();
+      console.log('Si entre a limpiar localSTorage');
+      await localStorage.setItem('visitors',JSON.stringify(myVisitors));
+      await localStorage.setItem('token_px', myToken_px);
+
+    }
 
 }
