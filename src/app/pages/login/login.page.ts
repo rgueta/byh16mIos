@@ -40,36 +40,6 @@ export class LoginPage implements OnInit {
 
   ) { }
 
-  async ngOnInit_() {
-    this.version = environment.app.version;
-    if(isPlatform('cordova') || isPlatform('ios')){
-      this.lockToPortrait();
-    }else if(isPlatform('android')){
-      this.isAndroid = true;
-    }
-
-    
-    if(localStorage.getItem(VISITORS) != null){
-      var pkg = localStorage.getItem('visitors');
-       localStorage.clear();
-       localStorage.setItem('visitors',pkg);
-    }else{
-      await localStorage.clear();
-    }
-
-    
-
-    this.credentials = await this.fb.group({
-      email: ['neighbor2@gmail.com', [Validators.required, Validators.email]],
-      pwd: ['1234', [Validators.required, Validators.minLength(4)]],
-    });
-
-    this.device_info = await Device.getInfo();
-  
-    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
-  }
-
-
   async ngOnInit() {
     this.version = environment.app.version;
     if(isPlatform('cordova') || isPlatform('ios')){
@@ -80,10 +50,13 @@ export class LoginPage implements OnInit {
 
     
     if(localStorage.getItem(VISITORS) != null){
+      console.log('SI encontree key visitors')
+
       var pkg = localStorage.getItem('visitors');
        localStorage.clear();
        localStorage.setItem('visitors',pkg);
     }else{
+      console.log('NO. encontree key visitors')
       await localStorage.clear();
     }
 
@@ -99,7 +72,8 @@ export class LoginPage implements OnInit {
     console.log('this.device_info --> ',await JSON.stringify(this.device_info))
   }
 
-  
+
+ 
   lockToPortrait(){
     this.orientation.lock(this.orientation.ORIENTATIONS.PORTRAIT)
   }
