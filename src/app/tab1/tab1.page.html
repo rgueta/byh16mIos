@@ -47,7 +47,7 @@
     <ion-content>
       <ion-list>
         <ion-item-group>
-          <ion-item (click)="openFamily()">Familia</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="openFamily()">Familia</ion-item>
           <ion-item [button]="true" [detail]="false">Option 2</ion-item>
           <ion-item-divider></ion-item-divider>
           <ion-item [button]="true" [detail]="false">Log out</ion-item>
