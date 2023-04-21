@@ -1,6 +1,6 @@
 import { Component ,Input,} from '@angular/core';
 import { ModalController, ToastController ,
-  AnimationController, isPlatform, getPlatforms} from '@ionic/angular';
+  AnimationController, isPlatform, getPlatforms, PopoverController} from '@ionic/angular';
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { Sim } from "@ionic-native/sim/ngx"; 
 import { Socket } from 'ngx-socket-io';
@@ -13,6 +13,7 @@ import { VisitorsPage } from '../modals/visitors/visitors.page';
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import {Utils } from "../tools/tools";
+import { FamilyPage } from "../modals/family/family.page";
 
 const DEVICE_UUID = 'device-uuid';
 
@@ -40,7 +41,6 @@ export class Tab1Page {
   REST_API_SERVER = environment.db.server_url;
 
   constructor(
-    private authService: AuthenticationService,
     private sms: SMS,
     private toast: ToastController,
     public modalController: ModalController,
@@ -49,7 +49,8 @@ export class Tab1Page {
     private router: Router,
     private screenOrientation: ScreenOrientation,
     private socket: Socket,
-    private SIM : Sim) { }
+    private SIM : Sim,
+    private popoverCtrl:PopoverController) { }
   
   async ionViewWillEnter(){
       if(localStorage.getItem('IsAdmin') === 'true'){
@@ -155,6 +156,7 @@ export class Tab1Page {
   }, 2000);
 }
 
+
 async collectInfo(){
  await this.api.getData('api/info/' + this.userId['value']).subscribe(async result => {
     this.localInfo = await result;
@@ -197,7 +199,11 @@ async collectInfo(){
   }
 
   async openFamily(){
-
+    const modal = await this.modalController.create({
+      component: FamilyPage,
+    });
+  
+    modal.present()
   }
 
   sendOpening(Door : string){

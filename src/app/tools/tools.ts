@@ -60,15 +60,13 @@ export const Utils = {
 
       if(localStorage.getItem('visitors') != null){
         myVisitors = await JSON.parse(localStorage.getItem('visitors'));
-      }else{
       }
 
       if(localStorage.getItem('token_px') != null){
-        myToken_px = await JSON.parse(localStorage.getItem('token_px'));
+        myToken_px = await localStorage.getItem('token_px');
       }
 
       await localStorage.clear();
-      console.log('Si entre a limpiar localSTorage');
       await localStorage.setItem('visitors',JSON.stringify(myVisitors));
       await localStorage.setItem('token_px', myToken_px);
 

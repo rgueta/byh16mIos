@@ -38,6 +38,10 @@
     } 
 }
 
+ion-menu-button{
+    font-size: 2em !important;
+  }
+
 .title{
     text-align: center;
     font-size: 1.4em;
@@ -56,6 +60,11 @@
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
     --background:#64AA95;
     color:#fff
+}
+
+.icon_exit{
+    font-size: 38px;
+    padding-left: 10px;
 }
 
 .basic-alert{

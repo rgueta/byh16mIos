@@ -1,5 +1,7 @@
 
-
+.family-menu{
+    min-width: 100%;
+}
 
 .itemWrapper{
     display: inline;
@@ -102,7 +104,7 @@
 
 .detailRoutines{
     padding-left:12px;
-    max-width: 97% !important;
+    min-width: 87% !important;
     --ion-item-background:#dfedfa;
     --ion-item-color: #000;
 }

@@ -80,6 +80,10 @@ const routes: Routes = [
   },  {
     path: 'visitor-list',
     loadChildren: () => import('./modals/visitor-list/visitor-list.module').then( m => m.VisitorListPageModule)
+  },
+  {
+    path: 'family',
+    loadChildren: () => import('./modals/family/family.module').then( m => m.FamilyPageModule)
   }
 
 ];

@@ -62,9 +62,9 @@ export class LoginPage implements OnInit {
       pwd: new FormControl('1234', [Validators.required, Validators.minLength(4)]),
     });
 
-    // this.device_info = await Device.getInfo();
+    this.device_info = await Device.getInfo();
 
-    // console.log('this.device_info --> ',await JSON.stringify(this.device_info))
+    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
   }
 
   lockToPortrait(){
