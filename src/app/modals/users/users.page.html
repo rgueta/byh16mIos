@@ -34,7 +34,8 @@
           <ion-label> Location:  {{item.location}}</ion-label>
         </ion-item>
         <ion-item class="wrap-input">
-          <ion-label>locked : </ion-label>
+          <ion-label *ngIf="item.locked">Unlock : </ion-label>
+          <ion-label *ngIf="!item.locked">Lock : </ion-label>
           <ion-toggle id="disableToggle" slot="end" checked="{{item.locked}}"
           (ionChange)="chgLockStatus($event,item.locked,item._id, item.name)"></ion-toggle>
         </ion-item>
