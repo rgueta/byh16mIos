@@ -10,13 +10,13 @@
       <div id="header-core">
         <ion-title>{{coreName}}</ion-title>
       </div>
-      <div>
+      <!-- <div> -->
         <ion-buttons class="" slot="end">
-        <ion-button id="popover-button">
+        <ion-button class="home-manu" id="popover-button">
           <ion-icon slot="icon-only"  name="ellipsis-vertical-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-      </div>
+      <!-- </div> -->
     </div>
     
   </ion-toolbar>
@@ -50,7 +50,7 @@
           <ion-item [button]="true" [detail]="false" (click)="openFamily()">Familia</ion-item>
           <ion-item [button]="true" [detail]="false">Option 2</ion-item>
           <ion-item-divider></ion-item-divider>
-          <ion-item [button]="true" [detail]="false">Log out</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="logout()">Log out</ion-item>
         </ion-item-group>
       </ion-list>
     </ion-content>

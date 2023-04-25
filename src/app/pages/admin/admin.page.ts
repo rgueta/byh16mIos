@@ -140,43 +140,7 @@ export class AdminPage implements OnInit {
     return await modal.present()
   }
 
-  async modalUpdCores_() {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('ion-backdrop')!)
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
 
-      const wrapperAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('.modal-wrapper')!)
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0)' },
-          { offset: 1, opacity: '0.99', transform: 'scale(1)' }
-        ]);
-
-      return this.animationController.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(700)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    }
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    }
-
-    let modal = await this.modalController.create({
-      component: UpdCoresPage,
-      enterAnimation,
-      leaveAnimation
-    });
-
-   modal.onDidDismiss().then((data) => {
-     console.log(data);
-      this.getCores();
-    });
-
-    return await modal.present();
-  }
 
   async getSIMstatus(){
      // Send a text message using default options
@@ -338,39 +302,20 @@ export class AdminPage implements OnInit {
       // ---- Animation controller  ----------------------------------
 
   async collectUsers(id:string,core:string) {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('ion-backdrop')!)
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-      const wrapperAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('.modal-wrapper')!)
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0)' },
-          { offset: 1, opacity: '0.99', transform: 'scale(1)' }
-        ]);
-
-      return this.animationController.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(700)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    }
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    }
-
     const modal = await this.modalController.create({
-      component: UpdUsersPage,
-      componentProps:{
-        'Core':core,
-        'CoreId': id
-      },
-      enterAnimation,
-      leaveAnimation
+      component: UsersPage,
+      backdropDismiss: true,
+      componentProps: {retorno: Boolean}
     });
-    return await modal.present();
+
+    modal.onDidDismiss()
+    // .then(async (data) =>{
+    //   if(data.data) {
+    //     this.getCores();
+    //   }
+    // });
+  
+    modal.present();
   }
 
   async chgStatusCore(event:any,coreStatus:any, id:string, name:string) {

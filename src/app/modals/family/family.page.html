@@ -45,11 +45,11 @@
            <strong>Opciones</strong></ion-label>
          </ion-item>
          <form tappable *ngIf="routineOpen" class="detailRoutines">
-           <ion-item class="detail-item" (click)="collectUsers(item._id,item.Name)">View users</ion-item>
-           <ion-item class="detail-item" (click)="modalRegister(item._id,item.name,item.location)">Add user</ion-item>
+           <ion-item class="detail-item" (click)="reportePerdido(i,item)">Reportar perdido</ion-item>
+           <!-- <ion-item class="detail-item" (click)="modalRegister(item._id,item.name,item.location)">Add user</ion-item>
            <ion-item class="detail-item" (click)="ModuleRST()">Reset module</ion-item>
            <ion-item class="detail-item" (click)="getSIMstatus()">Module status</ion-item>
-           <ion-item class="detail-item" (click)="getCoreCodes()">Active codes</ion-item>
+           <ion-item class="detail-item" (click)="getCoreCodes()">Active codes</ion-item> -->
          </form>
        </ion-list>
 

@@ -39,7 +39,10 @@ export class FamilyPage implements OnInit {
       .map((item:any) => item.open = false);
     }
   }
-  removeVisitor(index:number,name:string){}
+
+  reportePerdido(index:number,item:any){
+    console.log('Reportar --> ', index, 'item --> '+ JSON.stringify(item))
+  }
 
   checkDefault(user:any){}
   OnUserChanged(user:string){}

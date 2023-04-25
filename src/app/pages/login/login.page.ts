@@ -81,7 +81,11 @@ export class LoginPage implements OnInit {
         // let myrole = await localStorage.getItem(USER_ROLE);
 
        for(const val_myrole of JSON.parse(roles)){
-          console.log('Login.. page my-role --->  ' + roles);
+          if(localStorage.getItem('locked') === 'true')
+          {
+            await this.lockedUser('Usuario bloqueado !');
+            return;
+          }
           if(val_myrole.name === 'admin' || val_myrole.name === 'neighbor'){
             this.router.navigateByUrl('/tabs', { replaceUrl: true });
           }else{
@@ -97,12 +101,6 @@ export class LoginPage implements OnInit {
         await loading.dismiss();
 
         let msgErr='';
-
-        if(1==1) {
-            msgErr = 'Fallo el acceso: ' + JSON.stringify(err);
-        }else{
-          msgErr = 'Fallo de acceso';
-        }
 
         const alert = await this.alertController.create({
           header: msgErr,
@@ -124,6 +122,27 @@ export class LoginPage implements OnInit {
         await alert.present();
       }
     );
+}
+
+async lockedUser(msg:string){
+  const alert = await this.alertController.create({
+    // header: msgErr,
+    message: msg,
+    buttons: [
+      {
+        text : 'OK',
+        role : 'registro',
+        handler : () => {
+          const url = '/'
+          this.router.navigateByUrl(url, {replaceUrl: true});
+          // this.router.navigate([url] , { state : { from : 'login'}  }); //send parameters
+        }
+      },
+      { text : 'OK'}
+    ],
+  });
+
+  await alert.present();
 }
 
 async openStore(){

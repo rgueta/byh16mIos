@@ -20,11 +20,15 @@ const USER_ROLES = 'my-roles';
 const MY_SIM = 'my-sim';
 const CORE_SIM = 'my-core-sim';
 const USER_ROLE = 'my-role';
+const CORE_ID = 'core-id';
 const CORE_NAME = 'core-name';
 const LOCATION = 'location';
 const TWILIO = 'twilio';
 const CODE_EXPIRY = 'code_expiry';
 const TOKEN_PX = 'token_px';
+const LOCKED = 'locked';
+
+
 
 // #endregion  
 
@@ -83,6 +87,7 @@ export class AuthenticationService {
         localStorage.setItem(USER_ROLES,JSON.stringify(tokens.roles));
         localStorage.setItem(CORE_SIM,tokens.core_sim);
         localStorage.setItem(MY_SIM,tokens.sim);
+        localStorage.setItem(CORE_ID,tokens.core_id);
         localStorage.setItem(CORE_NAME,tokens.coreName);
         localStorage.setItem(LOCATION,tokens.location);
         localStorage.setItem(TWILIO,'false');
@@ -90,7 +95,9 @@ export class AuthenticationService {
 
         localStorage.setItem(TOKEN_IAT,tokens.iatDate);
         localStorage.setItem(TOKEN_EXP,tokens.expDate);
-
+        localStorage.setItem(LOCKED,tokens.locked);
+        
+        console.log('tokens -->', tokens);
         const storeAccess = localStorage.setItem(TOKEN_KEY,tokens.accessToken);
         const storeRefresh = localStorage.setItem(REFRESH_TOKEN_KEY,tokens.refreshToken);
         return from(Promise.all([storeAccess, storeRefresh]));
