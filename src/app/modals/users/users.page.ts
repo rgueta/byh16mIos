@@ -22,7 +22,10 @@ export class UsersPage implements OnInit {
   }
 
   async getUsers(){
-    await this.api.getData('api/users/core/' + localStorage.getItem('core-id')).subscribe(async (result:any) => {
+    await this.api.getData('api/users/core/' + 
+    localStorage.getItem('core-id') + '/' +
+    localStorage.getItem('my-userId')
+    ).subscribe(async (result:any) => {
       this.users = result;
       this.users[0].open = true;
       console.log('users -->', this.users);
@@ -67,8 +70,9 @@ export class UsersPage implements OnInit {
             text: 'Ok',
             cssClass: 'icon-color',
             handler: async data => {
+              const adminId = localStorage.getItem('my-userId');
               if(event.target.checked){
-                await this.api.postData('api/users/lock/' + id,{'userId' : id}).then(async (onResolve) =>{
+                await this.api.postData('api/users/lock/' + adminId + '/' + id, {'neighborId' : id}).then(async (onResolve) =>{
                   await this.getUsers();
                 },
                 (onReject) =>{
@@ -77,7 +81,7 @@ export class UsersPage implements OnInit {
                 // console.log('Se bloqueara el usuario ', id);
               }else{
                 // console.log('api/cores/disable/',{'coreId': id});
-                await this.api.postData('api/users/unlock/' + id,{'userId' : id}).then(async (onResolve) =>{
+                await this.api.postData('api/users/unlock/' + adminId + '/' + id, {'neighborId' : id}).then(async (onResolve) =>{
                   await this.getUsers();
                 },
                 (onReject) =>{

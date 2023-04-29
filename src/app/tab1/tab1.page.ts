@@ -1,6 +1,8 @@
 import { Component ,Input,} from '@angular/core';
 import { ModalController, ToastController ,
-  AnimationController, isPlatform, getPlatforms, PopoverController} from '@ionic/angular';
+  AnimationController, isPlatform, getPlatforms,
+  PopoverController} from '@ionic/angular';
+import type { ToastOptions } from "@ionic/angular";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { Sim } from "@ionic-native/sim/ngx"; 
 import { Socket } from 'ngx-socket-io';
@@ -11,9 +13,11 @@ import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
-import { LocalNotifications } from "@capacitor/local-notifications";
+import { ScheduleOptions, LocalNotifications } from "@capacitor/local-notifications";
 import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
+import { RequestsPage } from "../modals/requests/requests.page";
+
 
 const DEVICE_UUID = 'device-uuid';
 
@@ -77,8 +81,23 @@ export class Tab1Page {
     // const userId = await this.storage.get('my-userId');
 
      // ---- socket  -------------------------
-    this.socket.connect();
+    // this.socket.connect();
+  
     this.socket.emit('create', sim)
+    this.socket.on('msg', async (msg:string) =>{
+      await this.presentToast({
+        message : 'msg. recivido del socket --> ' + msg,
+        duration: 10000,
+        buttons:[
+          {text: 'Ok'}
+        ]
+      });
+
+      this.scheduleBasic('msg. recivido del socket --> ');
+
+      console.log('msg. recivido del socket --> ', msg)
+    });
+
     let name = `User-${new Date().getTime()}`;
     this.currentUser = name;
 
@@ -92,6 +111,8 @@ export class Tab1Page {
       this.scheduleBasic(data);
     });
 // -----------------------------------------------
+
+
     console.log('getPlatform --> ', JSON.stringify(getPlatforms()));
     if(isPlatform('cordova') || isPlatform('ios')){
       this.lockToPortrait();
@@ -102,11 +123,13 @@ export class Tab1Page {
     // getting info data
     if(environment.app.debugging){
       console.log('collect Info jumped, because debugging!');
-      const toast = await this.toast.create({
+      await this.presentToast({
         message : 'collect Info jumped, because debugging!',
-        duration: 3000
+        duration: 10000,
+        buttons:[
+          {text: 'Ok'}
+        ]
       });
-        toast.present();
     }else{
       this.collectInfo();
     }
@@ -129,10 +152,6 @@ export class Tab1Page {
       }
     });
   
-   
-
-     
-     
      const info = await Device.getInfo();
      console.log('tab1.page SIM info --> ' , info);
      localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
@@ -157,8 +176,15 @@ export class Tab1Page {
 }
 
 
+async presentToast(opts: ToastOptions) {
+  const toast = await this.toast.create(opts);
+
+  await toast.present();
+}
+
+
 async collectInfo(){
- await this.api.getData('api/info/' + this.userId['value']).subscribe(async result => {
+ await this.api.getData('api/info/' + this.userId).subscribe(async result => {
     this.localInfo = await result;
   });
 
@@ -271,6 +297,23 @@ async sendSMS(){
     }
 }
 
+async recoverAccount(){
+  const modal = await this.modalController.create({
+    component: RequestsPage,
+    componentProps:{request:'UnblockAccount'}
+  });
+   await modal.present();
+}
+
+
+async deviceLost(){
+  const modal = await this.modalController.create({
+    component: RequestsPage,
+    componentProps:{request:'deviceLost'}
+  });
+   await modal.present();
+}
+
 async newModal(){
   const modal = await this.modalController.create({
     component: VisitorsPage,
@@ -322,17 +365,23 @@ async modalVisitors() {
   return await modal.present();
 }
 
+
+async localNotification(){
+  this. scheduleBasic('Peatonal abierta');
+}
+
 async scheduleBasic(msg:any){
   await LocalNotifications.schedule({
     notifications: [
       {
         title: 'Core Alert',
         body: msg,
-        id:1,
+        id:2,
+        summaryText: 'Priv. San Juan',
         extra:{
           data: 'Pass data to your handler'
         },
-        iconColor:'#0000FF'
+        iconColor:'#488AFF'
       }
     ]
   });

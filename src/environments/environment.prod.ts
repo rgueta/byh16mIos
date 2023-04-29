@@ -3,7 +3,8 @@ export const environment = {
   app : {
     version: "3.0.0",
     Description: "Main tab data information feed",
-    debugging: true
+    debugging: true,
+    debugging_send_sms: false
   },
   db : {
     // status 1 = Active; 2 = Inactive, 3 = New register

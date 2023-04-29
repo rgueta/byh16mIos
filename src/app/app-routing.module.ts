@@ -34,10 +34,6 @@ const routes: Routes = [
     loadChildren: () => import('./pages/intro/intro.module').then( m => m.IntroPageModule)
   },
   {
-    path: 'pwd-reset',
-    loadChildren: () => import('./pages/pwd-reset/pwd-reset.module').then( m => m.PwdResetPageModule)
-  },
-  {
     path: 'register',
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
   },
@@ -77,13 +73,18 @@ const routes: Routes = [
   {
     path: 'upd-cpus',
     loadChildren: () => import('./modals/upd-cpus/upd-cpus.module').then( m => m.UpdCpusPageModule)
-  },  {
+  },
+  {
     path: 'visitor-list',
     loadChildren: () => import('./modals/visitor-list/visitor-list.module').then( m => m.VisitorListPageModule)
   },
   {
     path: 'family',
     loadChildren: () => import('./modals/family/family.module').then( m => m.FamilyPageModule)
+  },
+  {
+    path: 'requests',
+    loadChildren: () => import('./modals/requests/requests.module').then( m => m.RequestsPageModule)
   }
 
 ];

@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { PwdResetPage } from './pwd-reset.page';
+import { RequestsPage } from './requests.page';
 
-describe('PwdResetPage', () => {
-  let component: PwdResetPage;
-  let fixture: ComponentFixture<PwdResetPage>;
+describe('RequestsPage', () => {
+  let component: RequestsPage;
+  let fixture: ComponentFixture<RequestsPage>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PwdResetPage ],
+      declarations: [ RequestsPage ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PwdResetPage);
+    fixture = TestBed.createComponent(RequestsPage);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

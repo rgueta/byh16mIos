@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title class="title">{{title}}</ion-title>
+    <ion-buttons class="closeButton" slot="start">
+      <ion-icon class="icon_exit" (click)='closeModal()' name='arrow-back-circle-outline' >Cerrar</ion-icon>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="logo">
+    <img src="../../../assets/logo_v2.png"/>
+   </div> 
+  
+   <form (ngSubmit)="sendRequest()" [formGroup]="validator">
+     <div class="input-group">
+        <ion-item>
+          <ion-input type="email" placeholder="Email" formControlName="email"></ion-input>
+        </ion-item>
+        <hr>
+        <ion-item>
+          <ion-textarea type="string" placeholder="Comentario" formControlName="comment"></ion-textarea>
+        </ion-item>
+
+      </div>
+      <hr>
+      <ion-button class="loginButton" type="submit" expand="block" 
+        [disabled]="!validator.valid">Mandar</ion-button>
+
+    </form>
+
+</ion-content>

@@ -48,7 +48,9 @@
       <ion-list>
         <ion-item-group>
           <ion-item [button]="true" [detail]="false" (click)="openFamily()">Familia</ion-item>
-          <ion-item [button]="true" [detail]="false">Option 2</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="recoverAccount()">Recupera cuenta</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="deviceLost()">Celular perdido</ion-item>
+          <ion-item [button]="true" [detail]="false" (click)="localNotification()">Local notification</ion-item>
           <ion-item-divider></ion-item-divider>
           <ion-item [button]="true" [detail]="false" (click)="logout()">Log out</ion-item>
         </ion-item-group>

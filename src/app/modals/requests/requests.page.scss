@@ -1,0 +1,61 @@
+
+ion-content {
+    --padding-top: 40%;
+    --padding-start: 10%;
+    --padding-end: 10%;
+    // --background: url('https://images.unsplash.com/photo-1536431311719-398b6704d4cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1234&q=80') 0 0/100% 100% no-repeat;
+    // --background: url('../../../assets/logo_v2.png') 0 0/100% 100% no-repeat;
+}
+
+.logo {
+    position:relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:center ;
+    height: 200px;
+    top:-60px;
+
+    img{
+        border-radius: 50%;
+        border: 2px solid #fff;
+        position: absolute;
+    }
+}
+
+
+// Small phones
+@media only screen and (min-width: 200px) {
+    .logo {      
+        img{
+            margin-bottom: 20px;
+            width: 170px;
+            height: 170px;
+        }
+ }
+}
+
+// Large phones
+@media only screen and (min-width: 400px) {
+    .logo {      
+        img{
+            margin-bottom: 40px;
+            width: 190px;
+            height: 190px;
+        }
+ }
+}
+
+// Tablets
+ @media only screen and (min-width: 768px) {
+    .logo {      
+        img{
+            margin-bottom: 180px;
+            width: 300px;
+            height: 300px;
+            
+        }
+ }
+
+
+}

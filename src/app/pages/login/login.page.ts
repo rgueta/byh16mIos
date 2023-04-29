@@ -3,10 +3,11 @@ import { Router } from '@angular/router';
 import { AuthenticationService } from './../../services/authentication.service';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { environment } from "../../../environments/environment";
-import { AlertController, LoadingController, isPlatform} from "@ionic/angular";
+import { AlertController, LoadingController, isPlatform, ModalController} from "@ionic/angular";
 import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { Device } from "@capacitor/device";
 import { Utils } from 'src/app/tools/tools';
+import { RequestsPage } from "../../modals/requests/requests.page";
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
@@ -43,6 +44,7 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private alertController: AlertController,
+    private modalController:ModalController
 
   ) { }
 
@@ -143,6 +145,15 @@ async lockedUser(msg:string){
   });
 
   await alert.present();
+}
+
+async pwdReset(){
+  const modal = await this.modalController.create({
+    component: RequestsPage,
+    componentProps:{request:'pwdReset'}
+  });
+   await modal.present();
+
 }
 
 async openStore(){

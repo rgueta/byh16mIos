@@ -37,7 +37,8 @@
       [disabled]="!credentials.valid">Soy visitante</ion-button>
 
     <div class="resetPwd-Link">
-      <a routerLink="/pwd-reset">Recuperar contraseña</a>
+      <a (click)="pwdReset()">Recuperar contraseña</a>
+      <!-- <a routerLink="/pwd-reset">Recuperar contraseña</a> -->
     </div>
   </form>
 </ion-content>
