@@ -8,6 +8,8 @@ import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { Device } from "@capacitor/device";
 import { Utils } from 'src/app/tools/tools';
 import { RequestsPage } from "../../modals/requests/requests.page";
+import { Socket } from "ngx-socket-io";
+import localNotification from "../../tools/localNotification";
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
@@ -44,7 +46,8 @@ export class LoginPage implements OnInit {
     private loadingController: LoadingController,
     private router: Router,
     private alertController: AlertController,
-    private modalController:ModalController
+    private modalController:ModalController,
+    private socket:Socket
 
   ) { }
 
@@ -67,6 +70,10 @@ export class LoginPage implements OnInit {
     this.device_info = await Device.getInfo();
 
     console.log('this.device_info --> ',await JSON.stringify(this.device_info))
+
+
+   
+
   }
 
   lockToPortrait(){
@@ -89,6 +96,31 @@ export class LoginPage implements OnInit {
             return;
           }
           if(val_myrole.name === 'admin' || val_myrole.name === 'neighbor'){
+
+    // ------socket.io ----------------------
+            this.socket.on('connect', ()=>{
+              this.socket.emit('join',localStorage.getItem('core-id'))
+            });
+            // this.socket.emit('join',localStorage.getItem('core-id'));
+            // unir(localStorage.getItem('core-id'));
+
+           
+            this.socket.emit('join',localStorage.getItem('core-id'));
+
+            // this.socket.on('*',()=>{
+            //   console.log('on * !');
+            //   this.socket.emit('join',localStorage.getItem('core-id'));
+            // })
+        
+            this.socket.on('joined',async (msg:string)=>{
+              console.log(msg);
+          });
+          
+          this.socket.on('Alert',async (msg:any)=>{
+            console.log('Alert --> ', msg);
+            localNotification(msg);
+          });
+
             this.router.navigateByUrl('/tabs', { replaceUrl: true });
           }else{
            this.router.navigateByUrl('/store', { replaceUrl: true });

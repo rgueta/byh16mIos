@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="title">Usuarios</ion-title>
+    <ion-title class="title">Usuarios: {{coreName}}</ion-title>
     <ion-buttons class="closeButton" slot="start">
       <ion-icon class="icon_exit" (click)='closeModal()' name='arrow-back-circle-outline' >Cerrar</ion-icon>
     </ion-buttons>
@@ -15,12 +15,19 @@
       <ion-icon slot="end" name="chevron-forward-outline" *ngIf="!item.open"></ion-icon>
       <ion-icon slot="end" name="chevron-down-outline" *ngIf="item.open"></ion-icon>
       <ion-label class="ion-text-wrap">{{item.name}},  house: {{item.house}}</ion-label>
-      <!-- <ion-label class="ion-text-wrap" *ngIf="!item.expired" >{{item.visitorName}} [ activo ] Expira en {{item.range}} horas </ion-label> -->
     </ion-item>
 
     <form tappable *ngIf="item.open" class="detail">
         <ion-item class='detail-item'>
           <ion-label> User name: {{item.username}}</ion-label>
+        </ion-item>
+        <ion-item class='detail-item'>
+          <ion-label> Email: {{item.email}}</ion-label>
+        </ion-item>
+        <ion-item class='detail-item'>Roles:
+            <ul *ngFor= "let role of item.roles">
+              <li>{{role}}</li>
+            </ul> 
         </ion-item>
         <ion-item class='detail-item'>
           <ion-label> Location:  {{item.location}}</ion-label>

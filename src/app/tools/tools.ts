@@ -57,6 +57,8 @@ export const Utils = {
     cleanLocalStorage: async () =>{
       let myVisitors : any = [];
       let myToken_px : string = '';
+      let mycore_id : string = '';
+
 
       if(localStorage.getItem('visitors') != null){
         myVisitors = await JSON.parse(localStorage.getItem('visitors'));
@@ -66,9 +68,14 @@ export const Utils = {
         myToken_px = await localStorage.getItem('token_px');
       }
 
+      if(localStorage.getItem('core-id') != null){
+        mycore_id = await localStorage.getItem('core-id');
+      }
+
       await localStorage.clear();
       await localStorage.setItem('visitors',JSON.stringify(myVisitors));
       await localStorage.setItem('token_px', myToken_px);
+      await localStorage.setItem('core-id', mycore_id);
 
     }
 

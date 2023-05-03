@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, AlertController } from "@ionic/angular";
+import { ModalController, AlertController,NavParams } from "@ionic/angular";
 import { DatabaseService  } from "../../services/database.service";
 
 @Component({
@@ -11,19 +11,23 @@ export class UsersPage implements OnInit {
 
   users : any;
   automaticClose = false;
+  coreId: string = '';
+  coreName : string= '';
+  
   constructor(
     private modalController:ModalController,
     private alertCtrl:AlertController,
-    private api:DatabaseService
+    private api:DatabaseService,
+    private navParams:NavParams
   ) { }
 
   ngOnInit() {
+    this.coreId = this.navParams.data['core']
     this.getUsers();
   }
 
   async getUsers(){
-    await this.api.getData('api/users/core/' + 
-    localStorage.getItem('core-id') + '/' +
+    await this.api.getData('api/users/core/' + this.coreId + '/' +
     localStorage.getItem('my-userId')
     ).subscribe(async (result:any) => {
       this.users = result;

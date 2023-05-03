@@ -68,48 +68,43 @@ export class Tab1Page {
             
     this.init();
     this.version = environment.app.version;
-    // await LocalNotifications.requestPermission();
 
     const sim = await localStorage.getItem('my-core-sim');
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
 
-
-
-    console.log('core Name --> ' + this.coreName);
-    // const sim = await this.storage.get('my-core-sim');
-    // const userId = await this.storage.get('my-userId');
-
      // ---- socket  -------------------------
     // this.socket.connect();
   
-    this.socket.emit('create', sim)
-    this.socket.on('msg', async (msg:string) =>{
-      await this.presentToast({
-        message : 'msg. recivido del socket --> ' + msg,
-        duration: 10000,
-        buttons:[
-          {text: 'Ok'}
-        ]
-      });
+    // this.socket.emit('join', sim)
+    // this.socket.on('msg', async (msg:string) =>{
+    //   await this.presentToast({
+    //     message : 'msg. recivido del socket --> ' + msg,
+    //     duration: 10000,
+    //     buttons:[
+    //       {text: 'Ok'}
+    //     ]
+    //   });
 
-      this.scheduleBasic('msg. recivido del socket --> ');
+    //   this.scheduleBasic('msg. recivido del socket --> ');
 
-      console.log('msg. recivido del socket --> ', msg)
-    });
+    //   console.log('msg. recivido del socket --> ', msg)
+    // });
 
-    let name = `User-${new Date().getTime()}`;
-    this.currentUser = name;
+    // let name = `User-${new Date().getTime()}`;
+    // this.currentUser = name;
 
-    this.socket.emit('set-name',this.userId['value']);
-    this.socket.fromEvent('users-changed').subscribe(data => {
-      console.log('got users-changed data: ', JSON.stringify(data));
-    });
+    // this.socket.emit('set-name',this.userId['value']);
+    // this.socket.fromEvent('users-changed').subscribe((data:any) => {
+    //   console.log('got users-changed data: ', JSON.stringify(data));
+    // });
 
-    this.socket.fromEvent('alert').subscribe(data => {
-      console.log('got alert data: ', data);
-      this.scheduleBasic(data);
-    });
+    // this.socket.fromEvent('alert').subscribe((data:any) => {
+    //   console.log('got alert data: ', data);
+    //   this.scheduleBasic(data);
+    // });
+
+
 // -----------------------------------------------
 
 

@@ -300,11 +300,11 @@ export class AdminPage implements OnInit {
 
       // ---- Animation controller  ----------------------------------
 
-  async collectUsers(id:string,core:string) {
+  async collectUsers(coreId:string,core:string) {
     const modal = await this.modalController.create({
       component: UsersPage,
       backdropDismiss: true,
-      componentProps: {retorno: Boolean}
+      componentProps: {core: coreId,coreName:core}
     });
 
     modal.onDidDismiss()
