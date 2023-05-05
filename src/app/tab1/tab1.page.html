@@ -1,23 +1,21 @@
 <ion-header [translucent]="true" [ngClass]="{'section-SendSMS-show' : SoyAdmin}">
-  <ion-toolbar>
-    <div class="mainToolBar">
-      <div id='header-logo'>
+  <ion-toolbar class="mainToolBar">
+      <div class='column left'>
         <div class="mainTitle">
           <img class="logo_header" src="../../assets/logo_transparent.png">
         </div>
-        <div class="version">version {{version}}</div>
+        <div class="version">v {{version}}</div>
       </div>
-      <div id="header-core">
+      <div class="column middle">
         <ion-title>{{coreName}}</ion-title>
       </div>
-      <!-- <div> -->
-        <ion-buttons class="" slot="end">
-        <ion-button class="home-manu" id="popover-button">
+      <div class="column right">
+        <ion-buttons slot="end">
+        <ion-button id="popover-button">
           <ion-icon slot="icon-only"  name="ellipsis-vertical-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-      <!-- </div> -->
-    </div>
+      </div>
     
   </ion-toolbar>
 </ion-header>

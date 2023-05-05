@@ -1,4 +1,4 @@
-import { Component ,Input,} from '@angular/core';
+import { Component ,Input, OnInit} from '@angular/core';
 import { ModalController, ToastController ,
   AnimationController, isPlatform, getPlatforms,
   PopoverController} from '@ionic/angular';
@@ -17,6 +17,7 @@ import { ScheduleOptions, LocalNotifications } from "@capacitor/local-notificati
 import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
 import { RequestsPage } from "../modals/requests/requests.page";
+import localNotification from "../tools/localNotification";
 
 
 const DEVICE_UUID = 'device-uuid';
@@ -26,7 +27,7 @@ const DEVICE_UUID = 'device-uuid';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss']
 })
-export class Tab1Page {
+export class Tab1Page implements OnInit {
   public localInfo:any;
   public codes : [];
   @Input() msg:string;
@@ -39,7 +40,8 @@ export class Tab1Page {
   public version = '';
   public coreName = '';
   twilio_client : any;
-  userId : any;
+  userId : string;
+  public socketId:string='SocketId';
   
 
   REST_API_SERVER = environment.db.server_url;
@@ -65,13 +67,13 @@ export class Tab1Page {
   }
 
   async ngOnInit(){
-            
-    this.init();
-    this.version = environment.app.version;
-
     const sim = await localStorage.getItem('my-core-sim');
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
+            
+   
+
+    
 
      // ---- socket  -------------------------
     // this.socket.connect();
@@ -105,8 +107,41 @@ export class Tab1Page {
     // });
 
 
+
+
+    await this.socket.on('connect', async ()=>{
+      this.socketId = await this.socket.ioSocket.id;
+
+      console.log('socket connected: ', this.socket.ioSocket.id);
+
+      // // DEbugging
+      // this.coreName = await this.coreName + '\n\r ' + this.socketId;
+      // console.log('coreName: ', this.coreName);
+      try{
+
+        await this.socket.emit('join',localStorage.getItem('core-id'));
+      }catch(ex){
+        console.log('Error socket join to room: ', ex);
+      }
+    });
+
+   await this.socket.on('joined', (msg:string)=>{
+      console.log(msg);
+  });
+
+
+  await this.socket.on('Alert',async (msg:any)=>{
+    console.log('Alert --> ' + new Date().toLocaleString(), msg);
+   await  localNotification(msg);
+  });
+
+  this.socket.on('disconnect', () => {
+    console.log('socket disconnected ' + new Date().toLocaleString());
+  });
 // -----------------------------------------------
 
+this.init();
+this.version = environment.app.version;
 
     console.log('getPlatform --> ', JSON.stringify(getPlatforms()));
     if(isPlatform('cordova') || isPlatform('ios')){
@@ -183,7 +218,6 @@ async collectInfo(){
     this.localInfo = await result;
   });
 
-  console.log('UserID --> ', this.userId['value'])
 }
   lockToPortrait(){
     this.screenOrientation.lock(this.screenOrientation.ORIENTATIONS.PORTRAIT);
@@ -270,10 +304,10 @@ async sendSMS(){
       console.log('send clicked..')
       await this.sms.send(this.sim,this.msg,options);
     }else{
-      console.log('url -- >   api/twilio/open/' + this.userId['value'] + '/' + 
+      console.log('url -- >   api/twilio/open/' + this.userId + '/' + 
       this.msg + '/' + this.sim);
       this.api.postData('api/twilio/open/' + 
-      this.userId['value'] + '/' + this.msg + '/' + this.sim,'')
+      this.userId + '/' + this.msg + '/' + this.sim,'')
     }
     
       const toast = await this.toast.create({

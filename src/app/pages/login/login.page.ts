@@ -97,29 +97,39 @@ export class LoginPage implements OnInit {
           }
           if(val_myrole.name === 'admin' || val_myrole.name === 'neighbor'){
 
-    // ------socket.io ----------------------
-            this.socket.on('connect', ()=>{
-              this.socket.emit('join',localStorage.getItem('core-id'))
-            });
-            // this.socket.emit('join',localStorage.getItem('core-id'));
-            // unir(localStorage.getItem('core-id'));
+    // ------socket.io ---------------------------------
 
-           
-            this.socket.emit('join',localStorage.getItem('core-id'));
+          //   await this.socket.on('connect', async ()=>{
+          //     console.log('socket connected: ', this.socket.ioSocket.id);
+          //     this.socket.emit('join',localStorage.getItem('core-id'));
 
-            // this.socket.on('*',()=>{
-            //   console.log('on * !');
-            //   this.socket.emit('join',localStorage.getItem('core-id'));
-            // })
+
+          //     await this.socket.emit('join',localStorage.getItem('core-id'));
+
+
+          //   });
+
+          //   // this.socket.emit('join',localStorage.getItem('core-id'));
+          //   // unir(localStorage.getItem('core-id'));
+
+          //   // this.socket.on('*',()=>{
+          //   //   console.log('on * !');
+          //   //   this.socket.emit('join',localStorage.getItem('core-id'));
+          //   // })
         
-            this.socket.on('joined',async (msg:string)=>{
-              console.log(msg);
-          });
+          //  await this.socket.on('joined', (msg:string)=>{
+          //     console.log(msg);
+          // });
           
-          this.socket.on('Alert',async (msg:any)=>{
-            console.log('Alert --> ', msg);
-            localNotification(msg);
-          });
+          // await this.socket.on('Alert',async (msg:any)=>{
+          //   console.log('Alert --> ', msg);
+          //  await  localNotification(msg);
+          // });
+
+  // -----------------------------------------
+
+
+          
 
             this.router.navigateByUrl('/tabs', { replaceUrl: true });
           }else{
