@@ -9,11 +9,13 @@ import { Device } from "@capacitor/device";
 import { Utils } from 'src/app/tools/tools';
 import { RequestsPage } from "../../modals/requests/requests.page";
 import { Socket } from "ngx-socket-io";
-import localNotification from "../../tools/localNotification";
+// import localNotification from "../../tools/localNotification";
+import { Sim } from "@ionic-native/sim/ngx"; 
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
 const VISITORS = 'visitors';
+const DEVICE_UUID = 'device-uuid';
 
 
 @Component({
@@ -47,11 +49,15 @@ export class LoginPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private modalController:ModalController,
-    private socket:Socket
+    private socket:Socket,
+    private SIM : Sim,
 
   ) { }
 
   async ngOnInit() {
+
+    Utils.cleanLocalStorage();
+    this.init();
     this.version = environment.app.version;
 
     if(isPlatform('cordova') || isPlatform('ios')){
@@ -60,7 +66,7 @@ export class LoginPage implements OnInit {
       this.isAndroid = true;
     }
 
-    Utils.cleanLocalStorage();
+    
 
     this.credentials =new FormGroup({
       email: new FormControl('neighbor2@gmail.com', [Validators.required, Validators.email]),
@@ -71,10 +77,39 @@ export class LoginPage implements OnInit {
 
     console.log('this.device_info --> ',await JSON.stringify(this.device_info))
 
-
    
-
   }
+
+  async init(): Promise<void> {
+    await this.SIM.hasReadPermission().then(async allowed =>{
+      if(!allowed){
+        console.log('Si entre init sim has read permissions')
+        await this.SIM.requestReadPermission().then( 
+        async () => {
+            await this.SIM.getSimInfo().then(
+            (info) => console.log('Sim info: ', info),
+            (err) => console.log('Unable to get sim info: ', err)
+          );
+           },
+        () => console.log('Permission denied')
+        )
+      }
+    });
+  
+     const info = await Device.getInfo();
+     console.log('tab1.page SIM info --> ' , info);
+     localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
+
+     if (info.platform === 'android') {
+       try {
+         console.log('soy android OK');
+       } catch (e) {
+         console.log('soy android con Error: ', e);
+     }
+   }else{
+     console.log('no soy android');
+   }
+ }
 
   lockToPortrait(){
     this.orientation.lock(this.orientation.ORIENTATIONS.PORTRAIT)

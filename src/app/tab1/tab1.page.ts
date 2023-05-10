@@ -4,7 +4,7 @@ import { ModalController, ToastController ,
   PopoverController} from '@ionic/angular';
 import type { ToastOptions } from "@ionic/angular";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
-import { Sim } from "@ionic-native/sim/ngx"; 
+// import { Sim } from "@ionic-native/sim/ngx"; 
 import { Socket } from 'ngx-socket-io';
 import { environment } from "../../environments/environment";
 import { Device } from "@capacitor/device";
@@ -20,7 +20,7 @@ import { RequestsPage } from "../modals/requests/requests.page";
 import localNotification from "../tools/localNotification";
 
 
-const DEVICE_UUID = 'device-uuid';
+// const DEVICE_UUID = 'device-uuid';
 
 @Component({
   selector: 'app-tab1',
@@ -55,7 +55,7 @@ export class Tab1Page implements OnInit {
     private router: Router,
     private screenOrientation: ScreenOrientation,
     private socket: Socket,
-    private SIM : Sim,
+    // private SIM : Sim,
     private popoverCtrl:PopoverController) { }
   
   async ionViewWillEnter(){
@@ -108,39 +108,12 @@ export class Tab1Page implements OnInit {
 
 
 
+      // ----------------  version reciente  -------------
+   await this.socketInit();
 
-    await this.socket.on('connect', async ()=>{
-      this.socketId = await this.socket.ioSocket.id;
-
-      console.log('socket connected: ', this.socket.ioSocket.id);
-
-      // // DEbugging
-      // this.coreName = await this.coreName + '\n\r ' + this.socketId;
-      // console.log('coreName: ', this.coreName);
-      try{
-
-        await this.socket.emit('join',localStorage.getItem('core-id'));
-      }catch(ex){
-        console.log('Error socket join to room: ', ex);
-      }
-    });
-
-   await this.socket.on('joined', (msg:string)=>{
-      console.log(msg);
-  });
-
-
-  await this.socket.on('Alert',async (msg:any)=>{
-    console.log('Alert --> ' + new Date().toLocaleString(), msg);
-   await  localNotification(msg);
-  });
-
-  this.socket.on('disconnect', () => {
-    console.log('socket disconnected ' + new Date().toLocaleString());
-  });
 // -----------------------------------------------
 
-this.init();
+// this.init();
 this.version = environment.app.version;
 
     console.log('getPlatform --> ', JSON.stringify(getPlatforms()));
@@ -166,35 +139,68 @@ this.version = environment.app.version;
 
   }
 
-  async init(): Promise<void> {
-    await this.SIM.hasReadPermission().then(async allowed =>{
-      if(!allowed){
-        console.log('Si entre init sim has read permissions')
-        await this.SIM.requestReadPermission().then( 
-        async () => {
-            await this.SIM.getSimInfo().then(
-            (info) => console.log('Sim info: ', info),
-            (err) => console.log('Unable to get sim info: ', err)
-          );
-           },
-        () => console.log('Permission denied')
-        )
-      }
-    });
+//   async init(): Promise<void> {
+//     await this.SIM.hasReadPermission().then(async allowed =>{
+//       if(!allowed){
+//         console.log('Si entre init sim has read permissions')
+//         await this.SIM.requestReadPermission().then( 
+//         async () => {
+//             await this.SIM.getSimInfo().then(
+//             (info) => console.log('Sim info: ', info),
+//             (err) => console.log('Unable to get sim info: ', err)
+//           );
+//            },
+//         () => console.log('Permission denied')
+//         )
+//       }
+//     });
   
-     const info = await Device.getInfo();
-     console.log('tab1.page SIM info --> ' , info);
-     localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
+//      const info = await Device.getInfo();
+//      console.log('tab1.page SIM info --> ' , info);
+//      localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
 
-     if (info.platform === 'android') {
-       try {
-         console.log('soy android OK');
-       } catch (e) {
-         console.log('soy android con Error: ', e);
-     }
-   }else{
-     console.log('no soy android');
-   }
+//      if (info.platform === 'android') {
+//        try {
+//          console.log('soy android OK');
+//        } catch (e) {
+//          console.log('soy android con Error: ', e);
+//      }
+//    }else{
+//      console.log('no soy android');
+//    }
+//  }
+
+ async socketInit(){
+  await this.socket.on('connect', async ()=>{
+    this.socketId = await this.socket.ioSocket.id;
+
+    console.log('socket connected: ', this.socket.ioSocket.id);
+
+    // // DEbugging
+    // this.coreName = await this.coreName + '\n\r ' + this.socketId;
+    // console.log('coreName: ', this.coreName);
+    try{
+
+      await this.socket.emit('join',localStorage.getItem('core-id'));
+    }catch(ex){
+      console.log('Error socket join to room: ', ex);
+    }
+  });
+
+ await this.socket.on('joined', (msg:string)=>{
+    console.log(msg);
+});
+
+
+await this.socket.on('Alert',async (msg:any)=>{
+  console.log('Alert --> ' + new Date().toLocaleString(), msg);
+ await  localNotification(msg);
+});
+
+this.socket.on('disconnect', () => {
+  console.log('socket disconnected ' + new Date().toLocaleString());
+});
+
  }
 
  async doRefresh(event:any){

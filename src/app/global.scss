@@ -83,40 +83,27 @@ ion-menu-button{
 }
 
 .aperturas{
+    background-color: white;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+    
+    display: flex;
+    justify-content: space-between;
+
     width: 100%;
     overflow: hidden;
-    height: 125px;
+    // height: 12vh;
+    padding: .8vh 1.5vw .8vh 1.5vw;
 }
 
-.aperturas ion-title{
-    padding: 5px ;
-    text-align: center;
-}
 
 .aperturas ion-button{
     border-radius: 20px;
     box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
-    height: 50px;
-    margin: 10px 20px ;
-    margin-bottom: 20px;
-    width: 40%;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    -ms-border-radius: 20px;
+    -o-border-radius: 20px;
 }
-
-// aperturas gris  ---------------------------------------
-
-.aperturas-gris{
-    background-color:lightgrey;
-}
-
-// aperturas blanco  ------------------------------------
-
-.aperturas-blanco{
-    background-color:white;
-}
-
-
-// ----------------------------------------------------
 
 .info{
     margin-top: 152px!important;
@@ -186,6 +173,7 @@ ion-menu-button{
     // padding: 0 0 -10px 0;
     // font-size: 3em;
 }
+
 
 .buttonAdd{
     border-radius: 100%;

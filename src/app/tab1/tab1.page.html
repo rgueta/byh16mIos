@@ -11,9 +11,9 @@
       </div>
       <div class="column right">
         <ion-buttons slot="end">
-        <ion-button id="popover-button">
-          <ion-icon slot="icon-only"  name="ellipsis-vertical-outline"></ion-icon>
-        </ion-button>
+          <ion-button id="popover-button">
+            <ion-icon  name="ellipsis-vertical-outline"></ion-icon>
+          </ion-button>
       </ion-buttons>
       </div>
     
@@ -60,12 +60,9 @@
 <!-- --------------------------------------------  -->
 
     <!-- Bi-color -->
-    <div slot="fixed" class="wrap-input aperturas aperturas-blanco" >
-      <!-- <ion-title>Aperturas {{coreName}}</ion-title> -->
-      <div style="display:flex; justify-content:space-between; margin-top: 15px;">
+    <div slot="fixed" class="aperturas" >
         <ion-button class="doorsButton-green"  (click)="sendOpening('open,peatonal')">Peatonal</ion-button>
         <ion-button class="doorsButton-blue"  (click)="sendOpening('open,vehicular')">Vehicular</ion-button>
-      </div>
     </div> 
 
     <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
