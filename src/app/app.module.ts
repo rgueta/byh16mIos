@@ -16,7 +16,7 @@ import { UpdCodesModalPageRoutingModule } from "./modals/upd-codes-modal/upd-cod
 // ------- Sockets -------------------------
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
-const config: SocketIoConfig = { url: environment.db.server_url, options: {transports: ['websocket'], upgrade: false} };
+// const config: SocketIoConfig = { url: environment.cloud.server_url, options: {transports: ['websocket'], upgrade: false} };
 
 // const config: SocketIoConfig = { url: environment.db.server_url, options: {
 //    transports: ['websocket'],
@@ -24,7 +24,18 @@ const config: SocketIoConfig = { url: environment.db.server_url, options: {trans
 
 // const config: SocketIoConfig = { url: environment.db.server_url, options: {transports: ['websocket'], autoConnect: false} };
 
-// const config: SocketIoConfig = { url: environment.db.server_url, options: {} };
+const config: SocketIoConfig = { url: environment.cloud.server_url, options: {
+// transports: ['websocket', 'polling'],
+// upgrade: true,
+reconnection: true,
+timeout: 600000,
+extraHeaders:{
+  "coreId": localStorage.getItem('core-id'),
+  "userId" : localStorage.getItem('my-userId')
+}
+} };
+
+// const config: SocketIoConfig = { url: environment.cloud.server_url, options: {} };
 
 @NgModule({
   declarations: [AppComponent],

@@ -6,7 +6,7 @@ export const environment = {
     debugging: true,
     debugging_send_sms: false
   },
-  db : {
+  cloud : {
     // status 1 = Active; 2 = Inactive, 3 = New register
     register_status : 3,
     // "server_url" : "http://ec2-52-55-153-194.compute-1.amazonaws.com/"

@@ -38,7 +38,7 @@ export class LoginPage implements OnInit {
   
   device_info:any;
 
- private  REST_API_SERVER = environment.db.server_url;
+ private  REST_API_SERVER = environment.cloud.server_url;
  public version = '';
 
   constructor(

@@ -10,7 +10,7 @@ export const environment = {
     debugging: true,
     debugging_send_sms: false
   },
-  db : {
+  cloud : {
     // "server_url" : "http://34.229.28.145/"
     server_url : "http://192.168.1.154:5000/"
   }

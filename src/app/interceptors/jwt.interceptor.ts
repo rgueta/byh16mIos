@@ -13,7 +13,7 @@ export class JwtInterceptor implements HttpInterceptor {
   tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   isRefreshingToken = false;
 
-  REST_API_SERVER = environment.db.server_url;
+  REST_API_SERVER = environment.cloud.server_url;
 
   constructor(private apiService: DatabaseService, 
               private toastCtrl: ToastController, 

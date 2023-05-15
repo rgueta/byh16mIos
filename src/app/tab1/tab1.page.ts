@@ -44,7 +44,7 @@ export class Tab1Page implements OnInit {
   public socketId:string='SocketId';
   
 
-  REST_API_SERVER = environment.db.server_url;
+  REST_API_SERVER = environment.cloud.server_url;
 
   constructor(
     private sms: SMS,
@@ -187,19 +187,23 @@ this.version = environment.app.version;
     }
   });
 
- await this.socket.on('joined', (msg:string)=>{
-    console.log(msg);
-});
+  await this.socket.on('joined', (msg:string)=>{
+      console.log(msg);
+  });
 
 
-await this.socket.on('Alert',async (msg:any)=>{
-  console.log('Alert --> ' + new Date().toLocaleString(), msg);
- await  localNotification(msg);
-});
+  await this.socket.on('Alert',async (msg:any)=>{
+    console.log('Alert --> ' + new Date().toLocaleString(), msg);
+  await  localNotification(msg);
+  });
 
-this.socket.on('disconnect', () => {
-  console.log('socket disconnected ' + new Date().toLocaleString());
-});
+  this.socket.on('disconnect', () => {
+    console.log('socket disconnected ' + new Date().toLocaleString());
+  });
+
+  this.socket.on("connect_error", (err:any) => {
+    console.log(`connect_error due to ${err.message}`);
+  });
 
  }
 
@@ -347,6 +351,11 @@ async deviceLost(){
     componentProps:{request:'deviceLost'}
   });
    await modal.present();
+}
+
+
+async socketCheck(){
+  this,this.socket.emit('check','Just checking socket connection');
 }
 
 async newModal(){

@@ -41,7 +41,7 @@ export class AuthenticationService {
   Tokens: tokens;
 
   // Init with null to filter out the first value in a guard!
-  private  REST_API_SERVER = environment.db.server_url;
+  private  REST_API_SERVER = environment.cloud.server_url;
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   currentAccessToken: any;
   userId = '';

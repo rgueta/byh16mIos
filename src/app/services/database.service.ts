@@ -23,7 +23,7 @@ export class DatabaseService {
   isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
   public currentAccessToken: any;
 
-  private  REST_API_SERVER = environment.db.server_url;
+  private  REST_API_SERVER = environment.cloud.server_url;
   collection : String;
   public roles:any;
   tokens : {token:'', refreshtoken:'', coreName:'',location:''};
