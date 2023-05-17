@@ -174,6 +174,7 @@ this.version = environment.app.version;
 
  async socketInit(){
 
+  this.socket.connect();
   
   this.socket.on('connect', async ()=>{
     this.socketId = await this.socket.ioSocket.id;
@@ -185,12 +186,10 @@ this.version = environment.app.version;
     // console.log('coreName: ', this.coreName);
 
     this.socket.emit('join',localStorage.getItem('core-id'));
-    try{
-
-      
-    }catch(ex){
-      console.log('Error socket join to room: ', ex);
-    }
+    // try{      
+    // }catch(ex){
+    //   console.log('Error socket join to room: ', ex);
+    // }
     
   });
 
@@ -212,7 +211,7 @@ this.version = environment.app.version;
     console.log(`connect_error due to ${err.message}`);
   });
 
-  this.socket.connect();
+  
 
  }
 

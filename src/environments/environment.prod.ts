@@ -12,7 +12,5 @@ export const environment = {
     // "server_url" : "http://ec2-52-55-153-194.compute-1.amazonaws.com/"
     // "server_url" : "http://34.229.28.145/"
     server_url : "http://192.168.1.154:5000/",
-    socket_url : "ws://192.168.1.154:5000/",
-
   }
 };
