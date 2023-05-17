@@ -64,6 +64,8 @@ export class Tab1Page implements OnInit {
       }else{
         this.SoyAdmin = false;
       }
+
+      await this.socketInit();
   }
 
   async ngOnInit(){
@@ -109,7 +111,7 @@ export class Tab1Page implements OnInit {
 
 
       // ----------------  version reciente  -------------
-   await this.socketInit();
+   
 
 // -----------------------------------------------
 
@@ -171,7 +173,9 @@ this.version = environment.app.version;
 //  }
 
  async socketInit(){
-  await this.socket.on('connect', async ()=>{
+
+  
+  this.socket.on('connect', async ()=>{
     this.socketId = await this.socket.ioSocket.id;
 
     console.log('socket connected: ', this.socket.ioSocket.id);
@@ -179,20 +183,23 @@ this.version = environment.app.version;
     // // DEbugging
     // this.coreName = await this.coreName + '\n\r ' + this.socketId;
     // console.log('coreName: ', this.coreName);
+
+    this.socket.emit('join',localStorage.getItem('core-id'));
     try{
 
-      await this.socket.emit('join',localStorage.getItem('core-id'));
+      
     }catch(ex){
       console.log('Error socket join to room: ', ex);
     }
+    
   });
 
-  await this.socket.on('joined', (msg:string)=>{
+  this.socket.on('joined', (msg:string)=>{
       console.log(msg);
   });
 
 
-  await this.socket.on('Alert',async (msg:any)=>{
+  this.socket.on('Alert',async (msg:any)=>{
     console.log('Alert --> ' + new Date().toLocaleString(), msg);
   await  localNotification(msg);
   });
@@ -205,6 +212,8 @@ this.version = environment.app.version;
     console.log(`connect_error due to ${err.message}`);
   });
 
+  this.socket.connect();
+
  }
 
  async doRefresh(event:any){
@@ -214,7 +223,6 @@ this.version = environment.app.version;
     event.target.complete();
   }, 2000);
 }
-
 
 async presentToast(opts: ToastOptions) {
   const toast = await this.toast.create(opts);
@@ -238,6 +246,7 @@ async collectInfo(){
     await this.api.logout();
     this.router.navigateByUrl('/',{replaceUrl:true});
     Utils.cleanLocalStorage();
+    await this.socket.disconnect();
   }
 
   loadCodes() {
