@@ -190,8 +190,16 @@ this.version = environment.app.version;
     // }catch(ex){
     //   console.log('Error socket join to room: ', ex);
     // }
+
+    this.socket.on('disconnect', () => {
+      console.log('socket disconnected ' + new Date().toLocaleString());
+    });
     
   });
+
+  this.socket.on('desconexion',()=>{
+    console.log('Desconnection received.! ',  this.socket.ioSocket.id + ', '  + new Date().toLocaleString())
+  })
 
   this.socket.on('joined', (msg:string)=>{
       console.log(msg);
@@ -203,9 +211,7 @@ this.version = environment.app.version;
   await  localNotification(msg);
   });
 
-  this.socket.on('disconnect', () => {
-    console.log('socket disconnected ' + new Date().toLocaleString());
-  });
+  
 
   this.socket.on("connect_error", (err:any) => {
     console.log(`connect_error due to ${err.message}`);
