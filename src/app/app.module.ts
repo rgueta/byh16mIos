@@ -22,10 +22,15 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 //    transports: ['websocket'],
 // } };
 
+// const config: SocketIoConfig = { url: environment.cloud.socket_url, options: {
+// transports: ['websocket'], 
+// autoConnect: false, 
+// reconnection: true}};
+
 const config: SocketIoConfig = { url: environment.cloud.socket_url, options: {
-transports: ['websocket'], 
-autoConnect: false, 
-reconnection: true}};
+  transports: ['websocket', 'polling'], 
+  autoConnect: false, 
+  reconnection: true}};
 
 // const config: SocketIoConfig = { url: environment.cloud.server_url, options: {
 // transports: ['websocket', 'polling'],
