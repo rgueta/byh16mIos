@@ -18,6 +18,7 @@ import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
 import { RequestsPage } from "../modals/requests/requests.page";
 import localNotification from "../tools/localNotification";
+import { setInterval } from 'timers';
 
 
 // const DEVICE_UUID = 'device-uuid';
@@ -65,6 +66,11 @@ export class Tab1Page implements OnInit {
         this.SoyAdmin = false;
       }
 
+  // interval socket keep socker awake
+    setInterval(() =>{
+      this.socket.emit('ping');
+    },35000)
+
       await this.socketInit();
   }
 
@@ -72,48 +78,6 @@ export class Tab1Page implements OnInit {
     const sim = await localStorage.getItem('my-core-sim');
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
-            
-   
-
-    
-
-     // ---- socket  -------------------------
-    // this.socket.connect();
-  
-    // this.socket.emit('join', sim)
-    // this.socket.on('msg', async (msg:string) =>{
-    //   await this.presentToast({
-    //     message : 'msg. recivido del socket --> ' + msg,
-    //     duration: 10000,
-    //     buttons:[
-    //       {text: 'Ok'}
-    //     ]
-    //   });
-
-    //   this.scheduleBasic('msg. recivido del socket --> ');
-
-    //   console.log('msg. recivido del socket --> ', msg)
-    // });
-
-    // let name = `User-${new Date().getTime()}`;
-    // this.currentUser = name;
-
-    // this.socket.emit('set-name',this.userId['value']);
-    // this.socket.fromEvent('users-changed').subscribe((data:any) => {
-    //   console.log('got users-changed data: ', JSON.stringify(data));
-    // });
-
-    // this.socket.fromEvent('alert').subscribe((data:any) => {
-    //   console.log('got alert data: ', data);
-    //   this.scheduleBasic(data);
-    // });
-
-
-
-      // ----------------  version reciente  -------------
-   
-
-// -----------------------------------------------
 
 // this.init();
 this.version = environment.app.version;
@@ -186,10 +150,10 @@ this.version = environment.app.version;
     // console.log('coreName: ', this.coreName);
 
     this.socket.emit('join',localStorage.getItem('core-id'));
-    // try{      
-    // }catch(ex){
-    //   console.log('Error socket join to room: ', ex);
-    // }
+
+    this.socket.on('pong',()=>{
+      console.log('pong ' + new Date().toLocaleString());
+    })
 
     this.socket.on('disconnect', () => {
       console.log('socket disconnected ' + new Date().toLocaleString());
