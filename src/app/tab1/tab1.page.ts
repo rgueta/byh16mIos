@@ -18,7 +18,6 @@ import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
 import { RequestsPage } from "../modals/requests/requests.page";
 import localNotification from "../tools/localNotification";
-import { setInterval } from 'timers';
 
 
 // const DEVICE_UUID = 'device-uuid';
@@ -65,12 +64,6 @@ export class Tab1Page implements OnInit {
       }else{
         this.SoyAdmin = false;
       }
-
-  // interval socket keep socker awake
-    setInterval(() =>{
-      this.socket.emit('ping');
-    },35000)
-
       await this.socketInit();
   }
 
@@ -78,6 +71,12 @@ export class Tab1Page implements OnInit {
     const sim = await localStorage.getItem('my-core-sim');
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
+
+
+    // interval socket keep socker awake
+    setInterval(() =>{
+      this.socket.emit('ping');
+    },25000)
 
 // this.init();
 this.version = environment.app.version;
@@ -141,29 +140,32 @@ this.version = environment.app.version;
   this.socket.connect();
   
   this.socket.on('connect', async ()=>{
-    this.socketId = await this.socket.ioSocket.id;
+    this.socketId = this.socket.ioSocket.id;
 
-    console.log('socket connected: ', this.socket.ioSocket.id);
-
+    console.log('connected: ', this.socket.ioSocket.id + ', ' +
+    new Date().toLocaleString());
+    this.socket.emit('join',localStorage.getItem('core-id'));
+  });
     // // DEbugging
     // this.coreName = await this.coreName + '\n\r ' + this.socketId;
     // console.log('coreName: ', this.coreName);
 
-    this.socket.emit('join',localStorage.getItem('core-id'));
 
     this.socket.on('pong',()=>{
       console.log('pong ' + new Date().toLocaleString());
     })
 
-    this.socket.on('disconnect', () => {
-      console.log('socket disconnected ' + new Date().toLocaleString());
+    this.socket.on('disconnect', (reason:string) => {
+      console.log('socket disconnected ' +  this.socket.ioSocket.id + ', ' +
+      new Date().toLocaleString() + '\r\n reason --> ' + reason );
+      this.socket.connect();
     });
     
-  });
+  
 
-  this.socket.on('desconexion',()=>{
-    console.log('Desconnection received.! ',  this.socket.ioSocket.id + ', '  + new Date().toLocaleString())
-  })
+  // this.socket.on('desconexion',()=>{
+  //   console.log('Desconnection received.! ',  this.socket.ioSocket.id + ', '  + new Date().toLocaleString())
+  // })
 
   this.socket.on('joined', (msg:string)=>{
       console.log(msg);
