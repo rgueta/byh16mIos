@@ -30,7 +30,8 @@ import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 const config: SocketIoConfig = { url: environment.cloud.socket_url, options: {closeOnBeforeunload:false,
   transports: ['websocket', 'polling'], 
   autoConnect: false, 
-  reconnection: true}};
+  reconnection: true,
+  }};
 
 // const config: SocketIoConfig = { url: environment.cloud.server_url, options: {
 // transports: ['websocket', 'polling'],
