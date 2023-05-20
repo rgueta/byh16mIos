@@ -7,8 +7,8 @@ import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 // import { Sim } from "@ionic-native/sim/ngx"; 
 import { Socket } from 'ngx-socket-io';
 import { environment } from "../../environments/environment";
-import { Device } from "@capacitor/device";
-import { AuthenticationService } from './../services/authentication.service';
+// import { Device } from "@capacitor/device";
+// import { AuthenticationService } from './../services/authentication.service';
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
@@ -18,9 +18,6 @@ import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
 import { RequestsPage } from "../modals/requests/requests.page";
 import localNotification from "../tools/localNotification";
-
-
-// const DEVICE_UUID = 'device-uuid';
 
 @Component({
   selector: 'app-tab1',
@@ -43,7 +40,6 @@ export class Tab1Page implements OnInit {
   userId : string;
   public socketId:string='SocketId';
   
-
   REST_API_SERVER = environment.cloud.server_url;
 
   constructor(
@@ -150,40 +146,29 @@ this.version = environment.app.version;
     // this.coreName = await this.coreName + '\n\r ' + this.socketId;
     // console.log('coreName: ', this.coreName);
 
-
-    this.socket.on('pong',()=>{
-      console.log('pong ' + new Date().toLocaleString());
-    })
-
     this.socket.on('disconnect', (reason:string) => {
-      console.log('socket disconnected ' +  this.socket.ioSocket.id + ', ' +
+      console.log('Disconnected: ' +  this.socket.ioSocket.id + ', ' +
       new Date().toLocaleString() + '\r\n reason --> ' + reason );
-      this.socket.connect();
     });
     
-  
-
   // this.socket.on('desconexion',()=>{
   //   console.log('Desconnection received.! ',  this.socket.ioSocket.id + ', '  + new Date().toLocaleString())
   // })
 
   this.socket.on('joined', (msg:string)=>{
       console.log(msg);
+      localNotification(msg);
   });
 
 
   this.socket.on('Alert',async (msg:any)=>{
     console.log('Alert --> ' + new Date().toLocaleString(), msg);
-  await  localNotification(msg);
+    localNotification(msg);
   });
-
-  
 
   this.socket.on("connect_error", (err:any) => {
     console.log(`connect_error due to ${err.message}`);
   });
-
-  
 
  }
 
@@ -217,7 +202,7 @@ async collectInfo(){
     await this.api.logout();
     this.router.navigateByUrl('/',{replaceUrl:true});
     Utils.cleanLocalStorage();
-    await this.socket.disconnect();
+    this.socket.disconnect();
   }
 
   loadCodes() {
