@@ -39,6 +39,7 @@ export class Tab1Page implements OnInit {
   twilio_client : any;
   userId : string;
   public socketId:string='SocketId';
+  id : number = 0;
   
   REST_API_SERVER = environment.cloud.server_url;
 
@@ -376,7 +377,7 @@ async modalVisitors() {
 
 
 async localNotification(){
-  this. scheduleBasic('Peatonal abierta');
+  this.scheduleBasic('Peatonal abierta');
 }
 
 async scheduleBasic(msg:any){
