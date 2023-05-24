@@ -8,7 +8,6 @@ import { ScreenOrientation } from "@ionic-native/screen-orientation/ngx";
 import { Device } from "@capacitor/device";
 import { Utils } from 'src/app/tools/tools';
 import { RequestsPage } from "../../modals/requests/requests.page";
-import { Socket } from "ngx-socket-io";
 // import localNotification from "../../tools/localNotification";
 import { Sim } from "@ionic-native/sim/ngx"; 
 
@@ -49,7 +48,6 @@ export class LoginPage implements OnInit {
     private router: Router,
     private alertController: AlertController,
     private modalController:ModalController,
-    private socket:Socket,
     private SIM : Sim,
 
   ) { }

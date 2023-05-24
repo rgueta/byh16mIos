@@ -5,7 +5,6 @@ import { ModalController, ToastController ,
 import type { ToastOptions } from "@ionic/angular";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 // import { Sim } from "@ionic-native/sim/ngx"; 
-import { Socket } from 'ngx-socket-io';
 import { environment } from "../../environments/environment";
 // import { Device } from "@capacitor/device";
 // import { AuthenticationService } from './../services/authentication.service';
@@ -38,7 +37,6 @@ export class Tab1Page implements OnInit {
   public coreName = '';
   twilio_client : any;
   userId : string;
-  public socketId:string='SocketId';
   id : number = 0;
   
   REST_API_SERVER = environment.cloud.server_url;
@@ -51,7 +49,6 @@ export class Tab1Page implements OnInit {
     public animationController : AnimationController,
     private router: Router,
     private screenOrientation: ScreenOrientation,
-    private socket: Socket,
     // private SIM : Sim,
     private popoverCtrl:PopoverController) { }
   
@@ -61,7 +58,6 @@ export class Tab1Page implements OnInit {
       }else{
         this.SoyAdmin = false;
       }
-      await this.socketInit();
   }
 
   async ngOnInit(){
@@ -69,11 +65,6 @@ export class Tab1Page implements OnInit {
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
 
-
-    // interval socket keep socker awake
-    setInterval(() =>{
-      this.socket.emit('ping');
-    },25000)
 
 // this.init();
 this.version = environment.app.version;
@@ -132,47 +123,6 @@ this.version = environment.app.version;
 //    }
 //  }
 
- async socketInit(){
-
-  this.socket.connect();
-  
-  this.socket.on('connect', async ()=>{
-    this.socketId = this.socket.ioSocket.id;
-
-    console.log('connected: ', this.socket.ioSocket.id + ', ' +
-    new Date().toLocaleString());
-    this.socket.emit('join',localStorage.getItem('core-id'));
-  });
-    // // DEbugging
-    // this.coreName = await this.coreName + '\n\r ' + this.socketId;
-    // console.log('coreName: ', this.coreName);
-
-    this.socket.on('disconnect', (reason:string) => {
-      console.log('Disconnected: ' +  this.socket.ioSocket.id + ', ' +
-      new Date().toLocaleString() + '\r\n reason --> ' + reason );
-    });
-    
-  // this.socket.on('desconexion',()=>{
-  //   console.log('Desconnection received.! ',  this.socket.ioSocket.id + ', '  + new Date().toLocaleString())
-  // })
-
-  this.socket.on('joined', (msg:string)=>{
-      console.log(msg);
-      localNotification(msg);
-  });
-
-
-  this.socket.on('Alert',async (msg:any)=>{
-    console.log('Alert --> ' + new Date().toLocaleString(), msg);
-    localNotification(msg);
-  });
-
-  this.socket.on("connect_error", (err:any) => {
-    console.log(`connect_error due to ${err.message}`);
-  });
-
- }
-
  async doRefresh(event:any){
   this.collectInfo();
 
@@ -203,7 +153,6 @@ async collectInfo(){
     await this.api.logout();
     this.router.navigateByUrl('/',{replaceUrl:true});
     Utils.cleanLocalStorage();
-    this.socket.disconnect();
   }
 
   loadCodes() {
@@ -317,11 +266,6 @@ async deviceLost(){
     componentProps:{request:'deviceLost'}
   });
    await modal.present();
-}
-
-
-async socketCheck(){
-  this,this.socket.emit('check','Just checking socket connection');
 }
 
 async newModal(){
