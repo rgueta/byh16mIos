@@ -1,7 +1,7 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-    appId: 'io.ionic.starter',
+    appId: 'com.bytheg.byh16m',
     appName: 'byh16m-3.0.0',
     webDir: 'www',
     bundledWebRuntime: false,
