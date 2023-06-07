@@ -16,7 +16,10 @@ import { ScheduleOptions, LocalNotifications } from "@capacitor/local-notificati
 import {Utils } from "../tools/tools";
 import { FamilyPage } from "../modals/family/family.page";
 import { RequestsPage } from "../modals/requests/requests.page";
-import localNotification from "../tools/localNotification";
+
+import {
+  ActionPerformed, PushNotificationSchema, PushNotifications, Token,
+} from '@capacitor/push-notifications';
 
 @Component({
   selector: 'app-tab1',
@@ -65,6 +68,44 @@ export class Tab1Page implements OnInit {
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
 
+
+
+    // -----------------firebase Push notification
+    PushNotifications.requestPermissions().then(resul => {
+      if(resul.receive === 'granted'){
+
+        PushNotifications.register();
+      }else{
+        this.toastEvent('Push notification not granted..!');
+      }
+    });
+
+    PushNotifications.addListener('registration', (token: Token) => {
+      console.log('Push registration success, token: ' + token.value);
+
+    });
+
+    PushNotifications.addListener('registrationError', (error: any) => {
+      alert('Error on registration: ' + JSON.stringify(error));
+    });
+
+    PushNotifications.addListener(
+      'pushNotificationReceived',
+      (notification: PushNotificationSchema) => {
+        alert('Push received: ' + JSON.stringify(notification));
+      },
+    );
+
+    PushNotifications.addListener(
+      'pushNotificationActionPerformed',
+      (notification: ActionPerformed) => {
+        alert('Push action performed: ' + JSON.stringify(notification));
+      },
+    );
+  
+
+
+    // -----------------------------------------------------
 
 // this.init();
 this.version = environment.app.version;
