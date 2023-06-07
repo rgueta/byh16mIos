@@ -66,14 +66,33 @@ export class LoginPage implements OnInit {
 
     
 
-    this.credentials =new FormGroup({
+    this.credentials = new FormGroup({
       email: new FormControl('neighbor2@gmail.com', [Validators.required, Validators.email]),
       pwd: new FormControl('1234', [Validators.required, Validators.minLength(4)]),
     });
 
-    this.device_info = await Device.getInfo();
 
-    console.log('this.device_info --> ',await JSON.stringify(this.device_info))
+    await Device.getInfo().then(async DeviceInfo => {
+      this.device_info = DeviceInfo;
+      console.log('this.device_info --> ',await this.device_info)
+
+      Device.getId().then(async (deviceId:any) =>{
+        await localStorage.setItem(DEVICE_UUID, await (deviceId));
+       })
+      
+  
+       if (this.device_info.platform === 'android') {
+         try {
+           console.log('soy android OK');
+         } catch (e) {
+           console.log('soy android con Error: ', e);
+       }
+     }else{
+       console.log('no soy android');
+     }
+    });
+
+    
 
    
   }
@@ -94,19 +113,8 @@ export class LoginPage implements OnInit {
       }
     });
   
-     const info = await Device.getInfo();
-     console.log('tab1.page SIM info --> ' , info);
-     localStorage.setItem(DEVICE_UUID, (await Device.getId()).uuid);
-
-     if (info.platform === 'android') {
-       try {
-         console.log('soy android OK');
-       } catch (e) {
-         console.log('soy android con Error: ', e);
-     }
-   }else{
-     console.log('no soy android');
-   }
+    
+     
  }
 
   lockToPortrait(){
