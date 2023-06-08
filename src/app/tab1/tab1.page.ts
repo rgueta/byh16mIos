@@ -20,6 +20,7 @@ import { RequestsPage } from "../modals/requests/requests.page";
 import {
   ActionPerformed, PushNotificationSchema, PushNotifications, Token,
 } from '@capacitor/push-notifications';
+import { FCM } from "@capacitor-community/fcm";
 
 @Component({
   selector: 'app-tab1',
@@ -73,7 +74,6 @@ export class Tab1Page implements OnInit {
     // -----------------firebase Push notification
     PushNotifications.requestPermissions().then(resul => {
       if(resul.receive === 'granted'){
-
         PushNotifications.register();
       }else{
         this.toastEvent('Push notification not granted..!');
@@ -82,8 +82,21 @@ export class Tab1Page implements OnInit {
 
     PushNotifications.addListener('registration', (token: Token) => {
       console.log('Push registration success, token: ' + token.value);
-
     });
+
+    // now you can subscribe to a specific topic
+    FCM.subscribeTo({ topic: "pedestrian" })
+    .then((r) => this.toastEvent(`subscribed to topic`))
+    .catch((err) => console.log(err));
+
+    // Get FCM token instead the APN one returned by Capacitor
+    FCM.getToken()
+    .then((r) => console.log(`Topic Token ${r.token}`))
+    .catch((err) => console.log(err));
+
+    // Enable the auto initialization of the library
+    FCM.setAutoInit({ enabled: true }).then(() => alert(`Auto init enabled`));
+
 
     PushNotifications.addListener('registrationError', (error: any) => {
       alert('Error on registration: ' + JSON.stringify(error));
