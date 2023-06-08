@@ -2,7 +2,7 @@ import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
     appId: 'com.bytheg.byh16m',
-    appName: 'byh16m-3.0.0',
+    appName: 'byh16m',
     webDir: 'www',
     bundledWebRuntime: false,
 

@@ -80,22 +80,24 @@ export class Tab1Page implements OnInit {
       }
     });
 
+    
     PushNotifications.addListener('registration', (token: Token) => {
       console.log('Push registration success, token: ' + token.value);
     });
 
     // now you can subscribe to a specific topic
-    FCM.subscribeTo({ topic: "pedestrian" })
-    .then((r) => this.toastEvent(`subscribed to topic`))
+    FCM.subscribeTo({ topic: localStorage.getItem('core-id') })
+    .then() 
     .catch((err) => console.log(err));
 
     // Get FCM token instead the APN one returned by Capacitor
-    FCM.getToken()
-    .then((r) => console.log(`Topic Token ${r.token}`))
-    .catch((err) => console.log(err));
+    // FCM.getToken()
+    // .then()
+    // // .then((r) => console.log(`Topic Token ${r.token}`))
+    // .catch((err) => console.log(err));
 
     // Enable the auto initialization of the library
-    FCM.setAutoInit({ enabled: true }).then(() => alert(`Auto init enabled`));
+    FCM.setAutoInit({ enabled: true }).then();
 
 
     PushNotifications.addListener('registrationError', (error: any) => {
@@ -303,6 +305,10 @@ async sendSMS(){
     });
       toast.present();
     }
+}
+
+async fcmNotification(){
+  this.api.postData(`api/alerts/${localStorage.getItem('core-id')}/peatonal open/`,'')
 }
 
 async recoverAccount(){
