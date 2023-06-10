@@ -6,8 +6,6 @@ import type { ToastOptions } from "@ionic/angular";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 // import { Sim } from "@ionic-native/sim/ngx"; 
 import { environment } from "../../environments/environment";
-// import { Device } from "@capacitor/device";
-// import { AuthenticationService } from './../services/authentication.service';
 import { DatabaseService } from '../services/database.service';
 import { Router } from '@angular/router';
 import { VisitorsPage } from '../modals/visitors/visitors.page';
@@ -85,7 +83,7 @@ export class Tab1Page implements OnInit {
       console.log('Push registration success, token: ' + token.value);
     });
 
-    // now you can subscribe to a specific topic
+    //  Subscribe to a specific topic
     FCM.subscribeTo({ topic: localStorage.getItem('core-id') })
     .then() 
     .catch((err) => console.log(err));
