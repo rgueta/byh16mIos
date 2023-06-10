@@ -162,7 +162,10 @@ getNewAccessToken() {
   // Store a new access token
   storeAccessToken(accessToken: any) {
     this.currentAccessToken = accessToken;
-    return from(throwError(localStorage.setItem(TOKEN_KEY,accessToken)));
+    // return from(throwError(localStorage.setItem(TOKEN_KEY,accessToken)));
+    throwError(() => {
+      return localStorage.setItem(TOKEN_KEY,accessToken);
+    })
     // return from(Observable.throw(localStorage.setItem(TOKEN_KEY,accessToken)));
     // return from(this.storage.set(TOKEN_KEY, accessToken));
   }
