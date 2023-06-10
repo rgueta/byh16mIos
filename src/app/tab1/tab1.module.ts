@@ -19,6 +19,6 @@ import { VisitorsPage } from '../modals/visitors/visitors.page';
   ],
   providers: [SMS],
   declarations: [Tab1Page],
-  entryComponents:[VisitorsPage]
+  // entryComponents:[VisitorsPage]
 })
 export class Tab1PageModule {}
