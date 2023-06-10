@@ -76,7 +76,7 @@ export class Tab1Page implements OnInit {
       if(resul.receive === 'granted'){
         PushNotifications.register();
       }else{
-        this.toastEvent('Push notification not granted..!');
+        this.toastEvent('Push notification not granted..!',2000);
       }
     });
 
@@ -104,17 +104,20 @@ export class Tab1Page implements OnInit {
       alert('Error on registration: ' + JSON.stringify(error));
     });
 
+    // pushNotification Received event
     PushNotifications.addListener(
       'pushNotificationReceived',
       (notification: PushNotificationSchema) => {
-        alert('Push received: ' + JSON.stringify(notification));
+        // this.toastEvent(JSON.stringify(notification.body));
+        this.toastEvent(notification.body,10000);
       },
     );
 
+    // pushNotification clicked Action Performed event
     PushNotifications.addListener(
       'pushNotificationActionPerformed',
       (notification: ActionPerformed) => {
-        alert('Push action performed: ' + JSON.stringify(notification));
+        // alert('Push action performed: ' + JSON.stringify(notification));
       },
     );
   
@@ -230,7 +233,7 @@ async collectInfo(){
   }
 
   push_notifications(codeId:Number){
-    this.toastEvent('Process code ' + codeId);
+    this.toastEvent('Process code ' + codeId,2000);
     
   }
 
@@ -403,10 +406,13 @@ async scheduleBasic(msg:any){
 // #endregion  ---------------------------------------------
 
 // -------   toast control alerts    ---------------------
-toastEvent(msg:string){
+toastEvent(msg:string,duration:number){
   this.myToast = this.toast.create({
     message:msg,
-    duration:2000
+    duration:duration,
+    buttons:[
+      {text: 'Ok'}
+    ]
   }).then((toastData) =>{
     console.log(toastData);
     toastData.present();
