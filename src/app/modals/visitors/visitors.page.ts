@@ -32,11 +32,10 @@ export class VisitorsPage implements OnInit {
   pkg:{};
 
   constructor(
-            private modalController : ModalController,
-            private toast : ToastController,
-            public api:DatabaseService,
-            private animationController : AnimationController,
-
+    private modalController : ModalController,
+    private toast : ToastController,
+    public api:DatabaseService,
+    private animationController : AnimationController,
   ) { 
     this.RegisterForm = new FormGroup({
       LocalName : new FormControl('', [Validators.required]),
@@ -45,6 +44,7 @@ export class VisitorsPage implements OnInit {
   }
 
   async ngOnInit() {
+
     this.userId = await localStorage.getItem('my-userId');
 
     if(localStorage.getItem(VISITORS) != null){
