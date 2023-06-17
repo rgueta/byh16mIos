@@ -3,12 +3,9 @@ import { ModalController,AlertController,
   Platform, ToastController, IonSelect } from '@ionic/angular';
 import { DatabaseService } from '../../services/database.service';
 import { Utils } from '../../tools/tools';
-// import { element } from 'protractor';
 import { Sim } from "@ionic-native/sim/ngx";
 import { SMS, SmsOptions } from "@ionic-native/sms/ngx";
 import { Validators, FormGroup, FormControl} from "@angular/forms";
-import { Router } from '@angular/router';
-// import { forEach } from 'android/app/src/main/assets/public/cordova_plugins';
 import { environment } from 'src/environments/environment';
 import { VisitorListPage } from '../visitor-list/visitor-list.page';
 
@@ -51,7 +48,6 @@ export class UpdCodesModalPage implements OnInit {
     public sms:SMS,
     public toast:ToastController,
     private alertController: AlertController,
-    private router: Router
     ) { 
       this.validateControls();
     }
