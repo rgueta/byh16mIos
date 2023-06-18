@@ -10,6 +10,7 @@ import { Utils } from 'src/app/tools/tools';
 import { RequestsPage } from "../../modals/requests/requests.page";
 // import localNotification from "../../tools/localNotification";
 import { Sim } from "@ionic-native/sim/ngx"; 
+import { Network } from "@ionic-native/network/ngx";
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
@@ -49,10 +50,19 @@ export class LoginPage implements OnInit {
     private alertController: AlertController,
     private modalController:ModalController,
     private SIM : Sim,
+    private network: Network
 
   ) { }
 
   async ngOnInit() {
+
+    this.network.onDisconnect().subscribe(() => {
+      alert('Se desconecto')
+    })
+
+    this.network.onConnect().subscribe(() => {
+      alert('Conectado')
+    })
 
     Utils.cleanLocalStorage();
     this.init();
