@@ -11,6 +11,7 @@ import { RequestsPage } from "../../modals/requests/requests.page";
 // import localNotification from "../../tools/localNotification";
 import { Sim } from "@ionic-native/sim/ngx"; 
 import { Network } from "@ionic-native/network/ngx";
+import { NONE } from 'android/app/src/main/assets/public/plugins/cordova-plugin-network-information/www/Connection';
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
@@ -40,6 +41,7 @@ export class LoginPage implements OnInit {
 
  private  REST_API_SERVER = environment.cloud.server_url;
  public version = '';
+ net_status:any;
 
   constructor(
     private fb: FormBuilder,
@@ -52,17 +54,41 @@ export class LoginPage implements OnInit {
     private SIM : Sim,
     private network: Network
 
-  ) { }
+  ) { 
+
+  
+
+    this.net_status = this.network.onDisconnect().subscribe((status) => {
+
+      console.log('Disconnected ' + this.network.type);
+      console.log('type of ' + typeof this.network.type);
+
+      console.log('net_status--> ' + JSON.stringify(this.net_status));
+
+      if(this.network.type === ''){
+        console.log('No data connection!')
+      }
+
+    })
+
+    this.net_status = this.network.onConnect().subscribe((status) => {
+      console.log('Connected ' + this.network.type);
+      if(this.network.type === 'wifi'){
+        console.log('Connection by TELNOR');
+      }
+
+      console.log('net_status--> ' + JSON.stringify(this.net_status));
+    })
+
+
+   
+
+   
+  }
 
   async ngOnInit() {
 
-    this.network.onDisconnect().subscribe(() => {
-      alert('Se desconecto')
-    })
-
-    this.network.onConnect().subscribe(() => {
-      alert('Conectado')
-    })
+    console.log('Actual connection: ' + this.network.type)
 
     Utils.cleanLocalStorage();
     this.init();
@@ -73,8 +99,6 @@ export class LoginPage implements OnInit {
     }else if(isPlatform('android')){
       this.isAndroid = true;
     }
-
-    
 
     this.credentials = new FormGroup({
       email: new FormControl('neighbor2@gmail.com', [Validators.required, Validators.email]),
@@ -87,7 +111,7 @@ export class LoginPage implements OnInit {
       console.log('this.device_info --> ',await this.device_info)
 
       Device.getId().then(async (deviceId:any) =>{
-        await localStorage.setItem(DEVICE_UUID, await (deviceId));
+        await localStorage.setItem(DEVICE_UUID, await (deviceId['identifier']));
        })
       
   
@@ -101,10 +125,6 @@ export class LoginPage implements OnInit {
        console.log('no soy android');
      }
     });
-
-    
-
-   
   }
 
   async init(): Promise<void> {
@@ -121,10 +141,7 @@ export class LoginPage implements OnInit {
         () => console.log('Permission denied')
         )
       }
-    });
-  
-    
-     
+    });   
  }
 
   lockToPortrait(){
