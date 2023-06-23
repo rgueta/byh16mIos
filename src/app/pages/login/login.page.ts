@@ -249,8 +249,7 @@ async lockedUser(msg:string){
           this.router.navigateByUrl(url, {replaceUrl: true});
           // this.router.navigate([url] , { state : { from : 'login'}  }); //send parameters
         }
-      },
-      { text : 'OK'}
+      }
     ],
   });
 

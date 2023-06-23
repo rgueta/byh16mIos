@@ -28,9 +28,8 @@
         <ion-item (click)="modalUpdInfo()">Add Information</ion-item>
         <ion-item-divider></ion-item-divider>
         <ion-item class="wrap-input">
-          <ion-label class='labelInputWarning'>Use twilio : </ion-label>
-          <ion-toggle id="twilioToggle" class="ion-toggle-red" slot="end" [ngModel]="localenable" [checked]="false" 
-          [ngModelOptions]="{standalone: true}" (ionChange)="TwilioToggleEven($event)"></ion-toggle>
+          <ion-toggle id="twilioToggle" class="ion-toggle-red" labelPlacement="start" [ngModel]="localenable" [checked]="false"  
+          [ngModelOptions]="{standalone: true}" (ionChange)="TwilioToggleEven($event)">Use twilio :</ion-toggle>
       </ion-item>
       </ion-list>
     </ion-content>
@@ -92,9 +91,8 @@
         </ion-list>
 
         <ion-item class="wrap-input">
-          <ion-label>Enabled core : </ion-label>
-          <ion-toggle id="disableToggle" slot="end" checked="{{item.enable}}"
-          (ionChange)="chgStatusCore($event,item.enable,item._id, item.name)"></ion-toggle>
+          <ion-toggle id="disableToggle" labelPlacement="start" checked="{{item.enable}}" 
+          (ionChange)="chgStatusCore($event,item.enable,item._id, item.name)">Enabled core : </ion-toggle>
         </ion-item>
 
          <ion-item  *ngIf="myUserList?.length > 0" >
