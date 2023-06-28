@@ -7,7 +7,6 @@ import { DatabaseService } from '../../services/database.service';
 import { UpdCpusPage } from "../../modals/upd-cpus/upd-cpus.page";
 import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { InfoPage } from "../../modals/info/info.page";
-import { async } from '@angular/core/testing';
 
 const TWILIO = 'twilio';
 
