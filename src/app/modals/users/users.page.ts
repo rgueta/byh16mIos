@@ -22,7 +22,7 @@ export class UsersPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.coreId = this.navParams.data['core']
+    this.coreId = this.navParams.data['CoreId'];
     this.getUsers();
   }
 
@@ -38,7 +38,6 @@ export class UsersPage implements OnInit {
   }
 
   toggleSection(index:number){
-    console.log('toggleSection index--> ', index)
     this.users[index].open = !this.users[index].open;
     if(this.automaticClose && this.users[index].open){
       this.users

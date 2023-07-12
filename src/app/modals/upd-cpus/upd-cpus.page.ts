@@ -9,24 +9,32 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./upd-cpus.page.scss'],
 })
 export class UpdCpusPage implements OnInit {
+  @Input() cores?:number = 23;
   public userId : any;
   public CpuList:any;
   automaticClose = false;
   routineOpen=false;
   isReadOnly: boolean = true;
   myToast : any;
-  backup_cpus : any = [];
+  cpus ={
+    _id:'',
+    cores:0,
+    entry:0,
+    coord: ['',''],
+    houses:0,
+    sim:'',
+    school:false
+  };
 
   constructor(
     public modalController : ModalController,
     public api : DatabaseService,
     private alertCtrl :AlertController
   ) { 
-    this.getCpus();
   }
 
   ngOnInit() {
-    // this.getCpus();
+    this.getCpus();
   }
 
   async doRefresh(event:any){
@@ -52,11 +60,7 @@ export class UpdCpusPage implements OnInit {
     let location = localStorage.getItem('location').split('.');
 
     this.api.getData( 'api/cpus/full/' + `${location[0]},${location[1]},${location[2]},${location[3]}/`).subscribe(async (result:any) =>{
-      result.forEach(async (element:any) => {
-        await this.backup_cpus.push(element);
-      });
       this.CpuList = await result;
-      // this.backup_cpus = await result;
       this.CpuList[0].open = true;
     },error => {
       console.log('Error response --> ', error)
@@ -66,17 +70,28 @@ export class UpdCpusPage implements OnInit {
   async updCpu(obj:any,value:boolean,index:number, item:any){
     this.isReadOnly = value;
     if(obj.target.innerHTML === 'Save'){ 
+      
       console.log('Save to mongo ! --> ', item);
-
       const MsgAlert = await this.alertCtrl.create({
         header: 'Confirmacion',
         message: 'Save changes ?',
         buttons: [
           { 
             text : 'OK',
-            handler : () => {
-              console.log('grabar --> ', this.CpuList[index]);
+            handler : async () => {
+              this.cpus._id = this.CpuList[index]['_id'];
+              this.cpus.cores = this.CpuList[index]['cores'];
+              this.cpus.entry = this.CpuList[index]['entry'];
+              this.cpus.coord = this.CpuList[index]['coord'];
+              this.cpus.houses = this.CpuList[index]['houses'];
+              this.cpus.sim = this.CpuList[index]['sim'];
+              this.cpus.school = this.CpuList[index]['school'];
+              try{
+              await this.api.putData('api/cpus/updCpu/' +  localStorage.getItem('my-userId'), this.cpus)
               this.isReadOnly = true;
+              }catch(ex){
+                console.error('Error api putData --> ' + ex);
+              }
             }
           },
           {
@@ -84,7 +99,7 @@ export class UpdCpusPage implements OnInit {
             role:"cancel",
             cssClass :"secondary",
             handler :()=>{
-              console.log("Return to --> ", this.backup_cpus);
+              console.log("Return to --> ", this.cpus);
           }
         }
         ]
@@ -94,13 +109,30 @@ export class UpdCpusPage implements OnInit {
 
       
     }else{
-      console.log('Solo para modo edicion');
+      // create item backup
+      this.cpus._id = item._id;
+      this.cpus.cores = item.cores;
+      this.cpus.entry = item.entry;
+      this.cpus.coord = item.coord;
+      this.cpus.houses = item.houses;
+      this.cpus.sim = item.sim;
+      this.cpus.school = item.school;
+
+      console.log('cpus copied --> ', this.cpus);
       this.isReadOnly = false;
     }
   }
 
-  CancelUpd(){
+  CancelUpd(index:number){
     this.isReadOnly = true;
+    this.CpuList[index]._id = this.cpus._id;
+    this.CpuList[index].cores = this.cpus.cores;
+    this.CpuList[index].entry = this.cpus.entry;
+    this.CpuList[index].coord = this.cpus.coord;
+    this.CpuList[index].houses = this.cpus.houses;
+    this.CpuList[index].sim = this.cpus.sim;
+    this.CpuList[index].school = this.cpus.school;
+
   }
 
   closeModal(){

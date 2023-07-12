@@ -68,38 +68,14 @@ export class AdminPage implements OnInit {
   } 
 
   async modalRegister(CoreId:string,CoreName:string, pathLocation:string) {
-    const enterAnimation = (baseEl: any) => {
-      const backdropAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('ion-backdrop')!)
-        .fromTo('opacity', '0.01', 'var(--backdrop-opacity)');
-
-      const wrapperAnimation = this.animationController.create()
-        .addElement(baseEl.querySelector('.modal-wrapper')!)
-        .keyframes([
-          { offset: 0, opacity: '0', transform: 'scale(0)' },
-          { offset: 1, opacity: '0.99', transform: 'scale(1)' }
-        ]);
-
-      return this.animationController.create()
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(700)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-    }
-
-    const leaveAnimation = (baseEl: any) => {
-      return enterAnimation(baseEl).direction('reverse');
-    }
 
     const modal = await this.modalController.create({
       component: UsersPage,
       componentProps:{
         'CoreName':CoreName,
         'CoreId': CoreId,
-        'pathLocation': pathLocation,
-      },
-      enterAnimation,
-      leaveAnimation
+        'pathLocation': pathLocation
+       }
     });
 
     return await modal.present();
@@ -303,7 +279,7 @@ export class AdminPage implements OnInit {
     const modal = await this.modalController.create({
       component: UsersPage,
       backdropDismiss: true,
-      componentProps: {core: coreId,coreName:core}
+      componentProps: {'CoreId' : coreId,'coreName':core}
     });
 
     modal.onDidDismiss()

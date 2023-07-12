@@ -115,7 +115,7 @@ export class CodesPage implements OnInit {
                           pkg['userId'] + '/' + pkg['_id'] ,pkg)
 
         }catch(err){
-            console.error('Error api putData --> ' + err)
+            console.error('Error api putData --> ' + err);
         }
       }
     });

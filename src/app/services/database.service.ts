@@ -238,25 +238,26 @@ async postRegisterData(url:String,data:any){
   return this.http.post(this.REST_API_SERVER + url , data, options)
 }
 
-
-
 //--- PUT data to server
 async putData(collecion:String,data:any){
-  const token = await localStorage.getItem(TOKEN_KEY);
+  const token = localStorage.getItem(TOKEN_KEY);
 
  let  options = {
    headers : {
     'content-type' :'application/json',
-    'Authorization' :  `Bearer ${token}`,
+    'authorization' :  `Bearer ${token}`,
    }
   }
 
-  this.http.put(this.REST_API_SERVER + collecion , data, options)
-  .subscribe(data => {
-    console.log('http put success --> ',data);
-  
-  }, error => {
-    console.log('http put error --> ',error);
+ return new Promise((resolve, reject) => {this.http.put(this.REST_API_SERVER + collecion , data, options)
+    .subscribe(data => {
+      console.log('http put success --> ',data);
+      resolve(data);
+    
+    }, error => {
+      console.log('http put error --> ',error);
+      reject(error);
+    });
   });
 }
 

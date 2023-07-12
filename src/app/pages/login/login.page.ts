@@ -11,7 +11,7 @@ import { RequestsPage } from "../../modals/requests/requests.page";
 // import localNotification from "../../tools/localNotification";
 import { Sim } from "@ionic-native/sim/ngx"; 
 import { Network } from "@ionic-native/network/ngx";
-import { NONE } from 'android/app/src/main/assets/public/plugins/cordova-plugin-network-information/www/Connection';
+
 
 const USER_ROLES = 'my-roles';
 const USER_ROLE = 'my-role';
