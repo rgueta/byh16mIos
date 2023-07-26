@@ -43,6 +43,8 @@ export class Tab1Page implements OnInit {
   
   REST_API_SERVER = environment.cloud.server_url;
 
+  iosOrAndroid: boolean;
+
   constructor(
     private sms: SMS,
     private toast: ToastController,
@@ -66,8 +68,6 @@ export class Tab1Page implements OnInit {
     const sim = await localStorage.getItem('my-core-sim');
     this.userId = await localStorage.getItem('my-userId');
     this.coreName = await localStorage.getItem('core-name')
-
-
 
     // -----------------firebase Push notification
     PushNotifications.requestPermissions().then(resul => {
@@ -258,6 +258,7 @@ async openUrl(url:string){
 }
 
 // Send a text message using default options
+
 async sendSMS(){
   if(this.msg == ''){
     const toast = await this.toast.create({
