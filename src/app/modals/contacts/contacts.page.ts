@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController,AlertController, isPlatform, 
+import { ModalController,AlertController, isPlatform,
   ToastController, LoadingController} from '@ionic/angular';
 import { Contacts, GetContactsResult } from "@capacitor-community/contacts";
 import { Utils } from "../../tools/tools";
@@ -22,13 +22,14 @@ export class ContactsPage implements OnInit {
   contact = {};
   constructor(private modalController : ModalController,
               private loadingController : LoadingController,
-              private toast: ToastController,) {
+              private toast: ToastController,
+              public alertCtrl: AlertController,) {
    }
 
   async ngOnInit() {
     await this.basicLoader();
     await this.loadContacts();
-    
+
   }
 
   async loadContacts(){
@@ -46,7 +47,7 @@ export class ContactsPage implements OnInit {
           }
         }).then(async (result) => {
           let localcontacts = await result.contacts;
-          let allName : any = []; 
+          let allName : any = [];
           await localcontacts.forEach(async (item: any) => {
             if(item.name) await allName.push(item);
           });
@@ -75,7 +76,35 @@ export class ContactsPage implements OnInit {
 
   async onClickContact(Contact: {}){
     this.contact = Contact;
-    this.closeModal();
+
+    // >> Confirmation ------------------------------------
+
+    let alert = await this.alertCtrl.create({
+      header: 'Confirmar',
+      message: 'Aceptar contacto ?',
+      cssClass:'basic-alert',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'icon-color',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Si',
+          cssClass: 'icon-color',
+          handler: async () => {
+              this.closeModal();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
+    // << Confirmation  -----------------------------------
+
   }
 
   closeModal(){
