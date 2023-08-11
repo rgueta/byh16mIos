@@ -31,7 +31,6 @@ export class VisitorListPage implements OnInit {
 }
 
 toggleSection(item:{}){
-  console.log('visitor --> ', item);
   this.selectedVisitor = item;
   this.closeModal();
 }

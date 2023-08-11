@@ -9,7 +9,6 @@ import { Validators, FormGroup, FormControl} from "@angular/forms";
 import { environment } from 'src/environments/environment';
 import { VisitorListPage } from '../visitor-list/visitor-list.page';
 
-
 const USERID = 'my-userId';
 
 @Component({
@@ -48,7 +47,7 @@ export class UpdCodesModalPage implements OnInit {
     public sms:SMS,
     public toast:ToastController,
     private alertController: AlertController,
-    ) { 
+    ) {
       this.validateControls();
     }
 
@@ -73,12 +72,12 @@ export class UpdCodesModalPage implements OnInit {
     this.initDates();
     this.getPlatform();
 
-  
+
 
     this.libSim.hasReadPermission().then(
       (info) => console.log('Has permission: ', info)
     );
-    
+
     this.libSim.requestReadPermission().then(
       () => console.log('Permission granted'),
       () => console.log('Permission denied')
@@ -131,7 +130,7 @@ getPlatform(){
       // var initTemp = new Date(init);
       this.initial = await new Date(init);
       this.expiry = await new Date(this.expiry);
-      
+
       this.diff =  await (Math.abs(this.initial.getTime() - this.expiry.getTime()) / 3600000).toFixed(1);
       console.log('Initial : ' + Utils.convDate(this.initial) + '\nExpiry :  ' + Utils.convDate(this.expiry) + '\nDiff hrs. ' + this.diff);
     }
@@ -164,13 +163,13 @@ async setupCode(event:any){
   this.visitorSim = this.selectedVisitor.sim;
   console.log('selected -->', event);
   this.visitorSelectRef.disabled;
-} 
+}
 
 
   async updSelectedVisitor(item:any){
     console.log('Se debe actualizar --> ', item);
     for(var i = 0; i < this.myVisitors.length; i++ ){
-      if(item.name === this.myVisitors[i].name && 
+      if(item.name === this.myVisitors[i].name &&
          item.sim === this.myVisitors[i].sim){
         this.myVisitors[i].date = new Date();
         break;
@@ -213,44 +212,45 @@ async setupCode(event:any){
     const coreName = await localStorage.getItem('core-name')
     const expire = await ((new Date(this.expiry).getTime() - new Date().getTime() ) / 3600000).toFixed(1)
 
+
+    this.updSelectedVisitor(this.selectedVisitor);
+
     console.log('api/codes/' + this.userId + ','+ JSON.stringify({'code':this.code,'sim':this.visitorSim,
-       'initial': Utils.convDate(new Date(this.initial)),
-       'expiry' : Utils.convDate(new Date(this.expiry)) ,'visitorSim' : this.selectedVisitor.sim, 'visitorName' : this.selectedVisitor.name, 'comment': this.localComment}) + ',' + JSON.stringify(
+       'initial': Utils.convDate(new Date(this.initial)),'expiry' : Utils.convDate(new Date(this.expiry)),
+       'visitorSim' : this.visitorSim, 'visitorName' : this.selectedVisitor.name, 'comment': this.localComment}) + ',' + JSON.stringify(
        {'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}));
 
-       this.updSelectedVisitor(this.selectedVisitor);
-       
     try{
 
       this.api.postData('api/codes/' + this.userId,{'code':this.code,'sim':this.visitorSim,
-       'initial': Utils.convDate(new Date(this.initial)),
-       'expiry' : Utils.convDate(new Date(this.expiry)) ,'visitorSim' : this.selectedVisitor.sim,'visitorName' : this.selectedVisitor.name ,'comment': this.localComment,
+       'initial': Utils.convDate(new Date(this.initial)),'expiry' : Utils.convDate(new Date(this.expiry)),
+       'visitorSim' : this.visitorSim,'visitorName' : this.selectedVisitor.name ,'comment': this.localComment,
        'source': {'user' : this.userId,'platform' : this.StrPlatform, 'id' : userSim}}).then(async resp => {
-        
-//------- Uncomment, just to fix bug 
+
+//------- Uncomment, just to fix bug
         const respId = await Object.values(resp)[1];
 
         await console.log('response from aPI --> ', respId);
-        
+
          // Send code to core
-        const pckgToCore = await 'codigo,' + this.code +','+ Utils.convDate(new Date(this.expiry)) 
+        const pckgToCore = await 'codigo,' + this.code +','+ Utils.convDate(new Date(this.expiry))
         + ',' + this.userId + ',' + this.visitorSim + ',' + respId
 
         await console.log('send to core module --> ', pckgToCore);
-        
+
       // Send code to Core
       await this.sendSMS(coreSim, pckgToCore);
 
       //  send code to visitor
       if(environment.app.debugging_send_sms){
-       await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + 
+       await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code +
        '  Expira en ' + expire + ' Hrs.' )
       }else{
         console.log('Modo debugging no se envio el SMS');
       }
 
        this.closeModal();
- 
+
       // //  this.showAlerts('Message', 'Se envio el codigo')
 
        },error =>{
@@ -260,11 +260,9 @@ async setupCode(event:any){
     }catch(err){
         console.log('Can not post data : ', err);
     }
-    
+
     // this.api.sendPostRequest('api/newCode',{'code':this.code,'sim':this.sim,'range':this.range});
   }
-
-
 
   async sendSMS(sim:string,text:string){
     var options:SmsOptions={
@@ -294,7 +292,7 @@ async setupCode(event:any){
         // });
 
         //   toast.present();
-        
+
     }
     catch(e){
       // alert('Text was not sent !')
@@ -322,7 +320,7 @@ async setupCode(event:any){
           // this.router.navigateByUrl(url, {replaceUrl: true});
           // this.router.navigate([url] , { state : { from : 'login'}  }); //send parameters
         }
-        
+
       }
       ],
     });
@@ -339,7 +337,8 @@ async setupCode(event:any){
     .then(async (item) => {
 
       if(item.data){
-
+        console.log("data --> ", item.data);
+        this.selectedVisitor = item.data;
         this.visitorCode = item.data['name'] ? item.data['name'] : ''  ;
         this.visitorSim = item.data['sim'] ? item.data['sim'] : '';
       }
@@ -350,6 +349,6 @@ async setupCode(event:any){
 
   closeModal(){
     this.modalController.dismiss();
-  } 
+  }
 
 }
