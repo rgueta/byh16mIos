@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, LoadingController, ToastController } from "@ionic/angular";
-import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
+// import { FileTransfer, FileUploadOptions, FileTransferObject } from '@ionic-native/file-transfer/ngx';
 // import { File } from '@ionic-native/file/ngx';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Capacitor } from "@capacitor/core";
@@ -44,7 +44,7 @@ export class InfoPage implements OnInit {
 
   constructor(
     private modalController : ModalController,
-    private transfer: FileTransfer,
+    // private transfer: FileTransfer,
     private camera: Camera,
     public loadingCtrl: LoadingController,
     public toast: ToastController,
@@ -182,57 +182,59 @@ export class InfoPage implements OnInit {
     });
   }
 
-  async uploadFile() {
-    let loader = await this.loadingCtrl.create({
-      message: "Uploading...",
-      duration: 4000,
-      cssClass:'loader-css-class',
-      backdropDismiss:true
-    }).then(res => {
-      res.present();
-      res.onDidDismiss().then((response) => {
-        console.log('Loader dismissed', response);
-      });
+  async uploadFile() {}
 
-      setTimeout(() =>{
-        this.loadingCtrl.dismiss();
-      },5000);
-    });
+  // async uploadFile() {
+  //   let loader = await this.loadingCtrl.create({
+  //     message: "Uploading...",
+  //     duration: 4000,
+  //     cssClass:'loader-css-class',
+  //     backdropDismiss:true
+  //   }).then(res => {
+  //     res.present();
+  //     res.onDidDismiss().then((response) => {
+  //       console.log('Loader dismissed', response);
+  //     });
+
+  //     setTimeout(() =>{
+  //       this.loadingCtrl.dismiss();
+  //     },5000);
+  //   });
 
     
-    const fileTransfer: FileTransferObject = this.transfer.create();
+  //   const fileTransfer: FileTransferObject = this.transfer.create();
 
-    let options: FileUploadOptions = {
-      fileKey: 'image',
-      // fileName: 'image.jpg',
-      chunkedMode: false,
-      // mimeType: "multipart/form-data",
-      mimeType: "image/jpeg",
-      params:{'title': this.localTitle, 'url' : this.localUrl, 
-        'description' : this.localDescription, 'locationFolder': this.imgFolder},
-      headers: {}
-    };
-    //'http://192.168.1.173:5000/api/info/' 
+  //   let options: FileUploadOptions = {
+  //     fileKey: 'image',
+  //     // fileName: 'image.jpg',
+  //     chunkedMode: false,
+  //     // mimeType: "multipart/form-data",
+  //     mimeType: "image/jpeg",
+  //     params:{'title': this.localTitle, 'url' : this.localUrl, 
+  //       'description' : this.localDescription, 'locationFolder': this.imgFolder},
+  //     headers: {}
+  //   };
+  //   //'http://192.168.1.173:5000/api/info/' 
 
-    // console.log('Image path --> ', this.REST_API_SERVER + "api/info/" +
-    // this.userId)
+  //   // console.log('Image path --> ', this.REST_API_SERVER + "api/info/" +
+  //   // this.userId)
 
-    console.log('Image options params', options.params)
+  //   console.log('Image options params', options.params)
     
-    fileTransfer.upload(this.imageURI, this.REST_API_SERVER + "api/info/" +
-      this.userId, options)
-      .then((data) => {
-      setTimeout(() =>{
+  //   fileTransfer.upload(this.imageURI, this.REST_API_SERVER + "api/info/" +
+  //     this.userId, options)
+  //     .then((data) => {
+  //     setTimeout(() =>{
         
-      })
-      this.toastEvent("Image uploaded successfully");
-    }, (err) => {
-      console.log(err);
-      // loader.dismiss();
-      this.toastEvent(err);
-    });
+  //     })
+  //     this.toastEvent("Image uploaded successfully");
+  //   }, (err) => {
+  //     console.log(err);
+  //     // loader.dismiss();
+  //     this.toastEvent(err);
+  //   });
 
-  }
+  // }
 
   //#endregion Image section ------------------------------------------------
   async collectInfo(){
