@@ -79,19 +79,14 @@ export class LoginPage implements OnInit {
 
       console.log('net_status--> ' + JSON.stringify(this.net_status));
     })
-
-
-   
-
-   
   }
 
   async ngOnInit() {
-
     console.log('Actual connection: ' + this.network.type)
 
     Utils.cleanLocalStorage();
     this.init();
+    
     this.version = environment.app.version;
 
     if(isPlatform('cordova') || isPlatform('ios')){

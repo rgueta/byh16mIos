@@ -9,6 +9,7 @@ import { SMS, SmsOptions } from '@ionic-native/sms/ngx';
 import { InfoPage } from "../../modals/info/info.page";
 
 const TWILIO = 'twilio';
+const EMAIL_TO_VISITOR = 'emailToVisitor'
 
 @Component({
   selector: 'app-admin',
@@ -25,6 +26,7 @@ export class AdminPage implements OnInit {
   public routineOpen=false;
   localenable:boolean=true;
   visitorId:string='';
+  emailToVisitors: boolean = true;
 
 
   constructor(
@@ -39,8 +41,10 @@ export class AdminPage implements OnInit {
       
      }
 
-  ngOnInit() {
-    
+  async ngOnInit() {
+    this.emailToVisitors = await (localStorage.getItem('emailToVisitor') === 'true');
+
+    console.log('emailToVisitors value --> ', this.emailToVisitors);
     this.getCores();
   }
 
@@ -352,6 +356,14 @@ export class AdminPage implements OnInit {
     }else{
       console.log('Usar Sim');
       await localStorage.setItem(TWILIO,'false');
+    }
+  }
+
+  async EmailVisitorToggleEven($event:any){
+    if($event.detail.checked){
+      await localStorage.setItem(EMAIL_TO_VISITOR,'true');
+    }else{
+      await localStorage.setItem(EMAIL_TO_VISITOR,'false');
     }
   }
 

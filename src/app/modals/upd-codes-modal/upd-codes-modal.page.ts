@@ -242,9 +242,9 @@ async setupCode(event:any){
       await this.sendSMS(coreSim, pckgToCore);
 
       //  send code to visitor
-      if(environment.app.debugging_send_sms){
-       await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code +
-       '  Expira en ' + expire + ' Hrs.' )
+      if(localStorage.getItem('emailToVisitor') === 'true'){
+        console.log('Se envio el SMS');
+      //  await this.sendSMS(this.visitorSim,'codigo ' + coreName + ': ' + this.code + '  Expira en ' + expire + ' Hrs.' )
       }else{
         console.log('Modo debugging no se envio el SMS');
       }
