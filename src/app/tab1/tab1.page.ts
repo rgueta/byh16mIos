@@ -83,16 +83,12 @@ export class Tab1Page implements OnInit {
       console.log('Push registration success, token: ' + token.value);
     });
 
+
     //  Subscribe to a specific topic
     FCM.subscribeTo({ topic: localStorage.getItem('core-id') })
     .then() 
     .catch((err) => console.log(err));
 
-    // Get FCM token instead the APN one returned by Capacitor
-    // FCM.getToken()
-    // .then()
-    // // .then((r) => console.log(`Topic Token ${r.token}`))
-    // .catch((err) => console.log(err));
 
     // Enable the auto initialization of the library
     FCM.setAutoInit({ enabled: true }).then();
